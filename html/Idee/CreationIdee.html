@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://kit.fontawesome.com/64d58efce2.js" crossorigin="anonymous"></script>
+        <link rel="icon" type="image/png" href="../../static/img/icon.png">
+        <link rel="stylesheet" href="../../static/css/style1.css">
+        <link rel="stylesheet" href="../../static/css/style2.css">
+        <link rel="stylesheet" href="../../static/css/style6.css">
+        <title>Profil</title>
+    </head>
+    <body>
+        <form methode="POST" enctype="multipart/form-data">
+            <div>
+                <input class="mettre" type="text" placeholder="Titre" name="titre" required>
+            </div>
+
+            <div>
+                <input class="mettre" type="text" placeholder="Description" name="description" required>
+            </div>
+
+            <div>
+                <input class="mettre" type="text" placeholder="Description" name="description" required>
+            </div>
+
+            <div>
+                <input class="mettre" type="text" placeholder="Catégorie" name="categorie" required>
+            </div>
+
+            <div>
+                <select name="publique" required>
+                    <option value="" disabled selected>Rendre l'idée publique</option>
+                    <option value="Masculin">OUI</option>
+                    <option value="Féminin">NON</option>
+                </select>
+            </div>
+
+            <div>
+                <input type="file" id="fichier" name="fichier" accept=".doc, .docx, .mpp, .avi, .gif, .gz, .zip, .jpeg, .jpg, .jpe, .png, .odp, .odt, .ods, .pdf, .xlsx, .pptx, .txt" multiple>
+            </div>
+
+            <div>
+                <input class="valider" type="submit" value="Créer">
+            </div>
+        </form>
+    </body>
+</html>
+
+<!--
+    catégorie
+    Solution
+    Innovation
+    Stratégie
+    -Marketing
+    -Organisationnel
+    -Technologique
+-->
