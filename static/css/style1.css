@@ -1,0 +1,244 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+* {
+    font-family: 'Poppins', sans-serif;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    justify-content: space-between;
+}
+
+.header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-bottom: 2px solid #ccc;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.logo img {
+    max-width: 40px;
+    vertical-align: middle;
+    margin-right: 10px;
+}
+
+.logo-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.logo h1 {
+    font-size: 2em;
+    color: #FF6600;
+    margin: 0;
+}
+
+.logo h3 {
+    font-size: 1em;
+    color: #333;
+    margin: 0;
+    align-self: flex-start; /* Aligning "for ideas" to the start */
+}
+
+.for-ideas {
+    color: #FF6600;
+}
+
+.connect_entete {
+    font-size: 1.1em;
+    color: #555;
+}
+
+.connect_entete a {
+    color: #555;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.connect_entete a:hover {
+    color: #FF6600;
+}
+
+.connect_entete i {
+    margin-right: 5px;
+}
+
+.boite {
+    background: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px;
+    margin-top: 20px;
+    margin-bottom: 20px; /* Added space between boite and footer */
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+}
+
+.entete {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.entete span {
+    font-size: 1em;
+    color: #777;
+}
+
+.entete header {
+    font-size: 1.5em;
+    color: #333;
+}
+
+.formulaire {
+    position: relative;
+    margin-bottom: 15px;
+}
+
+.formulaire input,
+.formulaire select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.formulaire input:focus,
+.formulaire select:focus {
+    border-color: #FF6600;
+}
+
+.formulaire i {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #999;
+    cursor: pointer; /* Added cursor pointer for the eye icon */
+}
+
+.accept-conditions-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    font-size: 0.9em;
+}
+
+.accept-conditions-container input {
+    margin-right: 10px;
+}
+
+.accept-conditions-container a:hover {
+    color: red; 
+    text-decoration: underline; 
+}
+
+
+.submit {
+    background-color: #FF6600;
+    color: #fff;
+    border: none;
+    padding: 15px;
+    border-radius: 5px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.submit:hover {
+    background-color: #e65c00;
+}
+
+.footer {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    background-color: #000;
+    color: #fff;
+    box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 20px; /* Added margin-top for space between footer and boite */
+}
+
+.footer h4 {
+    margin: 0;
+}
+
+.footer-left {
+    text-align: left;
+}
+
+.footer-right {
+    text-align: right;
+}
+
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+
+    .boite {
+        padding: 20px;
+    }
+
+    .footer {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .footer h4 {
+        margin-bottom: 10px;
+    }
+}
+
+
+.mdp_oublie {
+    color: #FF6600;
+    text-decoration: none;
+    font-size: 0.9em;
+    margin-bottom: 10px;
+    display: inline-block;
+}
+
+.mdp_oublie:hover {
+    text-decoration: underline;
+}
+
+.formulaire .eye {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+}

@@ -1,0 +1,30 @@
+.header .connect_entete {
+    display: inline-block;
+    margin-left: 20px;
+}
+
+.header .connect_entete a {
+    color: #FF6600;
+    text-decoration: none;
+}
+
+.container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.container header h2 {
+    margin-top: 0;
+}
+
+section {
+    margin-bottom: 20px;
+}
+
+section h3 {
+    margin-bottom: 10px;
+}
