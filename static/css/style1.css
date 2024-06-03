@@ -86,6 +86,11 @@ body {
     margin-right: 5px;
 }
 
+.connect_entete i:hover
+{
+    color:#FF6600;
+}
+
 .boite {
     background: #fff;
     padding: 30px;
