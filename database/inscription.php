@@ -57,7 +57,7 @@
             else 
             {
                 echo "Inscription Validée";
-                header("Location: ../html/Idee/AccueilIdee.html");
+                header("Location: ../html/idee/AccueilIdee.html");
             }
         }
     }

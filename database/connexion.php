@@ -37,7 +37,7 @@ if (isset($_POST['email']) && isset($_POST['mot_de_passe']))
         // Vérifier le mot de passe
         if (password_verify($mot_de_passe, $hashed_password)) {
             // Mot de passe correct, rediriger vers la page d'accueil
-            header("Location: ../html/Idee/AccueilIdee.html");
+            header("Location: ../html/idee/AccueilIdee.html");
             exit();
         } else {
             // Mot de passe incorrect
