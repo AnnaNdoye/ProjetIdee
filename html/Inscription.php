@@ -23,7 +23,8 @@
     <div class="boite">
         <form class="container" action="../database/inscription.php" method="POST">
             <div class="entete">
-                <span>Vous n'avez pas de compte ? </span>
+                <span>Vous n'avez
+                    pas de compte ? </span>
                 <header>Inscrivez-vous</header>
             </div>
             <?php //code php pour afficher le message d'erreur

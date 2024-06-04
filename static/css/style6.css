@@ -1,19 +1,171 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
+.profil {
+    color: #6d2e03;
+    text-decoration: none;
+    margin: 0 10px;
+}
+
+.profil:hover {
+    color: #ff6600;
+}
 * {
-    font-family: 'Poppins', sans-serif;
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    font-family: Arial, sans-serif;
 }
 
-form 
-{
-    background-color: rgb(174, 184, 184);
+body {
+    background-color: #f4f4f4;
+    color: #333;
+    line-height: 1.6;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ff6600;
+    color: white;
+    padding: 10px 20px;
+}
+
+.header .logo {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.header .logo img {
+    width: 50px;
+    margin-right: 10px;
+}
+
+.header .logo h1, .header .logo h3 {
+    margin: 0;
+}
+
+.header .navigation a, .header .connect_entete a, .header .profil p {
+    color: white;
+    text-decoration: none;
+    margin-left: 20px;
+}
+
+.header .profil {
+    display: flex;
+    align-items: center;
+}
+
+.main-content {
+    flex: 1;
+    padding: 20px;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: 20px;
     border-radius: 10px;
 }
 
-input, select
-{
-    border-radius: 10px;
+.entete {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.entete h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.form-group input[type="text"],
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.form-group textarea {
+    resize: vertical;
+    height: 100px;
+}
+
+.form-group input[type="radio"] {
+    margin-right: 10px;
+}
+
+.form-buttons {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+.form-buttons button {
+    background-color: #ff6600;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 10px;
+    transition: background-color 0.3s;
+}
+
+.form-buttons button:hover {
+    background-color: #e65c00;
+}
+
+.footer {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 20px;
+    background-color: #333;
+    color: white;
+    margin-top: auto;
+    border-top: 4px solid #ff6600;
+}
+
+.footer-left, .footer-right {
+    font-size: 14px;
+}
+
+@media (max-width: 768px) {
+    .header, .footer {
+        flex-direction: column;
+        text-align: center;
+    }
+    .header .navigation, .header .connect_entete, .header .profil {
+        margin: 10px 0;
+    }
+    .main-content {
+        margin: 10px;
+        padding: 15px;
+    }
+    .form-buttons {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .form-buttons button {
+        margin: 10px 0;
+    }
 }

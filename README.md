@@ -23,5 +23,5 @@ static/css
 static/img
 
 # Les scripts sont dans:
-static/img
+static/js
 
