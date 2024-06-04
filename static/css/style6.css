@@ -6,3 +6,14 @@
     margin: 0;
     padding: 0;
 }
+
+form 
+{
+    background-color: rgb(174, 184, 184);
+    border-radius: 10px;
+}
+
+input, select
+{
+    border-radius: 10px;
+}
