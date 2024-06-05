@@ -15,7 +15,8 @@ CREATE TABLE Employe (
 
 CREATE TABLE Categorie (
     id_categorie INTEGER PRIMARY KEY AUTO_INCREMENT,
-    nom VARCHAR(50) NOT NULL
+    nom VARCHAR(50) NOT NULL,
+    description VARCHAR(255)
 );
 
 CREATE TABLE Idee (

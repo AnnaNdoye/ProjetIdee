@@ -1,117 +1,157 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
-
-.profil {
-    color: #6d2e03;
-    text-decoration: none;
-    margin: 0 10px;
-}
-
-.profil:hover {
-    color: #ff6600;
-}
-* {
-    box-sizing: border-box;
+body, html {
     margin: 0;
     padding: 0;
+    height: 100%;
     font-family: Arial, sans-serif;
-}
-
-body {
-    background-color: #f4f4f4;
-    color: #333;
-    line-height: 1.6;
 }
 
 .container {
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
+    height: 100%;
 }
 
 .header {
+    background: #FFA500;
+    color: white;
+    padding: 10px 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #ff6600;
-    color: white;
-    padding: 10px 20px;
 }
 
-.header .logo {
+.logo {
     display: flex;
     align-items: center;
     cursor: pointer;
 }
 
-.header .logo img {
-    width: 50px;
+.logo img {
+    height: 50px;
     margin-right: 10px;
 }
 
-.header .logo h1, .header .logo h3 {
-    margin: 0;
-}
-
-.header .navigation a, .header .connect_entete a, .header .profil p {
+.navigation a, .connect_entete a {
+    margin: 0 10px;
     color: white;
     text-decoration: none;
-    margin-left: 20px;
-}
-
-.header .profil {
-    display: flex;
-    align-items: center;
 }
 
 .main-content {
     flex: 1;
     padding: 20px;
-    background-color: white;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    margin: 20px;
-    border-radius: 10px;
-}
-
-.entete {
-    text-align: center;
-    margin-bottom: 20px;
+    background: #f0f0f0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .entete h2 {
-    font-size: 24px;
-    margin-bottom: 10px;
+    margin: 20px 0;
 }
 
 form {
-    display: flex;
-    flex-direction: column;
+    width: 100%;
+    max-width: 800px;
+    background: white;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
 }
 
 .form-group {
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
 .form-group label {
-    font-weight: bold;
-    margin-bottom: 5px;
     display: block;
+    margin-bottom: 5px;
 }
 
 .form-group input[type="text"],
 .form-group textarea {
     width: 100%;
     padding: 10px;
-    border: 1px solid #ddd;
+    border: 1px solid #ccc;
     border-radius: 5px;
 }
 
-.form-group textarea {
-    resize: vertical;
-    height: 100px;
+.form-group .contenteditable {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    min-height: 200px;
+    background: white;
+    resize: none;
+    overflow: auto;
 }
 
 .form-group input[type="radio"] {
     margin-right: 10px;
+}
+
+.form-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.form-buttons button {
+    padding: 10px 20px;
+    border: none;
+    background: #FFA500;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background 0.3s;
+}
+
+.form-buttons button:hover {
+    background: #ff6600;
+}
+
+.footer {
+    background: #333;
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.toolbar button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    color: #333;
+    margin-right: 10px;
+}
+
+.toolbar button.active {
+    color: #FFA500;
+}
+
+#file-name {
+    margin-top: 10px;
+}
+
+.radio-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.radio-group input[type="radio"]:checked + label {
+    color: #ff6600;
 }
 
 .form-buttons {

@@ -185,14 +185,13 @@ body {
 }
 
 .footer {
-    width: 100%;
     display: flex;
     justify-content: space-between;
-    padding: 20px;
-    background-color: #000;
-    color: #fff;
-    box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.1);
-    margin-top: 20px; /* Added margin-top for space between footer and boite */
+    padding: 10px 20px;
+    background-color: #333;
+    color: white;
+    margin-top: auto;
+    border-top: 4px solid #ff6600;
 }
 
 .footer h4 {

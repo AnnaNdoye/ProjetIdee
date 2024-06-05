@@ -64,3 +64,5 @@
 
     // Fermer la connexion
     mysqli_close($connection);
+
+    
