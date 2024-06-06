@@ -1,112 +1,168 @@
-.header .navigation a, .header .connect_entete a, .header .profil a {
-    margin: 0 10px;
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: #d6a98b;
+    color: #fff;
+}
+
+.header .navigation a {
+    color: #fff;
+    margin: 0 15px;
     text-decoration: none;
-    color: #ff6600;
-    font-weight: bold;
 }
 
-.header .form-group {
-    position: relative;
-}
-
-.header .form-group input:focus {
-    width: 200px;
-}
-
-.header .form-group input {
-    padding: 5px 10px;
-    border: 1px solid #ccc;
-    border-radius: 20px;
-    width: 0;
-    transition: width 0.4s ease-in-out;
-}
-
-.navigation a {
-    color: white;
-    margin: 0 10px;
+.header .connect_entete a,
+.header .profil p {
+    color: #fff;
     text-decoration: none;
-    font-weight: bold;
-}
-
-.form-group {
-    position: relative;
-}
-
-.form-control {
-    padding: 5px 10px;
-    border-radius: 20px;
-    border: none;
-    transition: width 0.4s ease-in-out;
-    width: 200px;
-}
-
-#search-icon {
-    position: absolute;
-    top: 50%;
-    right: 10px;
-    transform: translateY(-50%);
-    cursor: pointer;
-}
-
-.form-control:focus {
-    outline: none;
-    width: 250px;
-}
-
-.connect_entete, .profil {
+    margin: 0 15px;
     display: flex;
     align-items: center;
 }
 
-.connect_entete a, .profil a {
-    color: white;
-    margin: 0 10px;
-    text-decoration: none;
-    font-weight: bold;
+.header .profil {
     display: flex;
     align-items: center;
 }
 
-.menu-button {
-    display: none;
-    position: fixed;
-    top: 15px;
-    left: 15px;
-    z-index: 1001;
-    cursor: pointer;
+.header .profil i {
+    font-size: 24px;
+    margin-right: 5px;
 }
 
 .main-content {
-    margin-top: 60px;
     display: flex;
+    padding: 20px;
 }
 
 .menu-deroulant {
-    width: 250px;
+    width: 200px;
     background-color: #333;
-    height: 100vh;
     position: fixed;
     top: 0;
-    left: -250px;
+    left: -500px;
     transition: left 0.3s;
+    position: relative;
+}
+
+.menu-deroulant button {
+    background-color: #3a2106e0;
+    border: none;
+    width: 200px;
+    color: white;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.menu-deroulant button:hover {
+    background-color: #ff6600;
+}
+
+.menu-deroulant button:active {
+    background-color: #ff6600;
 }
 
 .menu-deroulant ul {
     list-style: none;
     padding: 0;
+    margin: 0;
+    background: #837d7a;
+    position: absolute;
+    top: 50px;
+    left: 0;
+    width: 200px;
+    display: none;
+    flex-direction: column;
 }
 
 .menu-deroulant ul li {
+    text-align: center;
     padding: 15px;
 }
 
 .menu-deroulant ul li a {
-    color: white;
+    display: block;
+    color: #fff;
     text-decoration: none;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    transition: background-color 0.3s;
 }
 
 .menu-deroulant ul li:hover {
-    background-color: #444;
+background-color: #444;
+}
+
+.menu-deroulant ul li a:hover {
+    background: #ff6600;
+}
+
+.ideas-overview {
+    flex: 1;
+    padding-left: 20px;
+}
+
+.ideas-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.idea {
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.idea h3 {
+    margin-top: 0;
+}
+
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-left: 20px;
+    flex: 1;
+    
+}
+
+.search-bar input {
+    border: none;
+    padding: 10px;
+    outline: none;
+    color: #000;
+    width: 100%;
+}
+
+.search-bar button {
+    background: #fff;
+    border: none;
+    color: #FF6600;
+    padding: 10px 15px;
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+    }
+
+    .main-content {
+        flex-direction: column;
+    }
+
+    .search-bar {
+        margin: 10px 0;
+    }
 }
 
 .footer-left, .footer-right {
