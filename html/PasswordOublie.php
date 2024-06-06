@@ -16,9 +16,14 @@
             <h3><span class="for-ideas">for ideas</span></h3>
         </div>
         <div class="connect_entete">
-            <i class="fas fa-user"></i>
-            <a href="Connexion.php"><strong>Se connecter</strong></a>
-            <a href="Inscription.php"><strong>S'inscrire</strong></a>
+            <a href="Connexion.php">
+                <i class="fas fa-user"></i>
+                <strong>Se connecter</strong>
+            </a>
+            <a href="Inscription.php">
+                <i class="fas fa-user"></i>
+                <strong>S'inscrire</strong>
+            </a>
         </div>
     </div>
     <div class="boite">

@@ -16,8 +16,10 @@
             <h3><span class="for-ideas">for ideas</span></h3>
         </div>
         <div class="connect_entete">
-            <i class="fas fa-user"></i>
-            <a href="connexion.php"><strong>Se connecter</strong></a>
+            <a href="connexion.php">
+                <strong>Se connecter</strong>
+                <i class="fas fa-user"></i>
+            </a>
         </div>
     </div>
     <div class="boite">

@@ -8,7 +8,7 @@ $password = "";
 $database = "idee";
 
 // Établir une connexion à la base de données
-$connection = new mysqli($host, $user, $password, $database);
+$connection = mysqli_connect($host, $user, $password, $database);
 
 // Vérifier si la connexion a échoué
 if ($connection->connect_error) {

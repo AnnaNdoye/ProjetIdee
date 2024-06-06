@@ -2,15 +2,21 @@ CREATE DATABASE idee;
 
 USE idee;
 
-CREATE TABLE Employe (
-    id_employe INTEGER PRIMARY KEY AUTO_INCREMENT,
+CREATE TABLE Department(
+    id_departement INT PRIMARY KEY AUTO_INCREMENT,
+    nom_departement VARCHAR(100)
+);
+
+CREATE TABLE Employe(
+    id INT PRIMARY KEY,
     nom VARCHAR(50) NOT NULL,
     prenom VARCHAR(50) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
     mot_de_passe VARCHAR(255) NOT NULL,
     sexe ENUM('Masculin', 'Féminin') NOT NULL,
     poste VARCHAR(50),
-    departement VARCHAR(50)
+    departement_id VARCHAR(50),
+    FOREIGN KEY(departement_id) REFERENCES Departement(id_departement)
 );
 
 CREATE TABLE Categorie (
@@ -28,6 +34,7 @@ CREATE TABLE Idee (
     date_modification DATETIME ON UPDATE CURRENT_TIMESTAMP,
     employe_id INTEGER,
     categorie_id INTEGER,
+    statut ENUM(''),
     FOREIGN KEY (employe_id) REFERENCES Employe(id_employe),
     FOREIGN KEY (categorie_id) REFERENCES Categorie(id_categorie)
 );

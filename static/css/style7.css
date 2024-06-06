@@ -100,7 +100,7 @@ form {
 .form-buttons button {
     padding: 10px 20px;
     border: none;
-    background: #ff6600;
+    background: #FF6600;
     color: white;
     cursor: pointer;
     border-radius: 5px;
@@ -152,60 +152,4 @@ form {
 
 .radio-group input[type="radio"]:checked + label {
     color: #ff6600;
-}
-
-.form-buttons {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 20px;
-}
-
-.form-buttons button {
-    background-color: #ff6600;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-left: 10px;
-    transition: background-color 0.3s;
-}
-
-.form-buttons button:hover {
-    background-color: #e65c00;
-}
-
-.footer {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px 20px;
-    background-color: #333;
-    color: white;
-    margin-top: auto;
-    border-top: 4px solid #ff6600;
-}
-
-.footer-left, .footer-right {
-    font-size: 14px;
-}
-
-@media (max-width: 768px) {
-    .header, .footer {
-        flex-direction: column;
-        text-align: center;
-    }
-    .header .navigation, .header .connect_entete, .header .profil {
-        margin: 10px 0;
-    }
-    .main-content {
-        margin: 10px;
-        padding: 15px;
-    }
-    .form-buttons {
-        flex-direction: column;
-        align-items: stretch;
-    }
-    .form-buttons button {
-        margin: 10px 0;
-    }
 }
