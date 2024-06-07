@@ -78,7 +78,7 @@
             </div>
 
             <div class="formulaire">
-                <input type="text" class="input" placeholder="Email" name="email" required>
+                <input type="email" class="input" placeholder="Email" name="email" required>
                 <i class="fas fa-envelope"></i>
             </div>
     

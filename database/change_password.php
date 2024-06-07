@@ -35,6 +35,7 @@ if ($update_success) {
     header("Location: ../html/Connexion.php");
 } else {
     echo "Erreur lors de la modification du mot de passe.";
+    header("Location: ../html/PasswordOublie.php");
 }
 
 // Fermer la connexion

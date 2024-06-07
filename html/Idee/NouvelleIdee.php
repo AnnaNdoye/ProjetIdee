@@ -19,22 +19,16 @@
             </div>
             <strong>
                 <nav class="navigation">
-                    <a href="../accueil.html">Accueil</a>
-                    <a href="../public_ideas.html">Rechercher des idées publiques</a>
+                    <a href="AccueilIdee.html">Accueil</a>
+                    <a href="IdeePublique.php">Idées Publiques</a>
                 </nav>
             </strong>
             <div class="connect_entete">
-                <a href="../Connexion.php">
-                    <i class="fas fa-user"></i>
-                    <strong>Se déconnecter</strong>
-                </a>
+                <a href="../Connexion.php"><i class="fas fa-user"></i>Se déconnecter</a>
             </div>
             
-            <div class="profil">
-                <i class="fas fa-user-circle"></i>
-                <strong>
-                    Profil
-                </strong>
+            <div class="connect_entete">
+                <a href="Profil.html"><i class="fas fa-user-circle"></i>Profil</a>
             </div>
         </header>
         
@@ -42,6 +36,26 @@
             <header class="entete">
                 <h2>Créer une nouvelle idée</h2>
             </header>
+
+            <?php
+                $host = "localhost";
+                $user = "root";
+                $password = "";
+                $database = "idee";
+                $connection = mysqli_connect($host, $user, $password, $database);
+
+                if ($connection->connect_error) {
+                    die("Erreur de connexion à la base de données : " . $connection->connect_error);
+                }
+
+                // Récupérer les catégories
+                $query = "SELECT id_categorie, nom_categorie FROM categorie";
+                $result = mysqli_query($connection, $query);
+                if (!$result) 
+                {
+                    die("Erreur lors de la requête : " . mysqli_error($connection));
+                }
+            ?>
             
             <form action="../../database/idee/soumettreidee.php" method="post" enctype="multipart/form-data" onsubmit="syncContent()">
                 <div class="form-group">
@@ -72,26 +86,32 @@
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="categorie">Catégorie:</label>
-                    <input type="text" id="categorie" name="categorie" required>
+                <div class="form-group" class="custom-select">
+                    <select name="categorie" required>
+                    <option value="" disabled selected>Sélectionnez une catégorie </option>
+                    <?php
+                    while ($row = mysqli_fetch_assoc($result)) 
+                    {
+                        echo '<option value="' . $row['id_categorie'] . '">' . $row['nom_categorie'] . '</option>';
+                    }
+                    ?>
+                    </select>
                 </div>
 
                 <div class="form-group">
-                    <label for="fichier">Ajouter un fichier:</label>
                     <input type="file" id="fichier" name="fichier" accept=".doc,.docx,.mpp,.avi,.gif,.gz,.zip,.jpeg,.jpg,.jpe,.png,.odp,.odt,.ods,.pdf,.xlsx,.pptx,.txt">
                 </div>
                 
                 <div class="form-buttons">
+                    <a href="AccueilIdee.html">Annuler</a>
                     <button type="submit">Créer</button>
-                    <button type="reset">Annuler</button>
                 </div>
             </form>
         </main>
         
         <footer class="footer">
-            <div class="footer-left">Contact</div>
-            <div class="footer-right">©Orange/Juin2024</div>
+            <h4 class="footer-left"><a href="mailto:support@orange.com" style="text-decoration: none; color: white;">Contact</a></h4>
+            <h4 class="footer-right">©Orange/Juin2024</h4>
         </footer>
     </div>
     <script src="../static/js/script1.js"></script>

@@ -5,7 +5,7 @@ $password = "";
 $database = "idee";
 
 // Créer une connexion
-$connexion = new mysqli($host, $user, $password, $database);
+$connexion = mysqli_connect($host, $user, $password, $database);
 
 // Vérifier la connexion
 if ($connexion->connect_error) 

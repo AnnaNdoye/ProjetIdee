@@ -1,18 +1,10 @@
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    background-color: #f0f0f0;
-}
-
 .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 20px;
-    background-color: #d6a98b;
-    color: #fff;
+    background-color: #fff;
+    color: #ff6600;
 }
 
 .header .logo {
@@ -45,7 +37,13 @@ body {
 }
 
 .header a {
-    color: #fff;
+    color: #ff6600;
+    margin: 0 15px;
+    text-decoration: none;
+}
+
+.header a:hover {
+    color: #ca895d;
     margin: 0 15px;
     text-decoration: none;
 }
@@ -68,8 +66,8 @@ body {
 
 .menu-deroulant {
     position: absolute;
-    top: 100px;
-    left: 20px;
+    top: 110px;
+    left: 0px;
     z-index: 1000;
 }
 
@@ -90,9 +88,9 @@ body {
     position: absolute;
     top: 0;
     bottom: 0;
-    width: 10px; /* Ajustez la largeur selon vos préférences */
+    width: 15px;
     background-color: #ff6600; /* Couleur de l'effet lumineux */
-    transition: width 0.3s ease-in-out; /* Animation de transition */
+    transition: width 0.05s ease-in-out; 
     opacity: 0;
 }
 
@@ -107,8 +105,9 @@ body {
 .menu-deroulant button:hover::before,
 .menu-deroulant button:hover::after {
     width: 100%; /* La largeur à laquelle l'effet lumineux doit se développer */
-    opacity: 1;
+    opacity: 0;
     color: #f0f0f0;
+    border-radius: 5px;
 }
 
 
@@ -175,12 +174,16 @@ body {
 .search-bar {
     display: flex;
     align-items: center;
-    background: #fff;
+    background: #ca895d;
     border-radius: 5px;
     overflow: hidden;
     margin-left: 20px;
     flex: 1;
+    border: #FF6600 solid;
+    outline: none;
 }
+
+
 
 .search-bar input {
     border: none;

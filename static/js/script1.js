@@ -13,3 +13,4 @@ document.querySelector('.logo').addEventListener('click', () =>
 {
     window.location.href = 'accueil.html';
 });
+
