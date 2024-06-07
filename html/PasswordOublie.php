@@ -30,7 +30,7 @@
         <form class="container" action="../database/password_oublie.php" method="POST">
             <div class="entete">
                 <span>Vous avez oublié votre mot de passe? </span>
-                <header>Veuillez renseigner ces informations</header>
+                <header>Veuillez renseigner votre email</header>
             </div>
             <?php
             session_start();
@@ -40,14 +40,6 @@
             }
             session_destroy();
             ?>
-            <div class="formulaire">
-                <input type="text" class="input" placeholder="Prénom" name="prenom" required>
-                <i class="fas fa-user"></i>
-            </div>
-            <div class="formulaire">
-                <input type="text" class="input" placeholder="Nom" name="nom" required>
-                <i class="fas fa-user"></i>
-            </div>
             <div class="formulaire">
                 <input type="email" class="input" placeholder="Email" name="email" required>
                 <i class="fas fa-envelope"></i>
