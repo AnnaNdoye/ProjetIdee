@@ -15,7 +15,7 @@ body {
     flex-direction: column;
     align-items: center;
     min-height: 100vh;
-    justify-content: space-between;
+    justify-content: flex-start; /* Changed from space-between to flex-start */
 }
 
 .header {
@@ -27,6 +27,7 @@ body {
     background-color: #fff;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-bottom: 2px solid #ccc;
+    color: #000000;
 }
 
 .logo {
@@ -86,9 +87,8 @@ body {
     margin-right: 5px;
 }
 
-.connect_entete i:hover
-{
-    color:#FF6600;
+.connect_entete i:hover {
+    color: #FF6600;
 }
 
 .boite {
@@ -168,7 +168,6 @@ body {
     text-decoration: underline; 
 }
 
-
 .submit {
     background-color: #FF6600;
     color: #fff;
@@ -187,11 +186,13 @@ body {
 .footer {
     display: flex;
     justify-content: space-between;
-    padding: 10px 20px;
-    background-color: #333;
+    padding: 15px 20px;
+    background: #333;
     color: white;
-    margin-top: auto;
+    margin-top: auto; /* Ensures the footer stays at the bottom */
     border-top: 4px solid #ff6600;
+    width: 100%;
+    box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .footer h4 {
@@ -225,7 +226,6 @@ body {
         margin-bottom: 10px;
     }
 }
-
 
 .mdp_oublie {
     color: #FF6600;

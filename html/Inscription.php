@@ -17,33 +17,29 @@
         </div>
         <div class="connect_entete">
             <a href="connexion.php">
-                <strong>Se connecter</strong>
                 <i class="fas fa-user"></i>
+                <strong>Se connecter</strong>
             </a>
         </div>
     </div>
     <div class="boite">
         <form class="container" action="../database/inscription.php" method="POST">
             <div class="entete">
-                <span>Vous n'avez
-                    pas de compte ? </span>
+                <span>Vous n'avez pas de compte ? </span>
                 <header>Inscrivez-vous</header>
             </div>
-            <?php //code php pour afficher le message d'erreur
-                session_start(); // Démarrez la session pour accéder aux variables de session
-                if (isset($_SESSION['erreur_email'])) 
-                {
+            <?php
+                session_start();
+                if (isset($_SESSION['erreur_email'])) {
                     echo '<span style="color: red;">' . $_SESSION['erreur_email'] . '</span>';
-                    unset($_SESSION['erreur_email']); // Effacez la variable de session après l'avoir affichée
+                    unset($_SESSION['erreur_email']);
                     $prenom = isset($_SESSION['prenom']) ? $_SESSION['prenom'] : '';
                     $nom = isset($_SESSION['nom']) ? $_SESSION['nom'] : '';
                     $mot_de_passe = isset($_SESSION['mot_de_passe']) ? $_SESSION['mot_de_passe'] : '';
                     $sexe = isset($_SESSION['sexe']) ? $_SESSION['sexe'] : '';
                     $poste = isset($_SESSION['poste']) ? $_SESSION['poste'] : '';
                     $departement = isset($_SESSION['departement']) ? $_SESSION['departement'] : '';
-                }
-                else 
-                {
+                } else {
                     $prenom = '';
                     $nom = '';
                     $sexe = '';
@@ -52,6 +48,23 @@
                 }
                 session_destroy();
 
+                // Connexion à la base de données
+                $host = "localhost";
+                $user = "root";
+                $password = "";
+                $database = "idee";
+                $connection = mysqli_connect($host, $user, $password, $database);
+
+                if ($connection->connect_error) {
+                    die("Erreur de connexion à la base de données : " . $connection->connect_error);
+                }
+
+                // Récupérer les départements
+                $query = "SELECT id_departement, nom_departement FROM department";
+                $result = mysqli_query($connection, $query);
+                if (!$result) {
+                    die("Erreur lors de la requête : " . mysqli_error($connection));
+                }
             ?>
 
             <div class="formulaire">
@@ -89,7 +102,14 @@
             </div>
 
             <div class="formulaire">
-                <input type="text" class="input" placeholder="Département" name="departement" value="<?php echo $departement; ?>" required>
+                <select name="departement_id" required>
+                    <option value="" disabled selected>Choisissez votre département</option>
+                    <?php
+                    while ($row = mysqli_fetch_assoc($result)) {
+                        echo '<option value="' . $row['id_departement'] . '">' . $row['nom_departement'] . '</option>';
+                    }
+                    ?>
+                </select>
                 <i class="fas fa-briefcase"></i>
             </div>
 
