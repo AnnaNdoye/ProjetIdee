@@ -1,4 +1,5 @@
 <?php
+
 session_start();
 
 $host = "localhost";
@@ -19,7 +20,6 @@ $titre = $_POST['titre'];
 $contenu = $_POST['contenu'];
 $categorie_id = $_POST['categorie_id'];
 $visibilite = $_POST['visibilite'] === 'publique' ? 1 : 0; // 1 pour publique, 0 pour privé
-$fichier = $_FILES['fichier'];
 $statut = "Soumis";
 
 // Définir le fuseau horaire
@@ -29,44 +29,48 @@ $dateCourante = date('Y-m-d H:i:s');
 // Récupérer l'ID de l'utilisateur
 $employe_id = $_SESSION['user_id'];
 
-// Gérer l'upload du fichier
-$target_dir = "../../html/idee/upload_files/";
-var_dump($_FILES['fichier']['name']);
+// Insérer l'idée dans la base de données
+$requete1 = "INSERT INTO idee (titre, contenu_idee, est_publique, date_creation, date_modification, employe_id, categorie_id, statut) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+$stmt = mysqli_prepare($connexion, $requete1);
+mysqli_stmt_bind_param($stmt, "ssissiis", $titre, $contenu, $visibilite, $dateCourante, $dateCourante, $employe_id, $categorie_id, $statut);
 
-$target_fichier = $target_dir . basename($fichier["name"]);
-$fichierNom = basename($fichier["name"]);
-$fichierType = $fichier["type"];
-$fichierTaille = $fichier["size"];
-
-if (move_uploaded_file($_FILES['fichier']['name'], $target_fichier)) 
+if (mysqli_stmt_execute($stmt)) 
 {
-    // Insérer l'idée dans la base de données
-    $requete1 = "INSERT INTO idee (titre, contenu_idee, est_publique, date_creation, date_modification, employe_id, categorie_id, statut) VALUES ('$titre', '$contenu', '$visibilite', '$dateCourante', '$dateCourante', '$employe_id', '$categorie_id', '$statut')";
-    if (mysqli_query($connexion, $requete1)) 
-    {
-        // Récupérer l'ID de l'idée insérée
-        $idee_id = mysqli_insert_id($connexion);
+    // Récupérer l'ID de l'idée insérée
+    $idee_id = mysqli_insert_id($connexion);
 
-        // Insérer les informations du fichier dans la base de données
-        $requete2 = "INSERT INTO fichier (nom_fichier, type, taille, idee_id) VALUES ('$fichierNom', '$fichierType', '$fichierTaille', '$idee_id')";
-        if (mysqli_query($connexion, $requete2)) 
+    // Insérer les informations du fichier dans la base de données
+    if (!empty($_FILES['fichier']['name'])) {
+        $fichierNom = $_FILES['fichier']['name'];
+        $fichierType = $_FILES['fichier']['type'];
+        $fichierTaille = $_FILES['fichier']['size'];
+        $fichierContenu = file_get_contents($_FILES['fichier']['tmp_name']);
+
+        $requete2 = "INSERT INTO fichier (nom_fichier, type, taille, contenu_fichier, idee_id) VALUES (?, ?, ?, ?, ?)";
+        $stmt2 = mysqli_prepare($connexion, $requete2);
+        mysqli_stmt_bind_param($stmt2, "sssbi", $fichierNom, $fichierType, $fichierTaille, $fichierContenu, $idee_id);
+        if (mysqli_stmt_execute($stmt2)) 
         {
             echo "<script>
-                    alert('Idée soumise avec succès');
-                    window.location.href = '../NouvelleIdee.php';
+                    alert('Nouvelle Idée Enregistrée');
+                    window.location.href = '../../html/idee/AccueilIdee.php';
                 </script>";
         } 
         else 
         {
             echo "Erreur lors de l'insertion du fichier: " . mysqli_error($connexion);
         }
-    } 
-    else {
-        echo "Erreur lors de l'insertion de l'idée: " . mysqli_error($connexion);
+        mysqli_stmt_close($stmt2);
+    } else {
+        echo "<script>
+                alert('Nouvelle Idée Enregistrée');
+                window.location.href = '../../html/idee/AccueilIdee.php';
+            </script>";
     }
 } 
 else {
-    echo "Erreur lors de l'upload du fichier.";
+    echo "Erreur lors de l'insertion de l'idée: " . mysqli_error($connexion);
 }
 
+mysqli_stmt_close($stmt);
 $connexion->close();

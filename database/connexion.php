@@ -8,7 +8,7 @@ $password = "";
 $database = "idee";
 
 // Établir une connexion à la base de données
-$connection = mysqli_connect($host, $user, $password, $database);
+$connection = new mysqli($host, $user, $password, $database);
 
 // Vérifier si la connexion a échoué
 if ($connection->connect_error) 
@@ -23,26 +23,35 @@ if (isset($_POST['email']) && isset($_POST['mot_de_passe']))
     $email = $connection->real_escape_string($_POST['email']);
     $mot_de_passe = $_POST['mot_de_passe'];
 
-    // Préparer la requête pour vérifier l'e-mail et récupérer l'ID et le mot de passe haché
-    $stmt = $connection->prepare("SELECT id_employe, mot_de_passe FROM employe WHERE email = ?");
+    // Préparer la requête pour vérifier l'e-mail et récupérer l'ID, le mot de passe haché et is_admin
+    $stmt = $connection->prepare("SELECT id_employe, mot_de_passe, is_admin FROM employe WHERE email = ?");
     $stmt->bind_param("s", $email);
     $stmt->execute();
-    $stmt->store_result(); //nouvelle manière plus sécurisé de pouvoir exécuter et stocker les résultats 
+    $stmt->store_result(); // Nouvelle manière plus sécurisée de pouvoir exécuter et stocker les résultats
 
     if ($stmt->num_rows > 0) 
     {
-        // L'e-mail existe, récupérer l'ID et le mot de passe haché
-        $stmt->bind_result($user_id, $hashed_password);
+        // L'e-mail existe, récupérer l'ID, le mot de passe haché et is_admin
+        $stmt->bind_result($user_id, $hashed_password, $is_admin);
         $stmt->fetch();
 
         // Vérifier le mot de passe
         if (password_verify($mot_de_passe, $hashed_password)) 
         {
-            // Mot de passe correct, stocker l'ID de l'utilisateur dans la session et rediriger vers la page d'accueil
+            // Mot de passe correct, stocker l'ID de l'utilisateur dans la session
             $_SESSION['user_id'] = $user_id;
             $_SESSION['mot_de_passe'] = $mot_de_passe;
             $_SESSION['email'] = $email;
-            header("Location: ../html/idee/AccueilIdee.php");
+
+            // Rediriger en fonction du statut admin
+            if ($is_admin == 1) 
+            {
+                header("Location: ../html/admin/AccueilAdmin.php");
+            } 
+            else 
+            {
+                header("Location: ../html/idee/AccueilIdee.php");
+            }
             exit();
         } 
         else 
@@ -59,7 +68,6 @@ if (isset($_POST['email']) && isset($_POST['mot_de_passe']))
         // E-mail incorrect
         $_SESSION['error_message'] = "E-mail incorrect.";
         header("Location: ../html/connexion.php");
-        
     }
 
     // Fermer la connexion
@@ -69,7 +77,7 @@ else
 {
     $_SESSION['error_message'] = "Veuillez remplir tous les champs.";
     header("Location: ../html/connexion.php");
-    
+    exit();
 }
 
 $connection->close();

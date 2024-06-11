@@ -55,8 +55,7 @@ if (!isset($_SESSION['user_id'])) {
         <button><strong>Menu</strong></button>
         <ul class="sous">
             <li><a href="NouvelleIdee.php">Nouvelle Idée</a></li>
-            <li><a href="MesIdees.php">Toutes vos idées</a></li>
-            <li><a href="Categorie.php">Catégories</a></li>
+            <li><a href="MesIdees.php">Mes idées</a></li>
             <li><a href="IdeePublique.php">Idées publiques</a></li>
             <li><a href="Profil.php">Profil</a></li>
         </ul>

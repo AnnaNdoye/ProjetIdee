@@ -1,8 +1,7 @@
 <?php
 session_start();
 
-if (!isset($_SESSION['user_id']) || !isset($_SESSION['mot_de_passe']) || !isset($_SESSION['email'])) 
-{
+if (!isset($_SESSION['user_id']) || !isset($_SESSION['mot_de_passe']) || !isset($_SESSION['email'])) {
     header("Location: ../connexion.php");
     exit();
 }
@@ -22,28 +21,29 @@ $user_id = $_SESSION['user_id'];
 $mot_de_passe = $_SESSION['mot_de_passe'];
 $email = $_SESSION['email'];
 
-$query = "SELECT nom, prenom, poste, photo_profil, departement_id FROM employe WHERE id_employe = $user_id";
-$result = $connexion->query($query);
+$query = "SELECT nom, prenom, poste, photo_profil, departement_id FROM employe WHERE id_employe = ?";
+$stmt = $connexion->prepare($query);
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$result = $stmt->get_result();
 
-if ($result->num_rows > 0) 
-{
+if ($result->num_rows > 0) {
     $row = $result->fetch_assoc();
     $departement_id = $row['departement_id'];
 
-    $departement_query = "SELECT nom_departement FROM department WHERE id_departement = $departement_id";
-    $departement_result = $connexion->query($departement_query);
+    $departement_query = "SELECT nom_departement FROM department WHERE id_departement = ?";
+    $dept_stmt = $connexion->prepare($departement_query);
+    $dept_stmt->bind_param("i", $departement_id);
+    $dept_stmt->execute();
+    $departement_result = $dept_stmt->get_result();
 
     if ($departement_result->num_rows > 0) {
         $departement_row = $departement_result->fetch_assoc();
         $nom_departement = $departement_row['nom_departement'];
-    } 
-    else 
-    {
+    } else {
         $nom_departement = "Non attribué";
     }
-} 
-else 
-{
+} else {
     echo "Aucun utilisateur trouvé.";
 }
 
@@ -54,37 +54,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $poste = $_POST['poste'];
     $photo_profil = $_FILES['photo_profil'];
 
-    // téléchargement de l'image
-    $photo_profil_path = $row['photo_profil'];
-    if ($photo_profil['name']) 
-    {
-        $target_dir = __DIR__ . "/uploads/"; //on définit le chemin vers l'image
-        if (!is_dir($target_dir))  //on vérifie si le dossier qui doit contenir l'image exste
-        {
-            mkdir($target_dir, 0755, true); // on le crée si ce n'est pas le cas et on accorde des privilèges sur ce dossier
-        }
-        $target_file = $target_dir . basename($photo_profil["name"]);
-
-        if (move_uploaded_file($photo_profil["tmp_name"], $target_file)) 
-        {
-            $photo_profil_path = "uploads/" . basename($photo_profil["name"]);
-        } 
-        else 
-        {
-            echo "Erreur lors du téléchargement de la photo.";
-        }
+    if ($photo_profil['name']) {
+        $photo_profil_blob = file_get_contents($photo_profil['tmp_name']);
+        $update_query = $connexion->prepare("UPDATE employe SET nom=?, prenom=?, poste=?, photo_profil=? WHERE id_employe=?");
+        $update_query->bind_param("ssssi", $nom, $prenom, $poste, $photo_profil_blob, $user_id);
+    } else {
+        $update_query = $connexion->prepare("UPDATE employe SET nom=?, prenom=?, poste=? WHERE id_employe=?");
+        $update_query->bind_param("sssi", $nom, $prenom, $poste, $user_id);
     }
 
-    $update_query = "UPDATE employe SET nom='$nom', prenom='$prenom', poste='$poste', photo_profil='$photo_profil_path' WHERE id_employe=$user_id";
-
-    if ($connexion->query($update_query) === TRUE) 
-    {
+    if ($update_query->execute() === TRUE) {
         $update_message = "Mise à jour réussie.";
         header("Location: Profil.php");
         exit();
-    } 
-    else 
-    {
+    } else {
         echo "Erreur lors de la mise à jour: " . $connexion->error;
     }
 }
@@ -99,94 +82,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link rel="icon" type="image/png" href="../../static/img/icon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
     <link rel="stylesheet" href="../../static/css/style1.css">
-    <link rel="stylesheet" href="../../static/css/Profil.css">
+    <link rel="stylesheet" href="../../static/css/profil.css">
     <title>Profil</title>
-    <style>
-        .profile-container {
-            max-width: 600px;
-            margin: 40px auto;
-            padding: 20px;
-            background-color: #f9f9f9;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .profile-item {
-            margin-bottom: 20px;
-        }
-
-        .profile-item label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-
-        .profile-item p, .profile-item input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background-color: #fff;
-        }
-
-        .profile-item button {
-            width: 48%;
-            padding: 10px;
-            background-color: #ff5722;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .profile-item button:hover {
-            background-color: #e64a19;
-        }
-
-        .header .navigation a {
-            margin-left: 20px;
-            color: #ff6600;
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-
-        .header .navigation a:hover {
-            color: #000;
-        }
-
-        .footer a {
-            color: white;
-            text-decoration: none;
-        }
-
-        .profile-photo {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .profile-photo img {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: transform 0.3s;
-        }
-
-        .profile-photo img:hover {
-            transform: scale(1.2);
-        }
-
-        .update-message {
-            color: green;
-            font-weight: bold;
-            text-align: center;
-        }
-
-        .header {
-            background-color: white;
-        }
-    </style>
 </head>
 <body>
     <div class="header">
@@ -213,7 +110,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <form method="POST" action="" enctype="multipart/form-data">
             <div class="profile-photo">
                 <?php if ($row['photo_profil']): ?>
-                    <img src="<?php echo $row['photo_profil']; ?>" alt="Photo de profil" id="profile-img">
+                    <img src="data:image/jpeg;base64,<?php echo base64_encode($row['photo_profil']); ?>" alt="Photo de profil" id="profile-img">
                 <?php else: ?>
                     <img src="uploads/unknow.png" alt="Photo par défaut" id="profile-img">
                 <?php endif; ?>
@@ -233,8 +130,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
             <div class="profile-item">
                 <label for="password">Mot de passe:</label>
-                <div style="position: relative;"> 
-                    <input type="password" id="password" name="mot_de_passe" value="<?php echo $mot_de_passe; ?>" onclick="location.href='ChangePassword2.html'" required>
+                <div style="position: relative;">
+                    <input type="password" id="password" name="mot_de_passe" value="<?php echo $mot_de_passe; ?>" onclick="location.href='ChangePassword2.php'" readonly>
                     <i class="fas fa-eye" id="togglePassword" style="position: absolute; top: 50%; right: 10px; cursor: pointer;"></i>
                 </div>
             </div>

@@ -5,6 +5,9 @@ $user = "root";
 $password = "";
 $database = "idee";
 
+//l'utilisateur simple n'est pas un admin
+$is_admin = 1;
+
 // Récupérer les valeurs des champs du formulaire
 $prenom = $_POST['prenom'];
 $nom = $_POST['nom'];
@@ -48,7 +51,7 @@ else  //la connexion a réussie
         if (filter_var($email, FILTER_VALIDATE_EMAIL))
         {
              // Préparer la requête d'insertion
-            $requete1 = "INSERT INTO employe (prenom, nom, email, mot_de_passe, sexe, poste, departement_id) VALUES ('$prenom', '$nom', '$email', '$hash_mot_de_passe', '$sexe', '$poste', '$departement_id')";
+            $requete1 = "INSERT INTO employe (is_admin, prenom, nom, email, mot_de_passe, sexe, poste, departement_id) VALUES ('$is_admin', '$prenom', '$nom', '$email', '$hash_mot_de_passe', '$sexe', '$poste', '$departement_id')";
             $resultat1 = mysqli_query($connection, $requete1);
 
             // Vérifier si la requête a échoué
