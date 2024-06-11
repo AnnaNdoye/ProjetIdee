@@ -16,6 +16,8 @@ CREATE TABLE Employe(
     sexe ENUM('Masculin', 'Féminin') NOT NULL,
     poste VARCHAR(50),
     departement_id INTEGER,
+    is_admin BOOLEAN,
+    photo_profil LONGBLOB, -- Utilisation de LONGBLOB pour stocker des images de profil
     FOREIGN KEY(departement_id) REFERENCES Departement(id_departement)
 );
 
@@ -42,8 +44,9 @@ CREATE TABLE Idee (
 CREATE TABLE Fichier (
     id_fichier INTEGER PRIMARY KEY AUTO_INCREMENT,
     nom_fichier VARCHAR(255) NOT NULL,
-    Type ENUM('excel', 'pdf', 'image'),
+    type VARCHAR(255), -- Utilisation de VARCHAR pour stocker les types MIME des fichiers
     taille DOUBLE,
+    contenu_fichier LONGBLOB, -- Utilisation de LONGBLOB pour stocker des fichiers de grande taille
     idee_id INTEGER,
     FOREIGN KEY (idee_id) REFERENCES Idee(id_idee)
 );
@@ -52,7 +55,7 @@ CREATE TABLE Commentaire (
     id_commentaire INTEGER PRIMARY KEY AUTO_INCREMENT,
     titre VARCHAR(255),
     contenu TEXT NOT NULL,
-    est_publique ENUM("Publique", "Privé"),
+    est_publique BOOLEAN,
     date_creation DATETIME DEFAULT CURRENT_TIMESTAMP,
     date_modification DATETIME ON UPDATE CURRENT_TIMESTAMP,
     employe_id INTEGER,

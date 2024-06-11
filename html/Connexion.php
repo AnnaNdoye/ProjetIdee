@@ -11,6 +11,25 @@
         .error {
             color: red;
         }
+        .admin-button {
+            background-color: #ff6600;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            text-align: center;
+            display: inline-block;
+            font-size: 16px;
+            margin: 20px 0 20px 0;
+            cursor: pointer;
+            text-decoration: none;
+            position: absolute;
+            bottom: 60px;
+            right: 20px;
+        }
+        .footer {
+            margin-top: 60px;
+        }
     </style>
 </head>
 <body>
@@ -66,6 +85,7 @@
             </div>
         </form>
     </div>
+    <a href="admin/ConnexionAdmin.php" class="admin-button">Connexion Administrateur</a>
     <div class="footer">
         <h4 class="footer-left"><a href="mailto:support@orange.com" style="text-decoration: none; color: white;">Contact</a></h4>
         <h4 class="footer-right">©Orange/Juin2024</h4>

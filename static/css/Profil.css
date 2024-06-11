@@ -1,5 +1,3 @@
-
-
 .header .logo {
     display: flex;
     align-items: center;
@@ -20,6 +18,7 @@
     margin: 0 15px;
     text-decoration: none;
     font-weight: bolder;
+    background: white;
 }
 
 .navigation a:hover{
@@ -142,36 +141,6 @@
     background-color: #e64a19;
 }
 
-.header, .footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 20px;
-    background-color: #ff5722;
-    color: #fff;
-}
-
-.header .logo, .header .navigation {
-    display: flex;
-    align-items: center;
-}
-
-.header .logo img {
-    height: 50px;
-    margin-right: 10px;
-}
-
-.header .navigation a {
-    margin-left: 20px;
-    color: #fff;
-    text-decoration: none;
-    transition: color 0.3s;
-}
-
-.header .navigation a:hover {
-    color: #e64a19;
-}
-
 .footer a {
     color: white;
     text-decoration: none;
@@ -199,5 +168,97 @@
     font-weight: bold;
     text-align: center;
 }
+
+/* profil.css */
+
+.profile-container {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.profile-item {
+    margin-bottom: 20px;
+}
+
+.profile-item label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.profile-item p, .profile-item input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #fff;
+}
+
+.profile-item button {
+    width: 48%;
+    padding: 10px;
+    background-color: #ff5722;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.profile-item button:hover {
+    background-color: #e64a19;
+}
+
+.header .navigation a {
+    margin-left: 20px;
+    color: #ff6600;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.header .navigation a:hover {
+    color: #000;
+}
+
+.footer a {
+    color: white;
+    text-decoration: none;
+}
+
+.profile-photo {
+    text-align: center;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center; /* Centrer horizontalement */
+    align-items: center; /* Centrer verticalement */
+}
+
+.profile-photo img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.3s;
+    border: 2px solid #ddd;  /* Ajout d'une bordure à l'image de profil */
+}
+
+.profile-photo img:hover {
+    transform: scale(1.2);
+}
+
+.update-message {
+    color: green;
+    font-weight: bold;
+    text-align: center;
+}
+
+.header {
+    background-color: white;
+}
+
 
 

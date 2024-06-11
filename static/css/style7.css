@@ -32,7 +32,7 @@
     font-weight : bolder;
 }
 
-.navigation a:hover{
+.navigation a:hover, .connect_entete a:hover {
     color: #000;
 }
 
@@ -66,6 +66,7 @@ form {
 .form-group label {
     display: block;
     margin-bottom: 5px;
+    font-weight: bolder;
 }
 
 .form-group input[type="text"],
@@ -202,4 +203,31 @@ a,button
 
 .radio-group input[type="radio"]:checked + label {
     color: #ff6600;
+}
+
+.navigation a:hover, .connect_entete a:hover {
+    color: #000;
+}
+
+.alert {
+    padding: 15px;
+    margin: 10px 0;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 1000;
+}
+
+.alert.success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+
+.alert.error {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
 }

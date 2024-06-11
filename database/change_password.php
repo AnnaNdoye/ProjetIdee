@@ -31,9 +31,11 @@ $stmt = $connection->prepare("UPDATE employe SET mot_de_passe = ? WHERE email = 
 $stmt->bind_param("ss", $hashed_password, $email);
 $update_success = $stmt->execute();
 
-if ($update_success) {
+if ($update_success) 
+{
     header("Location: ../html/Connexion.php");
-} else {
+} 
+else {
     echo "Erreur lors de la modification du mot de passe.";
     header("Location: ../html/PasswordOublie.php");
 }

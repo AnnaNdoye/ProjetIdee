@@ -59,6 +59,10 @@
     margin-right: 5px;
 }
 
+.navigation a:hover{
+    color: #000;
+}
+
 .main-content {
     display: flex;
     padding: 20px;
