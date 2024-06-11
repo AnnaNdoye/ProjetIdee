@@ -1,7 +1,8 @@
 <?php
 session_start();
 
-if (!isset($_SESSION['user_id']) || !isset($_SESSION['mot_de_passe'])) {
+if (!isset($_SESSION['user_id']) || !isset($_SESSION['mot_de_passe']) || !isset($_SESSION['email'])) 
+{
     header("Location: ../connexion.php");
     exit();
 }
@@ -224,7 +225,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="profile-item">
                 <label for="password">Mot de passe:</label>
                 <div style="position: relative;"> 
-                    <input type="password" id="password" name="mot_de_passe" value="<?php echo $mot_de_passe; ?>" onclick="location.href='../ChangePassword.html'" required>
+                    <input type="password" id="password" name="mot_de_passe" value="<?php echo $mot_de_passe; ?>" onclick="location.href='ChangePassword2.html'" required>
                     <i class="fas fa-eye" id="togglePassword" style="position: absolute; top: 50%; right: 10px; cursor: pointer;"></i>
                 </div>
             </div>

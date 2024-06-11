@@ -41,6 +41,7 @@ if (isset($_POST['email']) && isset($_POST['mot_de_passe']))
             // Mot de passe correct, stocker l'ID de l'utilisateur dans la session et rediriger vers la page d'accueil
             $_SESSION['user_id'] = $user_id;
             $_SESSION['mot_de_passe'] = $mot_de_passe;
+            $_SESSION['email'] = $email;
             header("Location: ../html/idee/AccueilIdee.html");
             exit();
         } 

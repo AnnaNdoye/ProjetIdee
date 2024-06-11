@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['email'])) {
-    header("Location: ../html/password_oublie.html");
+    header("Location: ../html/idee/Profil.php.html");
     exit();
 }
 
@@ -31,13 +31,11 @@ $stmt = $connection->prepare("UPDATE employe SET mot_de_passe = ? WHERE email = 
 $stmt->bind_param("ss", $hashed_password, $email);
 $update_success = $stmt->execute();
 
-if ($update_success) 
-{
-    header("Location: ../html/Connexion.php");
-} 
-else {
+if ($update_success) {
+    header("Location: ../html/idee/Profil.php");
+} else {
     echo "Erreur lors de la modification du mot de passe.";
-    header("Location: ../html/PasswordOublie.php");
+    header("Location: ../html/Profil.php");
 }
 
 // Fermer la connexion
