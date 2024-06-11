@@ -1,3 +1,12 @@
+<?php
+session_start();
+// Vérifiez si l'utilisateur est connecté, sinon redirigez vers la page de connexion
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../connexion.php");
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,7 +28,7 @@
             </div>
             <strong>
                 <nav class="navigation">
-                    <a href="AccueilIdee.html">Accueil</a>
+                    <a href="AccueilIdee.php">Accueil</a>
                     <a href="IdeePublique.php">Idées Publiques</a>
                 </nav>
             </strong>
@@ -47,6 +56,9 @@
                 if ($connection->connect_error) {
                     die("Erreur de connexion à la base de données : " . $connection->connect_error);
                 }
+
+                //réupérer l'id de l'utilisateur
+                $id_utilisateur = $_SESSION['user_id'];
 
                 // Récupérer les catégories
                 $query = "SELECT id_categorie, nom_categorie FROM categorie";
@@ -87,6 +99,7 @@
                 </div>
 
                 <div class="form-group" class="custom-select">
+                    <label for="contenu">Sélectionnez une catégorie :</label>
                     <select name="categorie_id" required>
                     <option value="" disabled selected>Sélectionnez une catégorie </option>
                     <?php
@@ -99,6 +112,7 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="contenu">Choississez un fichier :</label>
                     <input type="file" id="fichier" name="fichier" accept=".doc,.docx,.mpp,.avi,.gif,.gz,.zip,.jpeg,.jpg,.jpe,.png,.odp,.odt,.ods,.pdf,.xlsx,.pptx,.txt">
                 </div>
                 
@@ -114,6 +128,21 @@
             <h4 class="footer-right">©Orange/Juin2024</h4>
         </footer>
     </div>
+    <div id="alert-container"></div>
+<script>
+    function displayAlert(message, type) {
+        const alertContainer = document.getElementById('alert-container');
+        const alert = document.createElement('div');
+        alert.className = `alert ${type}`;
+        alert.textContent = message;
+        alertContainer.appendChild(alert);
+        setTimeout(() => {
+            alert.remove();
+        }, 3000);
+    }
+</script>
+
+
     <script src="../static/js/script1.js"></script>
     <script src="../static/js/script2.js"></script>
     <script>

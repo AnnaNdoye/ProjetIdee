@@ -42,7 +42,7 @@ if (isset($_POST['email']) && isset($_POST['mot_de_passe']))
             $_SESSION['user_id'] = $user_id;
             $_SESSION['mot_de_passe'] = $mot_de_passe;
             $_SESSION['email'] = $email;
-            header("Location: ../html/idee/AccueilIdee.html");
+            header("Location: ../html/idee/AccueilIdee.php");
             exit();
         } 
         else 

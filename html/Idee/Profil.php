@@ -20,8 +20,9 @@ if ($connexion->connect_error) {
 
 $user_id = $_SESSION['user_id'];
 $mot_de_passe = $_SESSION['mot_de_passe'];
+$email = $_SESSION['email'];
 
-$query = "SELECT nom, prenom, email, poste, photo_profil, departement_id FROM employe WHERE id_employe = $user_id";
+$query = "SELECT nom, prenom, poste, photo_profil, departement_id FROM employe WHERE id_employe = $user_id";
 $result = $connexion->query($query);
 
 if ($result->num_rows > 0) 
@@ -53,19 +54,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $poste = $_POST['poste'];
     $photo_profil = $_FILES['photo_profil'];
 
-    // Handle photo upload
+    // téléchargement de l'image
     $photo_profil_path = $row['photo_profil'];
     if ($photo_profil['name']) 
     {
-        $target_dir = __DIR__ . "/uploads/";
-        if (!is_dir($target_dir)) {
-            mkdir($target_dir, 0755, true);
+        $target_dir = __DIR__ . "/uploads/"; //on définit le chemin vers l'image
+        if (!is_dir($target_dir))  //on vérifie si le dossier qui doit contenir l'image exste
+        {
+            mkdir($target_dir, 0755, true); // on le crée si ce n'est pas le cas et on accorde des privilèges sur ce dossier
         }
         $target_file = $target_dir . basename($photo_profil["name"]);
 
-        if (move_uploaded_file($photo_profil["tmp_name"], $target_file)) {
+        if (move_uploaded_file($photo_profil["tmp_name"], $target_file)) 
+        {
             $photo_profil_path = "uploads/" . basename($photo_profil["name"]);
-        } else {
+        } 
+        else 
+        {
             echo "Erreur lors du téléchargement de la photo.";
         }
     }
@@ -86,7 +91,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -169,13 +174,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         .profile-photo img:hover {
-            transform: scale(1.1);
+            transform: scale(1.2);
         }
 
         .update-message {
             color: green;
             font-weight: bold;
             text-align: center;
+        }
+
+        .header {
+            background-color: white;
         }
     </style>
 </head>
@@ -189,7 +198,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
         </div>
         <div class="navigation">
-            <a href="AccueilIdee.html">Accueil</a>
+            <a href="AccueilIdee.php">Accueil</a>
         </div>
         <div class="navigation">
             <a href="../Connexion.php"><i class="fas fa-user"></i> Se déconnecter</a>
@@ -220,7 +229,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
             <div class="profile-item">
                 <label for="email">E-mail:</label>
-                <p id="email"><?php echo $row['email']; ?></p>
+                <p id="email"><?php echo $email; ?></p>
             </div>
             <div class="profile-item">
                 <label for="password">Mot de passe:</label>
@@ -239,7 +248,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
             <div class="profile-item" style="display: flex; justify-content: space-between;">
                 <button type="submit">Mettre à jour</button>
-                <button><a href="AccueilIdee.html" style="color: white; text-decoration: none;">Quitter</a></button>
+                <button><a href="AccueilIdee.php" style="color: white; text-decoration: none;">Quitter</a></button>
             </div>
         </form>
     </div>

@@ -1,6 +1,15 @@
+<?php
+session_start();
+
+// Vérifiez si l'utilisateur est connecté, sinon redirigez vers la page de connexion
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../connexion.php");
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,7 +19,6 @@
     <link rel="stylesheet" href="../../static/css/style5.css">
     <title>Accueil</title>
 </head>
-
 <body>
     <div class="header">
         <div class="logo" onclick="location.href='../accueil.html'">
@@ -30,7 +38,7 @@
             </strong>
         </div>
         <div class="connect_entete">
-            <a href="../Connexion.php">
+            <a href="../connexion.php">
                 <i class="fas fa-user"></i>
                 <span>Se déconnecter</span>
             </a>
@@ -47,8 +55,8 @@
         <button><strong>Menu</strong></button>
         <ul class="sous">
             <li><a href="NouvelleIdee.php">Nouvelle Idée</a></li>
-            <li><a href="MesIdees.html">Toutes vos idées</a></li>
-            <li><a href="Categorie.html">Catégories</a></li>
+            <li><a href="MesIdees.php">Toutes vos idées</a></li>
+            <li><a href="Categorie.php">Catégories</a></li>
             <li><a href="IdeePublique.php">Idées publiques</a></li>
             <li><a href="Profil.php">Profil</a></li>
         </ul>
@@ -102,5 +110,4 @@
         });
     </script>
 </body>
-
 </html>
