@@ -39,7 +39,9 @@
                     $sexe = isset($_SESSION['sexe']) ? $_SESSION['sexe'] : '';
                     $poste = isset($_SESSION['poste']) ? $_SESSION['poste'] : '';
                     $departement = isset($_SESSION['departement']) ? $_SESSION['departement'] : '';
-                } else {
+                } 
+                else 
+                {
                     $prenom = '';
                     $nom = '';
                     $sexe = '';
