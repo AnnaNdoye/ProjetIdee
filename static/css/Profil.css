@@ -1,0 +1,203 @@
+
+
+.header .logo {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.header .logo img {
+    height: 50px;
+    margin-right: 10px;
+}
+
+.header .logo h1 {
+    margin: 0;
+}
+
+.header .navigation a {
+    color: #FF6600;
+    margin: 0 15px;
+    text-decoration: none;
+    font-weight: bolder;
+}
+
+.navigation a:hover{
+    color: #000;
+}
+
+.profile-container {
+    width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+    background: rgb(227, 224, 224);
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.profile-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-weight: bolder;
+}
+
+.profile-container h2:hover{
+    color: #FF6600;
+}
+
+.profile-item {
+    margin: 10px 0;
+}
+
+.profile-item label {
+    font-weight: bold;
+}
+
+.profile-item label:hover {
+    color: #FF6600;
+}
+
+.profile-item p {
+    background: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.profile-item p:hover {
+    background: #ffa500;
+}
+
+.profile-item button {
+    position: left;
+}
+
+.edit-form {
+    display: none;
+    flex-direction: column;
+}
+
+.edit-form input {
+    margin: 5px 0;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+.edit-form button {
+    background: #FF6600;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+    }
+}
+
+.profile-container {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.profile-item {
+    margin-bottom: 20px;
+}
+
+.profile-item label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.profile-item p, .profile-item input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #fff;
+}
+
+.profile-item button {
+    width: 48%;
+    padding: 10px;
+    background-color: #ff5722;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.profile-item button:hover {
+    background-color: #e64a19;
+}
+
+.header, .footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #ff5722;
+    color: #fff;
+}
+
+.header .logo, .header .navigation {
+    display: flex;
+    align-items: center;
+}
+
+.header .logo img {
+    height: 50px;
+    margin-right: 10px;
+}
+
+.header .navigation a {
+    margin-left: 20px;
+    color: #fff;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.header .navigation a:hover {
+    color: #e64a19;
+}
+
+.footer a {
+    color: white;
+    text-decoration: none;
+}
+
+.profile-photo {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.profile-photo img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+
+.profile-photo img:hover {
+    transform: scale(1.1);
+}
+
+.update-message {
+    color: green;
+    font-weight: bold;
+    text-align: center;
+}
+
+

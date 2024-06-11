@@ -32,6 +32,10 @@
     font-weight : bolder;
 }
 
+.navigation a:hover{
+    color: #000;
+}
+
 .main-content {
     flex: 1;
     padding: 20px;

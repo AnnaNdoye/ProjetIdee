@@ -35,14 +35,20 @@
             </div>
             <?php
             session_start();
-            if (isset($_SESSION['error_message'])) {
+            if (isset($_SESSION['error_message'])) 
+            {
                 echo '<p class="error">' . $_SESSION['error_message'] . '</p>';
+                $email = isset($_SESSION['email']) ? $_SESSION['email'] : '';
                 unset($_SESSION['error_message']);
+            }
+            else
+            {
+                $email = '';
             }
             session_destroy();
             ?>
             <div class="formulaire">
-                <input type="email" name="email" class="input" placeholder="Email" required>
+                <input type="email" name="email" class="input" placeholder="Email" value="<?php echo $email; ?>" required>
                 <i class="fas fa-envelope"></i>
             </div>
 

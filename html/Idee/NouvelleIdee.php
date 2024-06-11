@@ -24,11 +24,11 @@
                 </nav>
             </strong>
             <div class="connect_entete">
-                <a href="../Connexion.php"><i class="fas fa-user"></i>Se déconnecter</a>
+                <a href="../Connexion.php"><i class="fas fa-user"></i> Se déconnecter</a>
             </div>
             
             <div class="connect_entete">
-                <a href="Profil.html"><i class="fas fa-user-circle"></i>Profil</a>
+                <a href="Profil.php"><i class="fas fa-user-circle"></i> Profil</a>
             </div>
         </header>
         
@@ -87,7 +87,7 @@
                 </div>
 
                 <div class="form-group" class="custom-select">
-                    <select name="categorie" required>
+                    <select name="categorie_id" required>
                     <option value="" disabled selected>Sélectionnez une catégorie </option>
                     <?php
                     while ($row = mysqli_fetch_assoc($result)) 
