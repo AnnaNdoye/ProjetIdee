@@ -117,7 +117,7 @@ if (!isset($_SESSION['user_id'])) {
                 </div>
                 
                 <div class="form-buttons">
-                    <a href="AccueilIdee.php">Annuler</a>
+                    <a href="AccueilIdee.html">Annuler</a>
                     <button type="submit">Créer</button>
                 </div>
             </form>

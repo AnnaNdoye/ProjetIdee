@@ -6,7 +6,7 @@ $password = "";
 $database = "idee";
 
 //l'utilisateur simple n'est pas un admin
-$is_admin = 1;
+$is_admin = 0;
 
 // Récupérer les valeurs des champs du formulaire
 $prenom = $_POST['prenom'];

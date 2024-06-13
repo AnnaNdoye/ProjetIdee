@@ -43,13 +43,13 @@ if (mysqli_stmt_execute($stmt))
     if (!empty($_FILES['fichier']['name'])) {
         $fichierNom = $_FILES['fichier']['name'];
         $fichierType = $_FILES['fichier']['type'];
-        $fichierTaille = $_FILES['fichier']['size'];
+        $fichierTaille = $_FILES['fichier']['size']; //on va l'avoir en octet dans la base de données
         $fichierContenu = file_get_contents($_FILES['fichier']['tmp_name']);
 
         $requete2 = "INSERT INTO fichier (nom_fichier, type, taille, contenu_fichier, idee_id) VALUES (?, ?, ?, ?, ?)";
-        $stmt2 = mysqli_prepare($connexion, $requete2);
-        mysqli_stmt_bind_param($stmt2, "sssbi", $fichierNom, $fichierType, $fichierTaille, $fichierContenu, $idee_id);
-        if (mysqli_stmt_execute($stmt2)) 
+        $requete2 = mysqli_prepare($connexion, $requete2);
+        mysqli_stmt_bind_param($requete2, "sssbi", $fichierNom, $fichierType, $fichierTaille, $fichierContenu, $idee_id);
+        if (mysqli_stmt_execute($requete2)) 
         {
             echo "<script>
                     alert('Nouvelle Idée Enregistrée');
@@ -60,7 +60,7 @@ if (mysqli_stmt_execute($stmt))
         {
             echo "Erreur lors de l'insertion du fichier: " . mysqli_error($connexion);
         }
-        mysqli_stmt_close($stmt2);
+        mysqli_stmt_close($requete2);
     } else {
         echo "<script>
                 alert('Nouvelle Idée Enregistrée');

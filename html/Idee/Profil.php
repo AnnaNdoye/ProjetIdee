@@ -13,7 +13,8 @@ $database = "idee";
 
 $connexion = new mysqli($host, $user, $password, $database);
 
-if ($connexion->connect_error) {
+if ($connexion->connect_error) 
+{
     die("Erreur lors de la connexion: " . $connexion->connect_error);
 }
 
@@ -37,10 +38,12 @@ if ($result->num_rows > 0) {
     $dept_stmt->execute();
     $departement_result = $dept_stmt->get_result();
 
-    if ($departement_result->num_rows > 0) {
+    if ($departement_result->num_rows > 0) 
+    {
         $departement_row = $departement_result->fetch_assoc();
         $nom_departement = $departement_row['nom_departement'];
-    } else {
+    } 
+    else {
         $nom_departement = "Non attribué";
     }
 } else {
@@ -48,13 +51,15 @@ if ($result->num_rows > 0) {
 }
 
 $update_message = "";
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if ($_SERVER["REQUEST_METHOD"] == "POST") 
+{
     $nom = $_POST['nom'];
     $prenom = $_POST['prenom'];
     $poste = $_POST['poste'];
     $photo_profil = $_FILES['photo_profil'];
 
-    if ($photo_profil['name']) {
+    if ($photo_profil['name']) 
+    {
         $photo_profil_blob = file_get_contents($photo_profil['tmp_name']);
         $update_query = $connexion->prepare("UPDATE employe SET nom=?, prenom=?, poste=?, photo_profil=? WHERE id_employe=?");
         $update_query->bind_param("ssssi", $nom, $prenom, $poste, $photo_profil_blob, $user_id);
@@ -63,11 +68,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $update_query->bind_param("sssi", $nom, $prenom, $poste, $user_id);
     }
 
-    if ($update_query->execute() === TRUE) {
+    if ($update_query->execute() === TRUE) 
+    {
         $update_message = "Mise à jour réussie.";
         header("Location: Profil.php");
         exit();
-    } else {
+    } 
+    else 
+    {
         echo "Erreur lors de la mise à jour: " . $connexion->error;
     }
 }

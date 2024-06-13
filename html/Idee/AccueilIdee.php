@@ -60,20 +60,6 @@ if (!isset($_SESSION['user_id'])) {
             <li><a href="Profil.php">Profil</a></li>
         </ul>
     </div>
-
-    <div class="main-content">
-        <div class="ideas-overview">
-            <h2>Idées Populaires</h2>
-            <div class="ideas-list">
-                <div class="idea">
-                    <h3>Titre de l'idée</h3>
-                    <p>Catégorie: Innovation</p>
-                    <p>Résumé: Description de l'idée...</p>
-                    <a href="IdeePublique.php">Voir plus</a>
-                </div>
-            </div>
-        </div>
-    </div>
     <div class="espace"></div>
     <div class="footer">
         <h4 class="footer-left"><a href="mailto:support@orange.com" style="text-decoration: none; color: white;">Contact</a></h4>

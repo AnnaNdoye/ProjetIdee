@@ -158,6 +158,10 @@ a,button
     color: #FF6600;
 }
 
+.form-buttons a:hover {
+    color: #000;
+}
+
 .form-buttons button:hover, .form-buttons a:hover {
     background: #FFA500;
 }

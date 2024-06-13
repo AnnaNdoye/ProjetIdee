@@ -31,6 +31,7 @@ if ($result->num_rows > 0) {
     }
 }
 
+// Gérer l'ajout de catégorie
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_category'])) {
     $nomCategorie = $_POST['new_nom_categorie'];
     $descriptionCategorie = $_POST['new_description_categorie'];
@@ -48,6 +49,46 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_category'])) {
 
     $stmt->close();
 }
+
+// Gérer la mise à jour de catégorie
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_category'])) {
+    $idCategorie = $_POST['id_categorie'];
+    $nomCategorie = $_POST['nom_categorie'];
+    $descriptionCategorie = $_POST['description_categorie'];
+
+    $updateQuery = "UPDATE Categorie SET nom_categorie = ?, description_categorie = ? WHERE id_categorie = ?";
+    $stmt = $connection->prepare($updateQuery);
+    $stmt->bind_param("ssi", $nomCategorie, $descriptionCategorie, $idCategorie);
+
+    if ($stmt->execute()) {
+        header("Location: " . $_SERVER['PHP_SELF']);
+        exit();
+    } else {
+        echo "Erreur lors de la mise à jour de la catégorie : " . $stmt->error;
+    }
+
+    $stmt->close();
+}
+
+// Gérer la suppression de catégorie
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_category'])) {
+    $idCategorie = $_POST['id_categorie'];
+
+    $deleteQuery = "DELETE FROM Categorie WHERE id_categorie = ?";
+    $stmt = $connection->prepare($deleteQuery);
+    $stmt->bind_param("i", $idCategorie);
+
+    if ($stmt->execute()) {
+        header("Location: " . $_SERVER['PHP_SELF']);
+        exit();
+    } else {
+        echo "Erreur lors de la suppression de la catégorie : " . $stmt->error;
+    }
+
+    $stmt->close();
+}
+
+$connection->close();
 ?>
 
 <!DOCTYPE html>
@@ -65,12 +106,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_category'])) {
             border-collapse: collapse;
             width: 100%;
             margin-bottom: 20px;
-            table-layout: fixed; /* Ajouté pour fixer la taille des colonnes */
+            table-layout: fixed;
         }
 
         th, td {
             border: 1px solid #ddd;
-            padding: 16px; /* Agrandi la taille des cellules */
+            padding: 16px;
             text-align: left;
         }
 
@@ -79,12 +120,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_category'])) {
         }
 
         th.description-col, td.description-col {
-            width: 50%; /* Ajuste la largeur de la colonne description */
+            width: 50%;
         }
 
         input[type="text"], textarea {
             width: 100%;
-            padding: 10px; /* Agrandi les champs de saisie */
+            padding: 10px;
             border: 1px solid #ccc;
             border-radius: 4px;
             box-sizing: border-box;
@@ -104,7 +145,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_category'])) {
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            margin-right: 10px; /* Ajoute un espacement entre les boutons */
+            margin-right: 10px;
         }
 
         .button-group button.update {
@@ -112,7 +153,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_category'])) {
             color: white;
         }
 
-        .button-group button.cancel {
+        .button-group button.delete {
             background-color: #f44336;
             color: white;
         }
@@ -122,7 +163,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_category'])) {
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            margin: 20px 10px; /* Espacement entre les boutons */
+            margin: 20px 10px;
         }
 
         .add-category-btn {
@@ -178,7 +219,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_category'])) {
                 <td>
                     <div class="button-group">
                         <button class="update" data-id="<?php echo $categorie['id_categorie']; ?>">Mettre à jour</button>
-                        <button class="cancel">Annuler</button>
+                        <button class="delete" data-id="<?php echo $categorie['id_categorie']; ?>">Supprimer</button>
                     </div>
                 </td>
             </tr>
@@ -210,14 +251,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_category'])) {
                     <td>
                         <div class="button-group">
                             <button class="update">Ajouter</button>
-                            <button class="cancel">Annuler</button>
+                            <button class="delete">Annuler</button>
                         </div>
                     </td>
                 `;
                 table.appendChild(newRow);
 
                 const updateButton = newRow.querySelector('.update');
-                const cancelButton = newRow.querySelector('.cancel');
+                const deleteButton = newRow.querySelector('.delete');
 
                 updateButton.addEventListener('click', function () {
                     const nom = newRow.querySelector('input[name="new_nom_categorie"]').value;
@@ -249,8 +290,74 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_category'])) {
                     form.submit();
                 });
 
-                cancelButton.addEventListener('click', function () {
+                deleteButton.addEventListener('click', function () {
                     newRow.remove();
+                });
+            });
+
+            // Gérer la mise à jour et la suppression
+            document.querySelectorAll('.update').forEach(button => {
+                button.addEventListener('click', function () {
+                    const row = button.closest('tr');
+                    const id = button.dataset.id;
+                    const nom = row.querySelector('input[name="nom_categorie"]').value;
+                    const description = row.querySelector('textarea[name="description_categorie"]').value;
+
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.style.display = 'none';
+
+                    const idInput = document.createElement('input');
+                    idInput.type = 'hidden';
+                    idInput.name = 'id_categorie';
+                    idInput.value = id;
+                    form.appendChild(idInput);
+
+                    const nomInput = document.createElement('input');
+                    nomInput.type = 'hidden';
+                    nomInput.name = 'nom_categorie';
+                    nomInput.value = nom;
+                    form.appendChild(nomInput);
+
+                    const descriptionInput = document.createElement('input');
+                    descriptionInput.type = 'hidden';
+                    descriptionInput.name = 'description_categorie';
+                    descriptionInput.value = description;
+                    form.appendChild(descriptionInput);
+
+                    const updateCategoryInput = document.createElement('input');
+                    updateCategoryInput.type = 'hidden';
+                    updateCategoryInput.name = 'update_category';
+                    updateCategoryInput.value = '1';
+                    form.appendChild(updateCategoryInput);
+
+                    document.body.appendChild(form);
+                    form.submit();
+                });
+            });
+
+            document.querySelectorAll('.delete').forEach(button => {
+                button.addEventListener('click', function () {
+                    const id = button.dataset.id;
+
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.style.display = 'none';
+
+                    const idInput = document.createElement('input');
+                    idInput.type = 'hidden';
+                    idInput.name = 'id_categorie';
+                    idInput.value = id;
+                    form.appendChild(idInput);
+
+                    const deleteCategoryInput = document.createElement('input');
+                    deleteCategoryInput.type = 'hidden';
+                    deleteCategoryInput.name = 'delete_category';
+                    deleteCategoryInput.value = '1';
+                    form.appendChild(deleteCategoryInput);
+
+                    document.body.appendChild(form);
+                    form.submit();
                 });
             });
         });

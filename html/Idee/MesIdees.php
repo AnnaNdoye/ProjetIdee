@@ -1,34 +1,40 @@
 <?php
 session_start();
 
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../connexion.php");
+    exit();
+}
+
 $host = "localhost";
 $user = "root";
 $password = "";
 $database = "idee";
 
-// Créer une connexion
-$connexion = mysqli_connect($host, $user, $password, $database);
+$connexion = new mysqli($host, $user, $password, $database);
 
-// Vérifier la connexion
 if ($connexion->connect_error) {
     die("Erreur lors de la connexion: " . $connexion->connect_error);
 }
 
-// Récupérer l'ID de l'utilisateur connecté
 $employe_id = $_SESSION['user_id'];
+$search = isset($_GET['search']) ? $_GET['search'] : '';
 
-// Récupérer les idées de l'utilisateur depuis la base de données
 $query = "
     SELECT idee.id_idee, idee.titre, idee.contenu_idee, idee.est_publique, idee.date_creation, idee.date_modification, idee.statut,
-           categorie.nom_categorie, fichier.nom_fichier, fichier.type, fichier.contenu_fichier
+    categorie.nom_categorie, fichier.nom_fichier, fichier.type, fichier.contenu_fichier
     FROM idee
     LEFT JOIN categorie ON idee.categorie_id = categorie.id_categorie
     LEFT JOIN fichier ON idee.id_idee = fichier.idee_id
-    WHERE idee.employe_id = $employe_id";
-$result = mysqli_query($connexion, $query);
+    WHERE idee.employe_id = ? AND idee.titre LIKE ?";
+$stmt = $connexion->prepare($query);
+$like_search = '%' . $search . '%';
+$stmt->bind_param('is', $employe_id, $like_search);
+$stmt->execute();
+$result = $stmt->get_result();
 
 if (!$result) {
-    die("Erreur lors de la requête: " . mysqli_error($connexion));
+    die("Erreur lors de la requête: " . $connexion->error);
 }
 ?>
 
@@ -38,53 +44,37 @@ if (!$result) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mes Idées</title>
+    <link rel="icon" href="../../static/img/icon.png">
     <link rel="stylesheet" href="../../static/css/style1.css">
+    <link rel="stylesheet" href="../../static/css/style5.css">
+    <link rel="stylesheet" href="../../static/css/IdeePP.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f5f5f5;
-        }
-
-        .header {
-            background-color: #333;
-            color: white;
-            padding: 10px;
+        form{
             display: flex;
-            justify-content: space-between;
             align-items: center;
-        }
-
-        .header h1, .header h3 {
-            margin: 0;
-        }
-
-        .logo img {
-            height: 40px;
-            margin-right: 10px;
-        }
-
-        .search-bar {
-            flex-grow: 1;
-            margin: 0 10px;
-        }
-
-        .search-bar input {
-            width: 100%;
-            padding: 5px;
-            border: 1px solid #ccc;
             border-radius: 5px;
+            overflow: hidden;
+            margin-left: 20px;
+            flex: 1;
+            border: #FF6600 solid;
+            outline: none;
         }
 
-        .search-bar button {
-            background-color: #4CAF50;
-            color: white;
+        form input{
             border: none;
-            padding: 5px 10px;
-            border-radius: 5px;
-            cursor: pointer;
+        padding: 10px;
+        outline: none;
+        color: #000;
+        width: 100%;
+        }
+
+        form button {
+        background: #fff;
+        border: none;
+        color: #FF6600;
+        padding: 10px 15px;
+        cursor: pointer;
         }
 
         .navigation a {
@@ -96,26 +86,18 @@ if (!$result) {
         }
 
         .navigation a:hover {
-            background-color: #0056b3;
+            background-color: #ccc;
         }
 
         .connect_entete a, .profil a {
-            color: white;
+            color: #ff6600;
             text-decoration: none;
             display: flex;
             align-items: center;
         }
 
         .connect_entete a:hover, .profil a:hover {
-            color: #ccc;
-        }
-
-        .footer {
-            background-color: #333;
-            color: white;
-            padding: 10px;
-            text-align: center;
-            margin-top: 20px;
+            color: #000;
         }
 
         .idea {
@@ -126,6 +108,7 @@ if (!$result) {
             margin: 10px 0;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease;
+            width: 900px;
         }
 
         .idea:hover {
@@ -186,26 +169,15 @@ if (!$result) {
             margin-right: 5px;
         }
 
-        .ideas {
+        .enveloppe {
+            background-color: #fff;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 10px 0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
             width: 100%;
-        }
-
-        .footer-left, .footer-right {
-            margin: 0;
-            padding: 5px;
-        }
-
-        .footer-left a {
-            color: white;
-            text-decoration: none;
-        }
-
-        .footer-left a:hover {
-            color: #ccc;
-        }
-
-        .footer-right {
-            margin-left: auto;
         }
 
         @media screen and (max-width: 768px) {
@@ -216,6 +188,7 @@ if (!$result) {
 
             .search-bar {
                 margin: 10px 0;
+                width: 100%;
             }
 
             .navigation a {
@@ -226,20 +199,43 @@ if (!$result) {
                 grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             }
         }
+
+        @media (max-width: 480px) {
+    .header h1 {
+        font-size: 20px;
+    }
+
+    .form input {
+        width: 150px;
+    }
+
+    .form input:focus {
+        width: 200px;
+    }
+}
     </style>
+    <script>
+        function confirmDeletion(id) {
+            if (confirm('Êtes-vous sûr de vouloir supprimer cette idée ?')) {
+                window.location.href = '../../database/idee/supprimer_idee.php?id=' + id;
+            }
+        }
+    </script>
 </head>
 <body>
 <div class="header">
-    <div class="logo" onclick="location.href='../accueil.html'">
+    <div class="logo" onclick="location.href='../Accueil.html'">
         <img src="../../static/img/icon.png" alt="Logo">
         <div>
             <h1>Orange</h1>
-            <h3><span class="for-ideas">for ideas</span></h3>
+            <h3><span class="for-ideas"> for ideas</span></h3>
         </div>
     </div>
     <div class="search-bar">
-        <input type="text" placeholder="Rechercher des idées publiques...">
-        <button><i class="fas fa-search"></i></button>
+        <form method="GET" action="MesIdees.php">
+            <input type="text" name="search" placeholder="Rechercher des idées" value="<?php echo htmlspecialchars($search); ?>">
+            <button type="submit"><i class="fas fa-search"></i></button>
+        </form>
     </div>
     <div class="navigation">
         <strong>
@@ -260,25 +256,41 @@ if (!$result) {
     </div>
 </div>
 
+<div class="filtre">
+    <i class="fa-solid fa-filter"></i>
+    <select name = filtre>
+        <option>Filtrer par :</option>
+        <option value="Titre">Titre</option>
+        <option value="Date">Date Création</option>
+        <option value="Statut">Statut</option>
+    </select>
+</div>
+
 <div class="container">
     <h1>Mes Idées</h1>
     <div class="ideas">
-        <?php while ($row = mysqli_fetch_assoc($result)) : ?>
-            <div class="idea">
-                <h2><?php echo $row['titre']; ?></h2>
-                <p><?php echo $row['contenu_idee']; ?></p>
-                <p><strong>Catégorie:</strong> <?php echo $row['nom_categorie']; ?></p>
-                <?php if ($row['nom_fichier']) : ?>
-                    <p><strong>Fichier:</strong> <a href="data:<?php echo $row['type']; ?>;base64,<?php echo base64_encode($row['contenu_fichier']); ?>" target="_blank"><?php echo $row['nom_fichier']; ?></a></p>
-                <?php endif; ?>
-                <p><strong>Date de création:</strong> <?php echo $row['date_creation']; ?></p>
-                <p><strong>Date de modification:</strong> <?php echo $row['date_modification']; ?></p>
-                <p class="status-<?php echo strtolower($row['statut']); ?>">
-                    <span class="status-circle"></span>
-                    <strong>Statut:</strong> <?php echo $row['statut']; ?>
-                </p>
-                <a href="editeridee.php?id=<?php echo $row['id_idee']; ?>"><i class="fas fa-edit"></i> Éditer</a>
-                <a href="supprimeridee.php?id=<?php echo $row['id_idee']; ?>" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette idée?');"><i class="fas fa-trash"></i> Supprimer</a>
+        <?php while ($row = $result->fetch_assoc()) : ?>
+            <div class="enveloppe">
+                
+                <div class="idea">
+                    <h2>Titre: <?php echo htmlspecialchars($row['titre']); ?></h2>
+                </div>
+                <div class="idea">
+                    <p><strong>Contenu :</strong> <?php echo htmlspecialchars($row['contenu_idee']); ?></p>
+                </div>
+                <div class="idea">
+                    <p><strong>Catégorie:</strong> <?php echo htmlspecialchars($row['nom_categorie']); ?></p>
+                    <?php if ($row['nom_fichier']) : ?>
+                        <p><strong>Fichier :</strong> <a href="data:<?php echo htmlspecialchars($row['type']); ?>;base64,<?php echo base64_encode($row['contenu_fichier']); ?>" target="_blank"><?php echo htmlspecialchars($row['nom_fichier']); ?></a></p>
+                    <?php endif; ?>
+                    <p><strong>Date de création: </strong> <?php echo htmlspecialchars($row['date_creation']); ?></p>
+                    <p><strong>Date de modification: </strong> <?php echo htmlspecialchars($row['date_modification']); ?></p>
+                    <p class="status-<?php echo strtolower(htmlspecialchars($row['statut'])); ?>">
+                        <strong>Statut:</strong> <strong class="statut-color"> <?php echo htmlspecialchars($row['statut']); ?> <span class="status-circle"></span></strong>
+                    </p>
+                    <a href="ModifierIdee.php?id=<?php echo htmlspecialchars($row['id_idee']); ?>"><i class="fas fa-edit"></i> Éditer</a>
+                    <a href="javascript:void(0);" onclick="confirmDeletion(<?php echo htmlspecialchars($row['id_idee']); ?>)"><i class="fas fa-trash"></i> Supprimer</a>
+                </div>
             </div>
         <?php endwhile; ?>
     </div>
@@ -293,5 +305,6 @@ if (!$result) {
 </html>
 
 <?php
-mysqli_close($connexion);
+$stmt->close();
+$connexion->close();
 ?>

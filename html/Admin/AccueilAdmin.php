@@ -35,7 +35,7 @@ if (!isset($_SESSION['user_id'])) {
             </a>
         </div>
         <div class="profil">
-            <a href="Profil.php">
+            <a href="../idee/Profil.php">
                 <i class="fas fa-user-circle"></i>
                 <strong>Profil</strong>
             </a>
