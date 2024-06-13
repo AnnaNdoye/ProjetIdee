@@ -95,7 +95,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 </head>
 <body>
     <div class="header">
-        <div class="logo" onclick="location.href='../accueil.html'">
+        <div class="logo" onclick="location.href='../Accueil.html'">
             <img src="../../static/img/icon.png" alt="Logo">
             <div>
                 <h1>Orange</h1>
