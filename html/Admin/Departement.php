@@ -189,6 +189,11 @@ $connection->close();
         </div>
     </div>
 
+    <div class="button-container">
+        <a class="return-home-btn" href="AccueilAdmin.php"><i class="fas fa-arrow-left"></i>Retour à l'accueil</a>
+        <button class="add-department-btn" id="add-department-btn">Ajouter Département</button>
+    </div>
+
     <div>
         <h2>Liste des Départements</h2>
     </div>

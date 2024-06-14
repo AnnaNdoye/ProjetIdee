@@ -199,6 +199,11 @@ $connection->close();
         </div>
     </div>
 
+    <div class="button-container">
+        <a class="return-home-btn" href="AccueilAdmin.php"><i class="fas fa-arrow-left"></i>Retour à l'accueil</a>
+        <button class="add-category-btn" id="add-category-btn">Ajouter Catégorie</button>
+    </div>
+
     <div>
         <h2>Liste des Catégories</h2>
     </div>

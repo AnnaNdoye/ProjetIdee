@@ -48,7 +48,7 @@ if (!isset($_SESSION['user_id'])) {
             <li><a href="StatutIdee.php">Statut Idée</a></li>
             <li><a href="Categorie.php">Catégories</a></li>
             <li><a href="Departement.php">Départements</a></li>
-            <li><a href="IdeePublique.php">Idées publiques</a></li>
+            <li><a href="../idee/IdeePublique.php">Idées publiques</a></li>
         </ul>
     </div>
     <div class="espace"></div>

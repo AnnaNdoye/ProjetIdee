@@ -1,15 +1,3 @@
-.navigation a {
-    color: white;
-    text-decoration: none;
-    padding: 5px 10px;
-    border-radius: 5px;
-    background-color: #007bff;
-}
-
-.navigation a:hover {
-    background-color: #ccc;
-}
-
 .connect_entete a, .profil a {
     color: #ff6600;
     text-decoration: none;
@@ -154,16 +142,8 @@ padding: 10px 15px;
 cursor: pointer;
 }
 
-.navigation a {
-    color: white;
-    text-decoration: none;
-    padding: 5px 10px;
-    border-radius: 5px;
-    background-color: #007bff;
-}
-
 .navigation a:hover {
-    background-color: #ccc;
+    background-color: #000;
 }
 
 .connect_entete a, .profil a {
@@ -244,6 +224,10 @@ cursor: pointer;
 
 .idea i {
     margin-right: 5px;
+}
+
+.supprime {
+    background-color: #E74C3C;
 }
 
 .enveloppe {

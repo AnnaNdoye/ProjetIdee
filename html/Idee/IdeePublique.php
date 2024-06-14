@@ -1,6 +1,11 @@
 <?php
 session_start();
 
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../connexion.php");
+    exit();
+}
+
 $host = "localhost";
 $user = "root";
 $password = "";
@@ -30,9 +35,10 @@ if (!$result) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Idées Publiques</title>
     <link rel="stylesheet" href="../../static/css/style1.css">
+    <link rel="stylesheet" href="../../static/css/style5.css">
     <link rel="stylesheet" href="../../static/css/IdeePP.css">
     <style>
-        form{
+        .serach-bar form {
             display: flex;
             align-items: center;
             border-radius: 5px;
@@ -207,8 +213,10 @@ if (!$result) {
             </div>
         </div>
         <div class="search-bar">
-            <input type="text" placeholder="Rechercher des idées publiques...">
-            <button><i class="fas fa-search"></i></button>
+            <form action="IdeePubliqeu.php" method="GET">
+                <input type="text" name="search" placeholder="Rechercher des idées publiques..." value="<?php echo htmlspecialchars($search); ?>">
+                <button><i class="fas fa-search"></i></button>
+            </form>
         </div>
         <div class="navigation">
             <strong>

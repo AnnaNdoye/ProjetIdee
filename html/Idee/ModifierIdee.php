@@ -98,21 +98,21 @@ if (!isset($_SESSION['user_id'])) {
                     </div>
                 </div>
 
-                <div class="form-group" class="custom-select">
-                    <label for="contenu">Sélectionnez une catégorie :</label>
+                <div class="form-group custom-select">
+                    <label for="categorie">Sélectionnez une catégorie :</label>
                     <select name="categorie_id" required>
-                    <option value="" disabled selected>Sélectionnez une catégorie </option>
-                    <?php
-                    while ($row = mysqli_fetch_assoc($result)) 
-                    {
-                        echo '<option value="' . $row['id_categorie'] . '">' . $row['nom_categorie'] . '</option>';
-                    }
-                    ?>
+                        <option value="" disabled selected>Sélectionnez une catégorie</option>
+                        <?php
+                        while ($row = mysqli_fetch_assoc($result)) 
+                        {
+                            echo '<option value="' . $row['id_categorie'] . '">' . $row['nom_categorie'] . '</option>';
+                        }
+                        ?>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label for="contenu">Choississez un fichier :</label>
+                    <label for="fichier">Choisissez un fichier :</label>
                     <input type="file" id="fichier" name="fichier" accept=".doc,.docx,.mpp,.avi,.gif,.gz,.zip,.jpeg,.jpg,.jpe,.png,.odp,.odt,.ods,.pdf,.xlsx,.pptx,.txt">
                 </div>
                 
@@ -140,39 +140,41 @@ if (!isset($_SESSION['user_id'])) {
             alert.remove();
         }, 3000);
     }
+
+    function formatText(command) {
+        document.execCommand(command, false, null);
+    }
+
+    function toggleFormat(command) {
+        formatText(command);
+        const button = document.getElementById(`${command}Button`);
+        if (document.queryCommandState(command)) {
+            button.classList.add('active');
+        } else {
+            button.classList.remove('active');
+        }
+    }
+
+    function syncContent() {
+        const contentEditableDiv = document.getElementById('contenu');
+        const hiddenTextarea = document.getElementById('hiddenContent');
+        hiddenTextarea.value = contentEditableDiv.innerHTML;
+    }
+
+    function displayFileName() {
+        const input = document.getElementById('fichier');
+        const fileName = input.files[0].name;
+        document.getElementById('file-name').textContent = `Selected file: ${fileName}`;
+    }
+
+    document.getElementById('fichier').addEventListener('change', displayFileName);
 </script>
-
-
-    <script src="../static/js/script1.js"></script>
-    <script src="../static/js/script2.js"></script>
-    <script>
-        function formatText(command) {
-            document.execCommand(command, false, null);
-        }
-
-        function toggleFormat(command) {
-            formatText(command);
-            const button = document.getElementById(`${command}Button`);
-            if (document.queryCommandState(command)) {
-                button.classList.add('active');
-            } else {
-                button.classList.remove('active');
-            }
-        }
-
-        function syncContent() {
-            const contentEditableDiv = document.getElementById('contenu');
-            const hiddenTextarea = document.getElementById('hiddenContent');
-            hiddenTextarea.value = contentEditableDiv.innerHTML;
-        }
-
-        function displayFileName() {
-            const input = document.getElementById('fichier');
-            const fileName = input.files[0].name;
-            document.getElementById('file-name').textContent = `Selected file: ${fileName}`;
-        }
-
-        document.getElementById('fichier').addEventListener('change', displayFileName);
-    </script>
+<script src="../static/js/script1.js"></script>
+<script src="../static/js/script2.js"></script>
 </body>
 </html>
+
+<?php
+// Fermeture de la connexion à la base de données
+mysqli_close($connection);
+?>

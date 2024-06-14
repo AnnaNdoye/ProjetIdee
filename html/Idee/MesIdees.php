@@ -28,9 +28,14 @@ $query = "
     LEFT JOIN fichier ON idee.id_idee = fichier.idee_id
     WHERE idee.employe_id = ? AND idee.titre LIKE ?";
 $stmt = $connexion->prepare($query);
+if ($stmt === false) {
+    die("Erreur lors de la préparation de la requête: " . $connexion->error);
+}
 $like_search = '%' . $search . '%';
 $stmt->bind_param('is', $employe_id, $like_search);
-$stmt->execute();
+if (!$stmt->execute()) {
+    die("Erreur lors de l'exécution de la requête: " . $stmt->error);
+}
 $result = $stmt->get_result();
 
 if (!$result) {
@@ -50,7 +55,7 @@ if (!$result) {
     <link rel="stylesheet" href="../../static/css/IdeePP.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <style>
-        form{
+        .search-bar form{
             display: flex;
             align-items: center;
             border-radius: 5px;
@@ -59,6 +64,7 @@ if (!$result) {
             flex: 1;
             border: #FF6600 solid;
             outline: none;
+            width: 100%;
         }
 
         form input{
@@ -83,10 +89,6 @@ if (!$result) {
             padding: 5px 10px;
             border-radius: 5px;
             background-color: #007bff;
-        }
-
-        .navigation a:hover {
-            background-color: #ccc;
         }
 
         .connect_entete a, .profil a {
@@ -168,6 +170,10 @@ if (!$result) {
         .idea i {
             margin-right: 5px;
         }
+
+        .supprime {
+    background-color: #E74C3C;
+}
 
         .enveloppe {
             background-color: #fff;
@@ -256,9 +262,10 @@ if (!$result) {
     </div>
 </div>
 
+
 <div class="filtre">
     <i class="fa-solid fa-filter"></i>
-    <select name = filtre>
+    <select name="filtre">
         <option>Filtrer par :</option>
         <option value="Titre">Titre</option>
         <option value="Date">Date Création</option>
@@ -288,8 +295,16 @@ if (!$result) {
                     <p class="status-<?php echo strtolower(htmlspecialchars($row['statut'])); ?>">
                         <strong>Statut:</strong> <strong class="statut-color"> <?php echo htmlspecialchars($row['statut']); ?> <span class="status-circle"></span></strong>
                     </p>
+                    <?php 
+                    if ($row['est_publique'] == 1) {
+                        $visibilite = "publique";
+                    } else {
+                        $visibilite = "privé";
+                    }
+                    ?>
+                    <p><strong>Visibilité:</strong> <?php echo $visibilite; ?></p>
                     <a href="ModifierIdee.php?id=<?php echo htmlspecialchars($row['id_idee']); ?>"><i class="fas fa-edit"></i> Éditer</a>
-                    <a href="javascript:void(0);" onclick="confirmDeletion(<?php echo htmlspecialchars($row['id_idee']); ?>)"><i class="fas fa-trash"></i> Supprimer</a>
+                    <a class="supprime" href="javascript:void(0);" onclick="confirmDeletion(<?php echo htmlspecialchars($row['id_idee']); ?>)"><i class="fas fa-trash"></i> Supprimer</a>
                 </div>
             </div>
         <?php endwhile; ?>
