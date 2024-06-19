@@ -15,16 +15,36 @@ $database = "idee";
 $connexion = mysqli_connect($host, $user, $password, $database);
 
 // Vérifier la connexion
-if ($connexion->connect_error) {
-    die("Erreur lors de la connexion: " . $connexion->connect_error);
+if (!$connexion) {
+    die("Erreur lors de la connexion: " . mysqli_connect_error());
 }
 
-// Récupérer les idées publiques depuis la base de données
-$query = "SELECT id_idee, titre, contenu_idee, date_creation, date_modification, statut FROM idee WHERE est_publique = 1";
-$result = mysqli_query($connexion, $query);
+$employe_id = $_SESSION['user_id'];
+$search = isset($_GET['search']) ? $_GET['search'] : ''; 
+
+$query = "
+    SELECT idee.id_idee, idee.titre, idee.contenu_idee, idee.est_publique, idee.date_creation, idee.date_modification, idee.statut,
+    categorie.nom_categorie, fichier.nom_fichier, fichier.type, fichier.contenu_fichier,
+    employe.photo_profil, employe.prenom, employe.nom
+    FROM idee
+    LEFT JOIN categorie ON idee.categorie_id = categorie.id_categorie
+    LEFT JOIN fichier ON idee.id_idee = fichier.idee_id
+    LEFT JOIN employe ON idee.employe_id = employe.id_employe
+    WHERE idee.employe_id = ? AND idee.est_publique = 1 AND idee.titre LIKE ?";
+
+$stmt = $connexion->prepare($query);
+if ($stmt === false) {
+    die("Erreur lors de la préparation de la requête: " . $connexion->error);
+}
+$like_search = '%' . $search . '%';
+$stmt->bind_param('is', $employe_id, $like_search);
+if (!$stmt->execute()) {
+    die("Erreur lors de l'exécution de la requête: " . $stmt->error);
+}
+$result = $stmt->get_result();
 
 if (!$result) {
-    die("Erreur lors de la requête: " . mysqli_error($connexion));
+    die("Erreur lors de la requête: " . $connexion->error);
 }
 ?>
 
@@ -37,8 +57,9 @@ if (!$result) {
     <link rel="stylesheet" href="../../static/css/style1.css">
     <link rel="stylesheet" href="../../static/css/style5.css">
     <link rel="stylesheet" href="../../static/css/IdeePP.css">
+    <link rel="stylesheet" href="../../static/css/publique.css">
     <style>
-        .serach-bar form {
+       .serach-bar form {
             display: flex;
             align-items: center;
             border-radius: 5px;
@@ -205,65 +226,114 @@ if (!$result) {
 </head>
 <body>
 <div class="header">
-        <div class="logo" onclick="location.href='../accueil.html'">
-            <img src="../../static/img/icon.png" alt="Logo">
-            <div>
-                <h1>Orange</h1>
-                <h3><span class="for-ideas">for ideas</span></h3>
-            </div>
-        </div>
-        <div class="search-bar">
-            <form action="IdeePubliqeu.php" method="GET">
-                <input type="text" name="search" placeholder="Rechercher des idées publiques..." value="<?php echo htmlspecialchars($search); ?>">
-                <button><i class="fas fa-search"></i></button>
-            </form>
-        </div>
-        <div class="navigation">
-            <strong>
-                <a href="NouvelleIdee.php"><i class="fa fa-plus-circle"></i> Nouvelle idée</a>
-            </strong>
-        </div>
-        <div class="connect_entete">
-            <a href="../connexion.php">
-                <i class="fas fa-user"></i>
-                <span>Se déconnecter</span>
-            </a>
-        </div>
-        <div class="profil">
-            <a href="Profil.php">
-                <i class="fas fa-user-circle"></i>
-                <strong>Profil</strong>
-            </a>
+    <div class="logo" onclick="location.href='../accueil.html'">
+        <img src="../../static/img/icon.png" alt="Logo">
+        <div>
+            <h1>Orange</h1>
+            <h3><span class="for-ideas">for ideas</span></h3>
         </div>
     </div>
+    <div class="search-bar">
+        <form action="IdeePublique.php" method="GET">
+            <input type="text" name="search" placeholder="Rechercher des idées publiques..." value="<?php echo htmlspecialchars($search); ?>">
+            <button><i class="fas fa-search"></i></button>
+        </form>
+    </div>
+    <div class="navigation">
+        <strong><a href="AccueilIdee.php">Accueil</a></strong>
+    </div>
+    <div class="profil">
+        <a href="Profil.php">
+            <i class="fas fa-user-circle"></i>
+            <strong>Profil</strong>
+        </a>
+    </div>
+</div>
+
+<div class="menu-deroulant">
+    <button><strong>Menu</strong></button>
+    <ul class="sous">
+        <li><a href="NouvelleIdee.php">Nouvelle Idée</a></li>
+        <li><a href="MesIdees.php">Mes idées</a></li>
+        <li><a href="IdeePublique.php">Idées publiques</a></li>
+        <li><a href="Profil.php">Profil</a></li>
+    </ul>
+</div>
+
+<div class="filtre">
+    <i class="fa-solid fa-filter"></i>
+    <select name="filtre" id="filtre">
+        <option>Filtrer par:</option>
+        <option value="Titre">Titre</option>
+        <option value="Date de création">Date de création</option>
+        <option value="Statut">Statut</option>
+        <option value="Visibilité">Visibilité</option>
+    </select>
+</div>
 
 <div class="container">
     <h1>Idées Publiques</h1>
     <div class="ideas">
-        <?php while ($row = mysqli_fetch_assoc($result)) : ?>
+        <?php while ($row = $result->fetch_assoc()) : ?>
             <div class="enveloppe">
-                <div class="idea"><h2>Titre: <?php echo $row['titre']; ?></h2></div>
-                <div class="idea"><p>Contenu: <?php echo $row['contenu_idee']; ?></p></div>
+                <div><img src="<?php echo htmlspecialchars($row['photo_profil']); ?>" alt="Profile Picture"> <?php echo htmlspecialchars($row['prenom']); ?> <?php echo htmlspecialchars($row['nom']); ?></div>
                 <div class="idea">
-                <p>Date de création: <?php echo $row['date_creation']; ?></p>
-                <p>Date de modification: <?php echo $row['date_modification']; ?></p>
-                <p>Statut: <?php echo $row['statut']; ?></p> <span class="status-circle"></span></strong>
-            </div>
+                    <h2>Titre: <?php echo htmlspecialchars($row['titre']); ?></h2>
+                    <p>Contenu: <?php echo htmlspecialchars($row['contenu_idee']); ?></p>
+                    <p>Statut: <?php echo htmlspecialchars($row['statut']); ?></p>
+                    <p>Créer le: <?php echo htmlspecialchars($row['date_creation']); ?></p>
+                    <p>Modifier le: <?php echo htmlspecialchars($row['date_modification']); ?></p>
+                    <div class="like-container">
+                        <button id="likeButton<?php echo $row['id_idee']; ?>" class="like-button">
+                            <span id="thumbIcon<?php echo $row['id_idee']; ?>" class="thumb-icon">
+                                <i class="far fa-thumbs-up"></i>
+                            </span>
+                        </button>
+                        <span id="likeCount<?php echo $row['id_idee']; ?>" class="like-count">0</span>
+                    </div>
+                </div>
             </div>
         <?php endwhile; ?>
     </div>
 </div>
 
 <div class="espace"></div>
-    <div class="footer">
-        <h4 class="footer-left"><a href="mailto:support@orange.com" style="text-decoration: none; color: white;">Contact</a></h4>
-        <h4 class="footer-right">© Orange/Juin2024</h4>
-    </div>
+<div class="footer">
+    <h4 class="footer-left"><a href="mailto:support@orange.com" style="text-decoration: none; color: white;">Contact</a></h4>
+    <h4 class="footer-right">© Orange/Juin2024</h4>
+</div>
 
-    <script></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.like-button').forEach(button => {
+            let isLiked = false;
+            let count = 0;
+            const ideaId = button.id.replace('likeButton', '');
+            const likeCount = document.getElementById('likeCount' + ideaId);
+            const thumbIcon = document.getElementById('thumbIcon' + ideaId).firstElementChild;
+
+            button.addEventListener('click', () => {
+                if (isLiked) {
+                    count--;
+                    button.classList.remove('liked');
+                    thumbIcon.classList.remove('fas');
+                    thumbIcon.classList.add('far');
+                } else {
+                    count++;
+                    button.classList.add('liked');
+                    thumbIcon.classList.remove('far');
+                    thumbIcon.classList.add('fas');
+                }
+                isLiked = !isLiked;
+                likeCount.textContent = count;
+            });
+        });
+    });
+</script>
 </body>
 </html>
 
 <?php
+$stmt->close();
 mysqli_close($connexion);
 ?>

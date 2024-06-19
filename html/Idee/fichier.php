@@ -1,6 +1,7 @@
 <?php
 session_start();
 
+// Vérifiez si l'utilisateur est connecté, sinon redirigez vers la page de connexion
 if (!isset($_SESSION['user_id'])) {
     header("Location: ../connexion.php");
     exit();
@@ -43,17 +44,19 @@ if (!$result) {
 }
 ?>
 
+
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mes Idées</title>
-    <link rel="icon" href="../../static/img/icon.png">
+    <script src="https://kit.fontawesome.com/64d58efce2.js" crossorigin="anonymous"></script>
+    <link rel="icon" type="image/png" href="../../static/img/icon.png">
     <link rel="stylesheet" href="../../static/css/style1.css">
     <link rel="stylesheet" href="../../static/css/style5.css">
-    <link rel="stylesheet" href="../../static/css/IdeePP.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <title>Accueil</title>
+
     <style>
         .search-bar form{
             display: flex;
@@ -81,6 +84,14 @@ if (!$result) {
         color: #FF6600;
         padding: 10px 15px;
         cursor: pointer;
+        }
+
+        .navigation a {
+            color: white;
+            text-decoration: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            background-color: #007bff;
         }
 
         .connect_entete a, .profil a {
@@ -164,8 +175,8 @@ if (!$result) {
         }
 
         .supprime {
-            background-color: #E74C3C;
-        }
+    background-color: #E74C3C;
+}
 
         .enveloppe {
             background-color: #fff;
@@ -212,86 +223,99 @@ if (!$result) {
     }
 }
     </style>
+
     <script>
-        function confirmDeletion(id) {
-            if (confirm('Êtes-vous sûr de vouloir supprimer cette idée ?')) {
+        function confirmDeletion(id)
+        {
+            if (confirm('Êtes-vous sûr de vouloir supprimer cette idée'))
+            {
                 window.location.href = '../../database/idee/supprimer_idee.php?id=' + id;
             }
         }
     </script>
 </head>
 <body>
-<div class="header">
-    <div class="logo" onclick="location.href='../Accueil.html'">
-        <img src="../../static/img/icon.png" alt="Logo">
-        <div>
-            <h1>Orange</h1>
-            <h3><span class="for-ideas"> for ideas</span></h3>
+    <div class="header">
+        <div class="logo" onclick="location.href='../accueil.html'">
+            <img src="../../static/img/icon.png" alt="Logo">
+            <div>
+                <h1>Orange</h1>
+                <h3><span class="for-ideas">for ideas</span></h3>
+            </div>
+        </div>
+        <div class="search-bar">
+            <input type="text" placeholder="Rechercher des idées " value="<?php echo htmlspecialchars($search); ?>">
+            <button><i class="fas fa-search"></i></button>
+        </div>
+        <div class="navigation">
+            <strong>
+                <a href="NouvelleIdee.php"><i class="fa fa-plus-circle"></i> Nouvelle idée</a>
+            </strong>
+        </div>
+        <div class="connect_entete">
+            <a href="../connexion.php">
+                <i class="fas fa-user"></i>
+                <span>Se déconnecter</span>
+            </a>
+        </div>
+        <div class="profil">
+            <a href="Profil.php">
+                <i class="fas fa-user-circle"></i>
+                <strong>Profil</strong>
+            </a>
         </div>
     </div>
-    <div class="search-bar">
-        <form method="GET" action="MesIdees.php">
-            <input type="text" name="search" placeholder="Rechercher des idées" value="<?php echo htmlspecialchars($search); ?>">
-            <button type="submit"><i class="fas fa-search"></i></button>
-        </form>
-    </div>
-    <div class="navigation">
-        <strong>
-            <a href="NouvelleIdee.php"><i class="fa fa-plus-circle"></i> Nouvelle idée</a>
-        </strong>
-    </div>
-    <div class="connect_entete">
-        <a href="../connexion.php">
-            <i class="fas fa-user"></i>
-            <span>Se déconnecter</span>
-        </a>
-    </div>
-    <div class="profil">
-        <a href="Profil.php">
-            <i class="fas fa-user-circle"></i>
-            <strong>Profil</strong>
-        </a>
-    </div>
-</div>
 
+    <div class="menu-deroulant">
+        <button><strong>Menu</strong></button>
+        <ul class="sous">
+            <li><a href="NouvelleIdee.php">Nouvelle Idée</a></li>
+            <li><a href="MesIdees.php">Mes idées</a></li>
+            <li><a href="IdeePublique.php">Idées publiques</a></li>
+            <li><a href="Profil.php">Profil</a></li>
+        </ul>
+    </div>
 
-<div class="filtre">
-    <i class="fa-solid fa-filter"></i>
-    <select name="filtre">
-        <option>Filtrer par :</option>
-        <option value="Titre">Titre</option>
-        <option value="Date">Date Création</option>
-        <option value="Statut">Statut</option>
-    </select>
-</div>
+    <div class="filtre">
+        <select name="filtre" id="filtre">
+            <option>Titre</option>
+            <option>Date de création</option>
+            <option>Statut</option>
+        </select>
+    </div>
 
-<div class="container">
-    <h1>Mes Idées</h1>
-    <div class="ideas">
-        <?php while ($row = $result->fetch_assoc()) : ?>
-            <div class="enveloppe">
-                
-                <div class="idea">
-                    <h2>Titre: <?php echo htmlspecialchars($row['titre']); ?></h2>
-                </div>
-                <div class="idea">
-                    <p><strong>Contenu :</strong> <?php echo htmlspecialchars($row['contenu_idee']); ?></p>
-                </div>
-                <div class="idea">
-                    <p><strong>Catégorie:</strong> <?php echo htmlspecialchars($row['nom_categorie']); ?></p>
-                    <?php if ($row['nom_fichier']) : ?>
-                        <?php echo '<img src="data:'.htmlspecialchars($row['type']).';base64,'.base64_encode($row['contenu_fichier']).'"/>'; ?>
-                    <?php endif; ?>
-                    <p><strong>Date de création: </strong> <?php echo htmlspecialchars($row['date_creation']); ?></p>
+    <div class="container">
+        <h1>Mes idées</h1>
+        <div calss="ideas">
+            <?php while($row = $result->fetch_assoc()) : ?>
+                <div class="enveloppe">
+                    <div class="idea" >
+                        <h2>Titre: <?php echo htmlspecialchars($row['titre']); ?></h2>
+                    </div>
+                    <div class="idea" >
+                        <p><h2><strong>Contenu:  </strong><?php echo htmlspecialchars($row['contenu_idee']); ?></h2></p>tCtr
+                        </div>
+                        <div class="idea">
+                        <p><strong>Catégorie:</strong> <?php echo htmlspecialchars($row['nom_categorie']); ?></p>
+                        <?php if ($row['nom_fichier']) : ?>
+                        <p><strong>Fichier :</strong> <a href="data:<?php echo htmlspecialchars($row['type']); ?>;base64,<?php echo base64_encode($row['contenu_fichier']); ?>" target="_blank"><?php echo htmlspecialchars($row['nom_fichier']); ?></a></p>
+                        <p><strong>Fichier :</strong> <a href="data:<?php echo htmlspecialchars($row['type']); ?>;base64,<?php echo base64_encode($row['contenu_fichier']); ?>" target="_blank"><?php echo htmlspecialchars($row['nom_fichier']); ?></a></p>
+                        <p><strong>Fichier :</strong> <?php echo '<a href="data:' .htmlspecialchars($row['type']). ';base64,' .base64_encode($row['contenu_fichier']). '" </a>'. htmlspecialchars($row['nom_fichier']) ?></p>
+                        
+                        <?php endif; ?>
+                        <p><strong>Date de création: </strong> <?php echo htmlspecialchars($row['date_creation']); ?></p>
                     <p><strong>Date de modification: </strong> <?php echo htmlspecialchars($row['date_modification']); ?></p>
                     <p class="status-<?php echo strtolower(htmlspecialchars($row['statut'])); ?>">
                         <strong>Statut:</strong> <strong class="statut-color"> <?php echo htmlspecialchars($row['statut']); ?> <span class="status-circle"></span></strong>
                     </p>
                     <?php 
-                    if ($row['est_publique'] == 1) {
-                        $visibilite = "publique";
-                    } else {
-                        $visibilite = "privé";
+                    if ($row['est_publique'] == 1) 
+                    {
+                        $visibilite = "Publique";
+                    } 
+                    else 
+                    {
+                        $visibilite = "Privé";
                     }
                     ?>
                     <p><strong>Visibilité:</strong> <?php echo $visibilite; ?></p>
@@ -300,18 +324,49 @@ if (!$result) {
                 </div>
             </div>
         <?php endwhile; ?>
+                    </div>
+                </div>
+        </div>
     </div>
-</div>
+    
+    <div class="espace"></div>
+    <div class="footer">
+        <h4 class="footer-left"><a href="mailto:support@orange.com" style="text-decoration: none; color: white;">Contact</a></h4>
+        <h4 class="footer-right">© Orange/Juin2024</h4>
+    </div>
 
-<div class="espace"></div>
-<div class="footer">
-    <h4 class="footer-left"><a href="mailto:support@orange.com" style="text-decoration: none; color: white;">Contact</a></h4>
-    <h4 class="footer-right">© Orange/Juin2024</h4>
-</div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const menuButton = document.querySelector('.menu-deroulant button');
+            const menuList = document.querySelector('.menu-deroulant ul');
+
+            menuButton.addEventListener('click', () => {
+                menuList.style.display = menuList.style.display === 'flex' ? 'none' : 'flex';
+            });
+
+            menuButton.addEventListener('mouseover', () => {
+                menuList.style.display = 'flex';
+            });
+
+            menuButton.addEventListener('mouseout', () => {
+                if (menuList.style.display !== 'flex') {
+                    menuList.style.display = 'none';
+                }
+            });
+
+            menuList.addEventListener('mouseover', () => {
+                menuList.style.display = 'flex';
+            });
+
+            menuList.addEventListener('mouseout', () => {
+                menuList.style.display = 'none';
+            });
+        });
+    </script>
 </body>
 </html>
 
 <?php
-$stmt->close();
-$connexion->close();
+    $stmt->close();
+    $connexion->close();
 ?>

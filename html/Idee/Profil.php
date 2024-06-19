@@ -153,7 +153,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
             </div>
             <div class="profile-item" style="display: flex; justify-content: space-between;">
                 <button type="submit">Mettre à jour</button>
-                <button><a href="IdeePublique.php" style="color: white; text-decoration: none;">Quitter</a></button>
+                <button><a href="AccueilIdee.php" style="color: white; text-decoration: none;">Quitter</a></button>
             </div>
         </form>
     </div>

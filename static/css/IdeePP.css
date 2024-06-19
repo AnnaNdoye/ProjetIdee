@@ -1,149 +1,31 @@
-.connect_entete a, .profil a {
-    color: #ff6600;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-}
+/* styles.css */
 
-.connect_entete a:hover, .profil a:hover {
-    color: #000;
-}
-
-.footer {
-    background-color: #333;
-    color: white;
-    padding: 10px;
-    text-align: center;
-    margin-top: 20px;
-}
-
-.idea {
-    background-color: #fff;
-    border: 2px solid #ddd;
-    border-radius: 10px;
-    padding: 20px;
-    margin: 10px 0;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease;
-}
-
-.idea:hover {
-    transform: translateY(-5px);
-}
-
-.idea h2 {
-    margin-top: 0;
-    color: #333;
-    font-size: 1.5em;
-}
-
-.idea p {
-    margin-bottom: 10px;
-    color: #555;
-}
-
-.idea .status-circle {
-    display: inline-block;
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    margin-right: 5px;
-}
-
-.status-soumis .status-circle {
-    background-color: #F39C12;
-}
-
-.status-approuve .status-circle {
-    background-color: #27AE60;
-}
-
-.status-rejete .status-circle {
-    background-color: #E74C3C;
-}
-
-.status-implemente .status-circle {
-    background-color: #3498DB;
-}
-
-.idea a {
-    display: inline-block;
-    margin-top: 15px;
-    padding: 8px 20px;
-    background-color: #007bff;
-    color: white;
-    border-radius: 5px;
-    text-decoration: none;
-    transition: background-color 0.3s ease;
-}
-
-.idea a:hover {
-    background-color: #0056b3;
-}
-
-.idea i {
-    margin-right: 5px;
-}
-
-.enveloppe {
-    background-color: #fff;
-    border: 2px solid #ddd;
-    border-radius: 10px;
-    padding: 20px;
-    margin: 10px 0;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease;
-    width: 1200px;
-}
-
-@media screen and (max-width: 768px) {
-    .header {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .search-bar {
-        margin: 10px 0;
-    }
-
-    .navigation a {
-        margin-top: 10px;
-    }
-
-    .ideas {
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    }
-}
-
-form{
+.search-bar form {
     display: flex;
     align-items: center;
     border-radius: 5px;
     overflow: hidden;
     margin-left: 20px;
     flex: 1;
-    border: #FF6600 solid;
+    border: 1px solid #FF6600;
     outline: none;
+    width: 100%;
 }
 
-form input{
+form input {
     border: none;
-padding: 10px;
-outline: none;
-color: #000;
-width: 100%;
+    padding: 10px;
+    outline: none;
+    color: #000;
+    width: 100%;
 }
 
 form button {
-background: #fff;
-border: none;
-color: #FF6600;
-padding: 10px 15px;
-cursor: pointer;
-}
-
-.navigation a:hover {
-    background-color: #000;
+    background: #fff;
+    border: none;
+    color: #FF6600;
+    padding: 10px 15px;
+    cursor: pointer;
 }
 
 .connect_entete a, .profil a {
@@ -165,7 +47,7 @@ cursor: pointer;
     margin: 10px 0;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease;
-    width: 900px;
+    width: 100%;
 }
 
 .idea:hover {
@@ -222,12 +104,27 @@ cursor: pointer;
     background-color: #0056b3;
 }
 
-.idea i {
-    margin-right: 5px;
+.floating-button {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background-color: #FF6600;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    z-index: 1000;
 }
 
-.supprime {
-    background-color: #E74C3C;
+.floating-button:hover {
+    background-color: #cc5200;
 }
 
 .enveloppe {
@@ -239,6 +136,10 @@ cursor: pointer;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease;
     width: 100%;
+}
+
+.supprime {
+    background-color: red;
 }
 
 @media screen and (max-width: 768px) {
@@ -262,15 +163,15 @@ cursor: pointer;
 }
 
 @media (max-width: 480px) {
-.header h1 {
-font-size: 20px;
-}
+    .header h1 {
+        font-size: 20px;
+    }
 
-.form input {
-width: 150px;
-}
+    .form input {
+        width: 150px;
+    }
 
-.form input:focus {
-width: 200px;
-}
+    .form input:focus {
+        width: 200px;
+    }
 }

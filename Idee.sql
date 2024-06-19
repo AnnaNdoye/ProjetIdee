@@ -17,8 +17,8 @@ CREATE TABLE Employe(
     poste VARCHAR(50),
     departement_id INTEGER,
     is_admin BOOLEAN,
-    photo_profil LONGBLOB, -- Utilisation de LONGBLOB pour stocker des images de profil
-    FOREIGN KEY(departement_id) REFERENCES Departement(id_departement)
+    photo_profil VARCHAR(255), -- Stockage du chemin de l'image de profil
+    FOREIGN KEY(departement_id) REFERENCES Department(id_departement)
 );
 
 CREATE TABLE Categorie (
@@ -46,7 +46,7 @@ CREATE TABLE Fichier (
     nom_fichier VARCHAR(255) NOT NULL,
     type VARCHAR(255), -- Utilisation de VARCHAR pour stocker les types MIME des fichiers
     taille DOUBLE,
-    contenu_fichier LONGBLOB, -- Utilisation de LONGBLOB pour stocker des fichiers de grande taille
+    contenu_fichier VARCHAR(255), -- Utilisation de varchar pour stocker le chemin du fichier
     idee_id INTEGER,
     FOREIGN KEY (idee_id) REFERENCES Idee(id_idee)
 );
