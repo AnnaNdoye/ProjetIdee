@@ -45,7 +45,7 @@ if (mysqli_stmt_execute($stmt))
         $fichierTaille = $_FILES['fichier']['size']; //on va l'avoir en octet dans la base de données
 
         // Définir le chemin de sauvegarde
-        $dossierUpload = '../../uploads/';
+        $dossierUpload = 'uploads/';
         if (!is_dir($dossierUpload)) {
             mkdir($dossierUpload, 0777, true);
         }

@@ -112,3 +112,4 @@ $idee = $result->fetch_assoc();
 $stmt->close();
 $connexion->close();
 ?>
+

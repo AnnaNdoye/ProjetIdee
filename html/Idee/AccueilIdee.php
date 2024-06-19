@@ -1,4 +1,6 @@
 <?php
+// Code PHP pour récupérer et traiter les données
+
 session_start();
 
 if (!isset($_SESSION['user_id'])) {
@@ -167,7 +169,7 @@ if (!$result) {
                 <div class="enveloppe">
                     <div class="idea" onclick="location.href='VoirIdee.php?id=<?php echo htmlspecialchars($row['id_idee']); ?>'">
                         <h2>Titre: <?php echo htmlspecialchars($row['titre']); ?></h2>
-                        <p><strong>Contenu: </strong><?php echo htmlspecialchars($row['contenu_idee']); ?></p>
+                        <p><strong>Contenu: </strong><?php echo $row['contenu_idee']; ?></p> <!-- Suppression de htmlspecialchars ici -->
                         <p><strong>Catégorie:</strong> <?php echo htmlspecialchars($row['nom_categorie']); ?></p>
                         <?php if ($row['nom_fichier']) : ?>
                             <p><strong>Fichier :</strong> <a href="data:<?php echo htmlspecialchars($row['type']); ?>;base64,<?php echo base64_encode($row['contenu_fichier']); ?>" target="_blank"><?php echo htmlspecialchars($row['nom_fichier']); ?></a></p>

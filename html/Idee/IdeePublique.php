@@ -277,7 +277,7 @@ if (!$result) {
         <?php while ($row = $result->fetch_assoc()) : ?>
             <div class="enveloppe">
                 <div><img src="<?php echo htmlspecialchars($row['photo_profil']); ?>" alt="Profile Picture"> <?php echo htmlspecialchars($row['prenom']); ?> <?php echo htmlspecialchars($row['nom']); ?></div>
-                <div class="idea">
+                <div class="idea" onclick="location.href='VoirIdeePublique.php?id=<?php echo htmlspecialchars($row['id_idee']); ?>'">
                     <h2>Titre: <?php echo htmlspecialchars($row['titre']); ?></h2>
                     <p>Contenu: <?php echo htmlspecialchars($row['contenu_idee']); ?></p>
                     <p>Statut: <?php echo htmlspecialchars($row['statut']); ?></p>

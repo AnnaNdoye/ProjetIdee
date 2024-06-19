@@ -17,7 +17,7 @@ CREATE TABLE Employe(
     poste VARCHAR(50),
     departement_id INTEGER,
     is_admin BOOLEAN,
-    photo_profil VARCHAR(255), -- Stockage du chemin de l'image de profil
+    photo_profil LONGBLOB, -- Stockage de l'image de profi
     FOREIGN KEY(departement_id) REFERENCES Department(id_departement)
 );
 
