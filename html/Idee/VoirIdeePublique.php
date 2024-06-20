@@ -270,6 +270,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['like'])) {
     </style>
 </head>
 <body>
+<div class="header">
+    <div class="logo" onclick="location.href='../accueil.html'">
+        <img src="../../static/img/icon.png" alt="Logo">
+        <div>
+            <h1>Orange</h1>
+            <h3><span class="for-ideas">for ideas</span></h3>
+        </div>
+    </div>
+    <div class="navigation">
+    <a href="IdeePublique.php">
+        <i class="fas fa-arrow-left"></i>
+        <strong>Retour</strong>
+    </a>
+    </div>
+</div>
     <div class="container">
         <div class="idea-details">
             <div class="creator-info">
@@ -325,6 +340,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['like'])) {
         </div>
     </div>
 
+    <div class="espace"></div>
+    <div class="footer">
+        <h4 class="footer-left"><a href="mailto:support@orange.com" style="text-decoration: none; color: white;">Contact</a></h4>
+        <h4 class="footer-right">© Orange/Juin2024</h4>
+    </div>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const likeButton = document.querySelector('.like-button');

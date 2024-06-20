@@ -67,10 +67,10 @@ if (!$result) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://kit.fontawesome.com/64d58efce2.js" crossorigin="anonymous"></script>
     <link rel="icon" type="image/png" href="../../static/img/icon.png">
-    <link rel="stylesheet" href="../../static/css/style1.css">
-    <link rel="stylesheet" href="../../static/css/style5.css">
-    <link rel="stylesheet" href="../../static/css/IdeePP.css">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" type="text/css" href="../../static/css/style1.css">
+    <link rel="stylesheet" type="text/css" href="../../static/css/style5.css">
+    <link rel="stylesheet" type="text/css" href="../../static/css/IdeePP.css">
+    <link rel="stylesheet" type="text/css" href="../../static/css/styles.css">
     <title>Accueil Idées</title>
     <script>
         function confirmDeletion(id) {
@@ -152,7 +152,7 @@ if (!$result) {
     </div>
 
     <div class="filtre" style="float: right;">
-        <i class="fa-thin fa-filter"></i>
+        <i class="fas fa-filter"></i>
         <select name="filtre" id="filtre" onchange="this.form.submit()">
             <option value="">Filtrer par:</option>
             <option value="Date de création">Date de création</option>
@@ -163,7 +163,7 @@ if (!$result) {
     </div>
 
     <div class="container">
-        <h1>Mes idées</h1>
+        <h1>Toutes mes idées</h1>
         <div class="ideas">
             <?php while($row = $result->fetch_assoc()) : ?>
                 <div class="enveloppe">
