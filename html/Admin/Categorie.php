@@ -98,8 +98,8 @@ $connection->close();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://kit.fontawesome.com/64d58efce2.js" crossorigin="anonymous"></script>
     <link rel="icon" type="image/png" href="../../static/img/icon.png">
-    <link rel="stylesheet" href="../../static/css/style1.css">
-    <link rel="stylesheet" href="../../static/css/style5.css">
+    <link rel="stylesheet" type="text/css"  href="../../static/css/style1.css">
+    <link rel="stylesheet" type="text/css"  href="../../static/css/style5.css">
     <title>Catégories</title>
     <style>
         table {

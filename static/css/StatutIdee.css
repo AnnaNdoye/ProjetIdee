@@ -1,0 +1,87 @@
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: 20px;
+    table-layout: fixed;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 16px;
+    text-align: left;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+.statuts {
+    width: 20%;
+}
+
+.statut-soumis {
+    background-color: orange;
+    color: white;
+}
+
+.statut-approuve {
+    background-color: green;
+    color: white;
+}
+
+.statut-rejete {
+    background-color: red;
+    color: white;
+}
+
+.statut-implemente {
+    background-color: blue;
+    color: white;
+}
+
+.button-group {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.button-group button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.button-group button.update {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.button-group button.delete {
+    background-color: #f44336;
+    color: white;
+}
+
+.add-category-btn, .return-home-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 20px 10px;
+}
+
+.add-category-btn {
+    background-color: #007BFF;
+    color: white;
+}
+
+.return-home-btn {
+    background-color: #6c757d;
+    color: white;
+    text-decoration: none;
+}
+
+.return-home-btn i {
+    margin-right: 10px;
+}

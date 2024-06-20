@@ -19,25 +19,24 @@ if (!$connexion) {
     die("Erreur lors de la connexion: " . mysqli_connect_error());
 }
 
-$employe_id = $_SESSION['user_id'];
 $search = isset($_GET['search']) ? $_GET['search'] : ''; 
 
 $query = "
     SELECT idee.id_idee, idee.titre, idee.contenu_idee, idee.est_publique, idee.date_creation, idee.date_modification, idee.statut,
-    categorie.nom_categorie, fichier.nom_fichier, fichier.type, fichier.contenu_fichier,
-    employe.photo_profil, employe.prenom, employe.nom
+    categorie.nom_categorie, employe.photo_profil, employe.prenom, employe.nom,
+    (SELECT COUNT(*) FROM LikeIdee WHERE LikeIdee.idee_id = idee.id_idee) AS like_count,
+    (SELECT COUNT(*) FROM LikeIdee WHERE LikeIdee.idee_id = idee.id_idee AND LikeIdee.employe_id = ?) AS user_liked
     FROM idee
     LEFT JOIN categorie ON idee.categorie_id = categorie.id_categorie
-    LEFT JOIN fichier ON idee.id_idee = fichier.idee_id
     LEFT JOIN employe ON idee.employe_id = employe.id_employe
-    WHERE idee.employe_id = ? AND idee.est_publique = 1 AND idee.titre LIKE ?";
+    WHERE idee.est_publique = 1 AND idee.titre LIKE ?";
 
 $stmt = $connexion->prepare($query);
 if ($stmt === false) {
     die("Erreur lors de la préparation de la requête: " . $connexion->error);
 }
 $like_search = '%' . $search . '%';
-$stmt->bind_param('is', $employe_id, $like_search);
+$stmt->bind_param('is', $_SESSION['user_id'], $like_search);
 if (!$stmt->execute()) {
     die("Erreur lors de l'exécution de la requête: " . $stmt->error);
 }
@@ -59,7 +58,7 @@ if (!$result) {
     <link rel="stylesheet" href="../../static/css/IdeePP.css">
     <link rel="stylesheet" href="../../static/css/publique.css">
     <style>
-       .serach-bar form {
+        .search-bar form {
             display: flex;
             align-items: center;
             border-radius: 5px;
@@ -70,20 +69,20 @@ if (!$result) {
             outline: none;
         }
 
-        form input{
+        form input {
             border: none;
-        padding: 10px;
-        outline: none;
-        color: #000;
-        width: 100%;
+            padding: 10px;
+            outline: none;
+            color: #000;
+            width: 100%;
         }
 
         form button {
-        background: #fff;
-        border: none;
-        color: #FF6600;
-        padding: 10px 15px;
-        cursor: pointer;
+            background: #fff;
+            border: none;
+            color: #FF6600;
+            padding: 10px 15px;
+            cursor: pointer;
         }
 
         .navigation a {
@@ -210,18 +209,59 @@ if (!$result) {
         }
 
         @media (max-width: 480px) {
-    .header h1 {
-        font-size: 20px;
-    }
+            .header h1 {
+                font-size: 20px;
+            }
 
-    .form input {
-        width: 150px;
-    }
+            .form input {
+                width: 150px;
+            }
 
-    .form input:focus {
-        width: 200px;
-    }
-}
+            .form input:focus {
+                width: 200px;
+            }
+        }
+
+        .like-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .like-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 2rem;
+            transition: transform 0.2s ease;
+        }
+
+        .like-button:focus {
+            outline: none;
+        }
+
+        .thumb-icon {
+            transition: color 0.2s ease, transform 0.2s ease;
+        }
+
+        .like-button:hover .thumb-icon {
+            color: #888;
+            transform: scale(1.1);
+        }
+
+        .liked .thumb-icon {
+            color: #007BFF;
+            transform: scale(1.2);
+        }
+
+        .like-count {
+            margin-left: 10px;
+            font-size: 1.5rem;
+            transition: color 0.2s ease;
+        }
+
+        .liked + .like-count {
+            color: #007BFF;
+        }
     </style>
 </head>
 <body>
@@ -256,84 +296,44 @@ if (!$result) {
         <li><a href="NouvelleIdee.php">Nouvelle Idée</a></li>
         <li><a href="MesIdees.php">Mes idées</a></li>
         <li><a href="IdeePublique.php">Idées publiques</a></li>
-        <li><a href="Profil.php">Profil</a></li>
+        <li><a href="IdeeComite.php">Idées comité</a></li>
+        <li><a href="IdeePrivee.php">Idées privées</a></li>
     </ul>
 </div>
 
-<div class="filtre">
-    <i class="fa-solid fa-filter"></i>
-    <select name="filtre" id="filtre">
-        <option>Filtrer par:</option>
-        <option value="Titre">Titre</option>
-        <option value="Date de création">Date de création</option>
-        <option value="Statut">Statut</option>
-        <option value="Visibilité">Visibilité</option>
-    </select>
+<div class="enveloppe">
+    <?php
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            echo "<div class='idea'>";
+            echo "<h2>" . htmlspecialchars($row['titre']) . "</h2>";
+            echo "<p><strong>Par:</strong> " . htmlspecialchars($row['prenom']) . " " . htmlspecialchars($row['nom']) . "</p>";
+            echo "<p><strong>Catégorie:</strong> " . htmlspecialchars($row['nom_categorie']) . "</p>";
+            echo "<p>" . nl2br(htmlspecialchars($row['contenu_idee'])) . "</p>";
+            echo "<p><strong>Date de création:</strong> " . htmlspecialchars($row['date_creation']) . "</p>";
+
+            $statutClass = strtolower($row['statut']);
+            echo "<p class='status-$statutClass'><span class='status-circle'></span>" . htmlspecialchars($row['statut']) . "</p>";
+            
+            echo "<div class='like-container'>";
+            echo "<form action='../../database/idee/like.php' method='POST'>";
+            echo "<input type='hidden' name='idee_id' value='" . $row['id_idee'] . "'>";
+            echo "<button type='submit' class='like-button" . ($row['user_liked'] ? ' liked' : '') . "'>";
+            echo "<i class='fas fa-thumbs-up thumb-icon'></i>";
+            echo "</button>";
+            echo "<span class='like-count'>" . $row['like_count'] . "</span>";
+            echo "</form>";
+            echo "</div>";
+            
+            echo "<a href='VoirIdeePublique.php?id=" . $row['id_idee'] . "'>Voir les détails</a>";
+            echo "</div>";
+        }
+    } else {
+        echo "<p>Aucune idée publique trouvée.</p>";
+    }
+    $stmt->close();
+    $connexion->close();
+    ?>
 </div>
-
-<div class="container">
-    <h1>Idées Publiques</h1>
-    <div class="ideas">
-        <?php while ($row = $result->fetch_assoc()) : ?>
-            <div class="enveloppe">
-                <div><img src="<?php echo htmlspecialchars($row['photo_profil']); ?>" alt="Profile Picture"> <?php echo htmlspecialchars($row['prenom']); ?> <?php echo htmlspecialchars($row['nom']); ?></div>
-                <div class="idea" onclick="location.href='VoirIdeePublique.php?id=<?php echo htmlspecialchars($row['id_idee']); ?>'">
-                    <h2>Titre: <?php echo htmlspecialchars($row['titre']); ?></h2>
-                    <p>Contenu: <?php echo htmlspecialchars($row['contenu_idee']); ?></p>
-                    <p>Statut: <?php echo htmlspecialchars($row['statut']); ?></p>
-                    <p>Créer le: <?php echo htmlspecialchars($row['date_creation']); ?></p>
-                    <p>Modifier le: <?php echo htmlspecialchars($row['date_modification']); ?></p>
-                    <div class="like-container">
-                        <button id="likeButton<?php echo $row['id_idee']; ?>" class="like-button">
-                            <span id="thumbIcon<?php echo $row['id_idee']; ?>" class="thumb-icon">
-                                <i class="far fa-thumbs-up"></i>
-                            </span>
-                        </button>
-                        <span id="likeCount<?php echo $row['id_idee']; ?>" class="like-count">0</span>
-                    </div>
-                </div>
-            </div>
-        <?php endwhile; ?>
-    </div>
-</div>
-
-<div class="espace"></div>
-<div class="footer">
-    <h4 class="footer-left"><a href="mailto:support@orange.com" style="text-decoration: none; color: white;">Contact</a></h4>
-    <h4 class="footer-right">© Orange/Juin2024</h4>
-</div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        document.querySelectorAll('.like-button').forEach(button => {
-            let isLiked = false;
-            let count = 0;
-            const ideaId = button.id.replace('likeButton', '');
-            const likeCount = document.getElementById('likeCount' + ideaId);
-            const thumbIcon = document.getElementById('thumbIcon' + ideaId).firstElementChild;
-
-            button.addEventListener('click', () => {
-                if (isLiked) {
-                    count--;
-                    button.classList.remove('liked');
-                    thumbIcon.classList.remove('fas');
-                    thumbIcon.classList.add('far');
-                } else {
-                    count++;
-                    button.classList.add('liked');
-                    thumbIcon.classList.remove('far');
-                    thumbIcon.classList.add('fas');
-                }
-                isLiked = !isLiked;
-                likeCount.textContent = count;
-            });
-        });
-    });
-</script>
 </body>
 </html>
-
-<?php
-$stmt->close();
-mysqli_close($connexion);
-?>

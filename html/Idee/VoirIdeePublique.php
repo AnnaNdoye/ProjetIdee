@@ -24,10 +24,13 @@ if (!isset($_GET['id'])) {
 $idee_id = $_GET['id'];
 $employe_id = $_SESSION['user_id'];
 
+// Récupérer les détails de l'idée
 $query = "
     SELECT idee.id_idee, idee.titre, idee.contenu_idee, idee.est_publique, idee.date_creation, idee.date_modification, idee.statut,
     categorie.nom_categorie, fichier.nom_fichier, fichier.type, fichier.contenu_fichier,
-    employe.nom, employe.prenom, employe.photo_profil
+    employe.nom, employe.prenom, employe.photo_profil,
+    (SELECT COUNT(*) FROM LikeIdee WHERE idee_id = idee.id_idee) AS like_count,
+    (SELECT COUNT(*) FROM LikeIdee WHERE idee_id = idee.id_idee AND employe_id = ?) AS user_liked
     FROM idee
     LEFT JOIN categorie ON idee.categorie_id = categorie.id_categorie
     LEFT JOIN fichier ON idee.id_idee = fichier.idee_id
@@ -40,7 +43,7 @@ if ($stmt === false) {
     die("Erreur lors de la préparation de la requête: " . $connexion->error);
 }
 
-$stmt->bind_param('i', $idee_id);
+$stmt->bind_param('ii', $employe_id, $idee_id);
 if (!$stmt->execute()) {
     die("Erreur lors de l'exécution de la requête: " . $stmt->error);
 }
@@ -52,6 +55,77 @@ if ($result->num_rows === 0) {
 }
 
 $idee = $result->fetch_assoc();
+
+// Récupérer les commentaires
+$comments_query = "
+    SELECT commentaire.id_commentaire, commentaire.contenu, commentaire.date_creation, commentaire.date_modification, 
+    employe.nom, employe.prenom, employe.photo_profil
+    FROM commentaire
+    LEFT JOIN employe ON commentaire.employe_id = employe.id_employe
+    WHERE commentaire.idee_id = ?
+    ORDER BY commentaire.date_creation DESC
+";
+
+$comments_stmt = $connexion->prepare($comments_query);
+if ($comments_stmt === false) {
+    die("Erreur lors de la préparation de la requête: " . $connexion->error);
+}
+
+$comments_stmt->bind_param('i', $idee_id);
+if (!$comments_stmt->execute()) {
+    die("Erreur lors de l'exécution de la requête: " . $comments_stmt->error);
+}
+
+$comments_result = $comments_stmt->get_result();
+$comments = $comments_result->fetch_all(MYSQLI_ASSOC);
+
+// Ajouter un commentaire
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['comment_content'])) {
+    $comment_content = $_POST['comment_content'];
+    $comment_query = "
+        INSERT INTO commentaire (contenu, employe_id, idee_id) 
+        VALUES (?, ?, ?)
+    ";
+    $comment_stmt = $connexion->prepare($comment_query);
+    if ($comment_stmt === false) {
+        die("Erreur lors de la préparation de la requête: " . $connexion->error);
+    }
+    $comment_stmt->bind_param('sii', $comment_content, $employe_id, $idee_id);
+    if (!$comment_stmt->execute()) {
+        die("Erreur lors de l'exécution de la requête: " . $comment_stmt->error);
+    }
+    header("Location: " . $_SERVER['REQUEST_URI']);
+    exit();
+}
+
+// Gérer les likes
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['like'])) {
+    $like = $_POST['like'];
+    
+    if ($like == 'true') {
+        $like_query = "
+            INSERT INTO LikeIdee (employe_id, idee_id) 
+            VALUES (?, ?)
+            ON DUPLICATE KEY UPDATE employe_id = employe_id
+        ";
+    } else {
+        $like_query = "
+            DELETE FROM LikeIdee WHERE employe_id = ? AND idee_id = ?
+        ";
+    }
+
+    $like_stmt = $connexion->prepare($like_query);
+    if ($like_stmt === false) {
+        die("Erreur lors de la préparation de la requête: " . $connexion->error);
+    }
+    $like_stmt->bind_param('ii', $employe_id, $idee_id);
+    if (!$like_stmt->execute()) {
+        die("Erreur lors de l'exécution de la requête: " . $like_stmt->error);
+    }
+
+    $like_stmt->close();
+    exit(json_encode(['success' => true]));
+}
 ?>
 
 <!DOCTYPE html>
@@ -66,13 +140,13 @@ $idee = $result->fetch_assoc();
     <title>Voir Idée</title>
     <style>
         .container {
-            max-width: 800px;
+            max-width: 1500px;
             margin: auto;
             padding: 20px;
         }
         .idea-details {
             border: 1px solid #ddd;
-            padding: 20px;
+            padding: 100px;
             border-radius: 8px;
             background: #f9f9f9;
             position: relative;
@@ -82,7 +156,7 @@ $idee = $result->fetch_assoc();
             align-items: center;
             position: absolute;
             top: 10px;
-            right: 10px;
+            left: 10px;
         }
         .creator-info img {
             width: 50px;
@@ -102,7 +176,9 @@ $idee = $result->fetch_assoc();
             padding: 5px 10px;
             border-radius: 5px;
             display: inline-block;
-            font-weight: bold;
+            font-weight: bolder;
+            top: 10px;
+            right: 10px;
         }
         .status.soumis { background: #ffecb3; }
         .status.approuve { background: #c8e6c9; }
@@ -155,110 +231,127 @@ $idee = $result->fetch_assoc();
             margin-bottom: 10px;
         }
         .comment-form button {
-            background: #ff7f00;
-            color: white;
-            border: none;
+            display: inline-block;
             padding: 10px 20px;
             border-radius: 5px;
+            border: none;
+            background-color: #007BFF;
+            color: white;
             cursor: pointer;
+            transition: background-color 0.2s ease;
         }
         .comment-form button:hover {
-            background: #e06b00;
+            background-color: #0056b3;
+        }
+        .comment {
+            display: flex;
+            align-items: flex-start;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .comment img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .comment-content {
+            background: #f9f9f9;
+            padding: 10px;
+            border-radius: 5px;
+            width: 100%;
+        }
+        .comment-meta {
+            font-size: 0.8em;
+            color: #666;
+            margin-bottom: 5px;
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <div class="logo" onclick="location.href='../accueil.html'">
-            <img src="../../static/img/icon.png" alt="Logo">
-            <div>
-                <h1>Orange</h1>
-                <h3><span class="for-ideas">for ideas</span></h3>
-            </div>
-        </div>
-        <div class="navigation">
-            <strong>
-                <a href="MesIdees.php"><i class="fas fa-arrow-left"></i> Retour</a>
-            </strong>
-        </div>
-    </div>
-
     <div class="container">
-        <h1>Voir Idée</h1>
         <div class="idea-details">
             <div class="creator-info">
-                <img src="data:image/jpeg;base64,<?php echo base64_encode($idee['photo_profil']); ?>" alt="Photo de profil" id="profile-img">
-                <div>
-                    <span class="name"><?php echo htmlspecialchars($idee['prenom']) . ' ' . htmlspecialchars($idee['nom']); ?></span>
-                    <div class="idea-dates">
-                        <p><strong>Créé le:</strong> <?php echo htmlspecialchars($idee['date_creation']); ?></p>
-                        <p><strong>Modifié le:</strong> <?php echo htmlspecialchars($idee['date_modification']); ?></p>
+                <img src="data:image/jpeg;base64,<?= base64_encode($idee['photo_profil']) ?>" alt="Photo de profil">
+                <div class="name"><?= htmlspecialchars($idee['prenom']) ?> <?= htmlspecialchars($idee['nom']) ?></div>
+            </div>
+            <div class="status <?= strtolower($idee['statut']) ?>">
+                <?= htmlspecialchars($idee['statut']) ?>
+            </div>
+            <h1><?= htmlspecialchars($idee['titre']) ?></h1>
+            <div class="idea-dates">
+                Créée le: <?= htmlspecialchars($idee['date_creation']) ?>
+                <br>
+                Dernière modification: <?= htmlspecialchars($idee['date_modification']) ?>
+            </div>
+            <p><?= nl2br(htmlspecialchars($idee['contenu_idee'])) ?></p>
+            <?php if ($idee['nom_fichier']): ?>
+                <div class="file">
+                    <strong>Fichier joint:</strong>
+                    <a href="data:<?= $idee['type'] ?>;base64,<?= base64_encode($idee['contenu_fichier']) ?>" download="<?= htmlspecialchars($idee['nom_fichier']) ?>">
+                        <?= htmlspecialchars($idee['nom_fichier']) ?>
+                    </a>
+                </div>
+            <?php endif; ?>
+            <div class="like-container">
+                <button class="like-button <?= $idee['user_liked'] ? 'liked' : '' ?>" data-liked="<?= $idee['user_liked'] ? 'true' : 'false' ?>">
+                    <i class="fas fa-thumbs-up thumb-icon"></i>
+                </button>
+                <div class="like-count"><?= $idee['like_count'] ?></div>
+            </div>
+        </div>
+        <div class="comments-section">
+            <h2>Commentaires</h2>
+            <div class="comment-form">
+                <form method="POST">
+                    <textarea name="comment_content" rows="3" placeholder="Ajouter un commentaire..." required></textarea>
+                    <button type="submit">Envoyer</button>
+                </form>
+            </div>
+            <?php foreach ($comments as $comment): ?>
+                <div class="comment">
+                    <img src="data:image/jpeg;base64,<?= base64_encode($comment['photo_profil']) ?>" alt="Photo de profil">
+                    <div class="comment-content">
+                        <div class="comment-meta">
+                            <strong><?= htmlspecialchars($comment['prenom']) ?> <?= htmlspecialchars($comment['nom']) ?></strong>
+                            <br>
+                            <?= htmlspecialchars($comment['date_creation']) ?>
+                        </div>
+                        <p><?= nl2br(htmlspecialchars($comment['contenu'])) ?></p>
                     </div>
                 </div>
-            </div>
-            <div class="idea-info">
-                <p class="status <?php echo strtolower(htmlspecialchars($idee['statut'])); ?>">
-                    <strong>Statut:</strong> <?php echo htmlspecialchars($idee['statut']); ?>
-                </p>
-                <h2><?php echo htmlspecialchars($idee['titre']); ?></h2>
-                <hr>
-                <p><?php echo nl2br(htmlspecialchars($idee['contenu_idee'])); ?></p>
-                <?php if ($idee['nom_fichier']) : ?>
-                    <p><strong>Fichier :</strong> <a href="data:<?php echo htmlspecialchars($idee['type']); ?>;base64,<?php echo base64_encode($idee['contenu_fichier']); ?>" target="_blank"><?php echo htmlspecialchars($idee['nom_fichier']); ?></a></p>
-                <?php endif; ?>
-                <div class="like-container">
-                    <button id="likeButton" class="like-button">
-                        <span id="thumbIcon" class="thumb-icon"><i class="far fa-thumbs-up"></i></span>
-                    </button>
-                    <span id="likeCount" class="like-count">0</span>
-                </div>
-            </div>
+            <?php endforeach; ?>
         </div>
-
-        <div class="comments-section">
-            <h3>Commentaires</h3>
-            <div class="comment-form">
-                <textarea placeholder="Ajouter un commentaire"></textarea>
-                <button>Envoyer</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="espace"></div>
-    <div class="footer">
-        <h4 class="footer-left"><a href="mailto:support@orange.com" style="text-decoration: none; color: white;">Contact</a></h4>
-        <h4 class="footer-right">© Orange/Juin2024</h4>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const likeButton = document.getElementById('likeButton');
-            const likeCount = document.getElementById('likeCount');
-            const thumbIcon = document.querySelector('.thumb-icon i');
-            let isLiked = false;
-            let count = 0;
+            const likeButton = document.querySelector('.like-button');
+            const likeCount = document.querySelector('.like-count');
 
             likeButton.addEventListener('click', () => {
-                if (isLiked) {
-                    count--;
-                    likeButton.classList.remove('liked');
-                    thumbIcon.classList.remove('fas');
-                    thumbIcon.classList.add('far');
-                } else {
-                    count++;
-                    likeButton.classList.add('liked');
-                    thumbIcon.classList.remove('far');
-                    thumbIcon.classList.add('fas');
-                }
-                isLiked = !isLiked;
-                likeCount.textContent = count;
+                const liked = likeButton.dataset.liked === 'true';
+
+                fetch(window.location.href, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        like: !liked
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        likeButton.dataset.liked = !liked;
+                        likeButton.classList.toggle('liked', !liked);
+                        likeCount.textContent = parseInt(likeCount.textContent) + (!liked ? 1 : -1);
+                    }
+                });
             });
         });
     </script>
 </body>
 </html>
-
-<?php
-$stmt->close();
-$connexion->close();
-?>

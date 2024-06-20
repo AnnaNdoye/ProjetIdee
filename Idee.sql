@@ -63,3 +63,13 @@ CREATE TABLE Commentaire (
     FOREIGN KEY (employe_id) REFERENCES Employe(id_employe),
     FOREIGN KEY (idee_id) REFERENCES Idee(id_idee)
 );
+
+
+CREATE TABLE LikeIdee (
+    id_like INTEGER PRIMARY KEY AUTO_INCREMENT,
+    employe_id INTEGER,
+    idee_id INTEGER,
+    FOREIGN KEY (employe_id) REFERENCES Employe(id_employe),
+    FOREIGN KEY (idee_id) REFERENCES Idee(id_idee),
+    UNIQUE (employe_id, idee_id) -- Un employé ne peut liker une idée qu'une seule fois
+);
