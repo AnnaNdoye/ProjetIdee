@@ -70,7 +70,7 @@ if (!$result) {
     <link rel="stylesheet" type="text/css" href="../../static/css/style1.css">
     <link rel="stylesheet" type="text/css" href="../../static/css/style5.css">
     <link rel="stylesheet" type="text/css" href="../../static/css/IdeePP.css">
-    <link rel="stylesheet" type="text/css" href="../../static/css/styles.css">
+    <link rel="stylesheet" type="text/css" href="../../static/css/style.css">
     <title>Accueil Idées</title>
     <script>
         function confirmDeletion(id) {
@@ -117,7 +117,7 @@ if (!$result) {
             </div>
         </div>
         <div class="search-bar">
-            <form method="GET" action="MesIdees.php">
+            <form method="GET" action="AccueilIdee.php">
                 <input type="text" name="search" placeholder="Rechercher des idées" value="<?php echo htmlspecialchars($search); ?>">
                 <button type="submit"><i class="fas fa-search"></i></button>
             </form>
@@ -127,16 +127,16 @@ if (!$result) {
                 <a href="NouvelleIdee.php"><i class="fa fa-plus-circle"></i> Nouvelle idée</a>
             </strong>
         </div>
-        <div class="connect_entete">
-            <a href="../connexion.php">
-                <i class="fas fa-user"></i>
-                <span>Se déconnecter</span>
-            </a>
-        </div>
         <div class="profil">
             <a href="Profil.php">
                 <i class="fas fa-user-circle"></i>
                 <strong>Profil</strong>
+            </a>
+        </div>
+        <div class="connect_entete">
+            <a href="../../database/deconnexion.php">
+                <i class="fas fa-user"></i>
+                <span>Se déconnecter</span>
             </a>
         </div>
     </div>
@@ -145,13 +145,13 @@ if (!$result) {
         <button><strong>Menu</strong></button>
         <ul class="sous">
             <li><a href="NouvelleIdee.php">Nouvelle Idée</a></li>
-            <li><a href="MesIdees.php">Mes idées</a></li>
+            <li><a href="AccueilIdee.php">Mes idées</a></li>
             <li><a href="IdeePublique.php">Idées publiques</a></li>
             <li><a href="Profil.php">Profil</a></li>
         </ul>
     </div>
 
-    <div class="filtre" style="float: right;">
+    <div class="filtre">
         <i class="fas fa-filter"></i>
         <select name="filtre" id="filtre" onchange="this.form.submit()">
             <option value="">Filtrer par:</option>
@@ -163,28 +163,40 @@ if (!$result) {
     </div>
 
     <div class="container">
-        <h1>Toutes mes idées</h1>
-        <div class="ideas">
-            <?php while($row = $result->fetch_assoc()) : ?>
+        <div id="ideas">
+            <?php
+                if ($result->num_rows > 0) {
+                    echo '<h1 id="ideepose">Toutes mes idées</h1>';
+                while ($row = $result->fetch_assoc()) {
+            ?>
                 <div class="enveloppe">
-                    <div class="idea" onclick="location.href='VoirIdee.php?id=<?php echo htmlspecialchars($row['id_idee']); ?>'">
-                        <h2>Titre: <?php echo htmlspecialchars($row['titre']); ?></h2>
-                        <p><strong>Contenu: </strong><?php echo $row['contenu_idee']; ?></p> <!-- Suppression de htmlspecialchars ici -->
-                        <p><strong>Catégorie:</strong> <?php echo htmlspecialchars($row['nom_categorie']); ?></p>
-                        <?php if ($row['nom_fichier']) : ?>
-                            <p><strong>Fichier :</strong> <a href="data:<?php echo htmlspecialchars($row['type']); ?>;base64,<?php echo base64_encode($row['contenu_fichier']); ?>" target="_blank"><?php echo htmlspecialchars($row['nom_fichier']); ?></a></p>
-                        <?php endif; ?>
-                        <p><strong>Date de création: </strong> <?php echo htmlspecialchars($row['date_creation']); ?></p>
-                        <p><strong>Date de modification: </strong> <?php echo htmlspecialchars($row['date_modification']); ?></p>
-                        <p class="status-<?php echo strtolower(htmlspecialchars($row['statut'])); ?>">
-                            <strong>Statut:</strong> <?php echo htmlspecialchars($row['statut']); ?> <span class="status-circle"></span>
-                        </p>
-                        <p><strong>Visibilité:</strong> <?php echo $row['est_publique'] == 1 ? 'Publique' : 'Privé'; ?></p>
-                        <a href="ModifierIdee.php?id=<?php echo htmlspecialchars($row['id_idee']); ?>"><i class="fas fa-edit"></i> Éditer</a>
+                    <div class="idea">
+                        <div id="div1">
+                            <p><strong>Créé le: </strong> <?php echo htmlspecialchars($row['date_creation']); ?></p>
+                            <p class="status-<?php echo strtolower(htmlspecialchars($row['statut'])); ?>">
+                                <strong>Statut:</strong> <?php echo htmlspecialchars($row['statut']); ?> <span class="status-circle"></span>
+                            </p>
+                            <p><strong>Visibilité:</strong> <?php echo $row['est_publique'] == 1 ? 'Publique' : 'Privé'; ?></p>
+                        </div>
+
+                        <div id="div2">
+                            <h2>Titre: <?php echo htmlspecialchars($row['titre']); ?></h2>
+                            <p><strong>Catégorie:</strong> <?php echo htmlspecialchars($row['nom_categorie']); ?></p>
+                            <a href="VoirIdee.php?id=<?php echo htmlspecialchars($row['id_idee']); ?>">Voir plus...</a>
+                        </div>
+                    </div>
+                    <div class="groupe">
+                        <a class="edit" href="ModifierIdee.php?id=<?php echo htmlspecialchars($row['id_idee']); ?>"><i class="fas fa-edit"></i> Éditer</a>
                         <a class="supprime" href="javascript:void(0);" onclick="confirmDeletion(<?php echo htmlspecialchars($row['id_idee']); ?>)"><i class="fas fa-trash"></i> Supprimer</a>
                     </div>
                 </div>
-            <?php endwhile; ?>
+                <?php
+                    }
+                } 
+                else {
+                    echo '<h1 id="ideepose">Aucune idée pour le moment.</h1>';
+                }
+                ?>
         </div>
     </div>
 

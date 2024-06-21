@@ -59,7 +59,9 @@ $idee = $result->fetch_assoc();
 // Récupérer les commentaires
 $comments_query = "
     SELECT commentaire.id_commentaire, commentaire.contenu, commentaire.date_creation, commentaire.date_modification, 
-    employe.nom, employe.prenom, employe.photo_profil
+    employe.nom, employe.prenom, employe.photo_profil,
+    (SELECT COUNT(*) FROM LikeCommentaire WHERE commentaire_id = commentaire.id_commentaire) AS like_count,
+    (SELECT COUNT(*) FROM LikeCommentaire WHERE commentaire_id = commentaire.id_commentaire AND employe_id = ?) AS user_liked
     FROM commentaire
     LEFT JOIN employe ON commentaire.employe_id = employe.id_employe
     WHERE commentaire.idee_id = ?
@@ -71,7 +73,7 @@ if ($comments_stmt === false) {
     die("Erreur lors de la préparation de la requête: " . $connexion->error);
 }
 
-$comments_stmt->bind_param('i', $idee_id);
+$comments_stmt->bind_param('ii', $employe_id, $idee_id);
 if (!$comments_stmt->execute()) {
     die("Erreur lors de l'exécution de la requête: " . $comments_stmt->error);
 }
@@ -126,8 +128,80 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['like'])) {
     $like_stmt->close();
     exit(json_encode(['success' => true]));
 }
-?>
 
+// Gérer les likes des commentaires
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['like_comment'])) {
+    $comment_id = $_POST['comment_id'];
+    $like_comment = $_POST['like_comment'];
+    
+    if ($like_comment == 'true') {
+        $like_comment_query = "
+            INSERT INTO LikeCommentaire (employe_id, commentaire_id) 
+            VALUES (?, ?)
+            ON DUPLICATE KEY UPDATE employe_id = employe_id
+        ";
+    } else {
+        $like_comment_query = "
+            DELETE FROM LikeCommentaire WHERE employe_id = ? AND commentaire_id = ?
+        ";
+    }
+
+    $like_comment_stmt = $connexion->prepare($like_comment_query);
+    if ($like_comment_stmt === false) {
+        die("Erreur lors de la préparation de la requête: " . $connexion->error);
+    }
+    $like_comment_stmt->bind_param('ii', $employe_id, $comment_id);
+    if (!$like_comment_stmt->execute()) {
+        die("Erreur lors de l'exécution de la requête: " . $like_comment_stmt->error);
+    }
+
+    $like_comment_stmt->close();
+    exit(json_encode(['success' => true]));
+}
+
+//modifier commentaires
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_comment_id'])) {
+    $edit_comment_id = $_POST['edit_comment_id'];
+    $new_content = $_POST['new_content'];
+    $edit_query = "
+        UPDATE commentaire 
+        SET contenu = ?, date_modification = NOW() 
+        WHERE id_commentaire = ? AND employe_id = ?
+    ";
+    $edit_stmt = $connexion->prepare($edit_query);
+    if ($edit_stmt === false) {
+        die("Erreur lors de la préparation de la requête: " . $connexion->error);
+    }
+    $edit_stmt->bind_param('sii', $new_content, $edit_comment_id, $employe_id);
+    if (!$edit_stmt->execute()) {
+        die("Erreur lors de l'exécution de la requête: " . $edit_stmt->error);
+    }
+    header("Location: " . $_SERVER['REQUEST_URI']);
+    exit();
+}
+
+
+//supprimer commenaires
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_comment_id'])) {
+    $delete_comment_id = $_POST['delete_comment_id'];
+    $delete_query = "
+        DELETE FROM commentaire 
+        WHERE id_commentaire = ? AND employe_id = ?
+    ";
+    $delete_stmt = $connexion->prepare($delete_query);
+    if ($delete_stmt === false) {
+        die("Erreur lors de la préparation de la requête: " . $connexion->error);
+    }
+    $delete_stmt->bind_param('ii', $delete_comment_id, $employe_id);
+    if (!$delete_stmt->execute()) {
+        die("Erreur lors de l'exécution de la requête: " . $delete_stmt->error);
+    }
+    header("Location: " . $_SERVER['REQUEST_URI']);
+    exit();
+}
+
+
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -136,7 +210,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['like'])) {
     <script src="https://kit.fontawesome.com/64d58efce2.js" crossorigin="anonymous"></script>
     <link rel="icon" type="image/png" href="../../static/img/icon.png">
     <link rel="stylesheet" href="../../static/css/style1.css">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="../../static/css/styles.css">
     <title>Voir Idée</title>
     <style>
         .container {
@@ -195,78 +269,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['like'])) {
             border: none;
             cursor: pointer;
             font-size: 1.5rem;
-            transition: transform 0.2s ease;
+            transition: transform 0.2s ease-in-out;
         }
-        .like-button:focus {
-            outline: none;
-        }
-        .thumb-icon {
-            transition: color 0.2s ease, transform 0.2s ease;
-        }
-        .like-button:hover .thumb-icon {
-            color: #888;
-            transform: scale(1.1);
-        }
-        .liked .thumb-icon {
-            color: #007BFF;
+        .like-button:hover {
             transform: scale(1.2);
         }
         .like-count {
-            margin-left: 10px;
-            font-size: 1.5rem;
-            transition: color 0.2s ease;
-        }
-        .liked + .like-count {
-            color: #007BFF;
+            margin-left: 5px;
+            font-size: 1.2rem;
         }
         .comments-section {
             margin-top: 40px;
         }
-        .comment-form textarea {
-            width: 100%;
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-            resize: vertical;
-            margin-bottom: 10px;
-        }
-        .comment-form button {
-            display: inline-block;
-            padding: 10px 20px;
-            border-radius: 5px;
-            border: none;
-            background-color: #007BFF;
-            color: white;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-        }
-        .comment-form button:hover {
-            background-color: #0056b3;
-        }
         .comment {
-            display: flex;
-            align-items: flex-start;
-            padding: 10px;
-            margin-bottom: 10px;
             border-bottom: 1px solid #ddd;
+            padding: 10px 0;
+            position: relative;
         }
-        .comment img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            margin-right: 10px;
+        .comment:last-child {
+            border-bottom: none;
         }
-        .comment-content {
-            background: #f9f9f9;
-            padding: 10px;
-            border-radius: 5px;
-            width: 100%;
+        .comment .creator-info {
+            position: static;
+            margin-bottom: 10px;
         }
-        .comment-meta {
-            font-size: 0.8em;
-            color: #666;
-            margin-bottom: 5px;
+        .comment .like-container {
+            justify-content: flex-start;
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
         }
+        .comment .like-count {
+            margin-left: 5px;
+        }
+
+        .edit-comment-form {
+    margin-top: 10px;
+}
+
+.edit-button {
+    margin-top: 10px;
+    margin-right: 10px;
+}
+
     </style>
 </head>
 <body>
@@ -279,99 +324,147 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['like'])) {
         </div>
     </div>
     <div class="navigation">
-    <a href="IdeePublique.php">
-        <i class="fas fa-arrow-left"></i>
-        <strong>Retour</strong>
-    </a>
+        <i class="fa-solid fa-arrow-left"></i>
+        <strong><a href="IdeePublique.php">Retour</a></strong>
     </div>
 </div>
     <div class="container">
         <div class="idea-details">
             <div class="creator-info">
-                <img src="data:image/jpeg;base64,<?= base64_encode($idee['photo_profil']) ?>" alt="Photo de profil">
-                <div class="name"><?= htmlspecialchars($idee['prenom']) ?> <?= htmlspecialchars($idee['nom']) ?></div>
+                <img src="<?php echo $idee['photo_profil']; ?>" alt="Photo de profil">
+                <div class="name"><?php echo $idee['prenom'] . ' ' . $idee['nom']; ?></div>
             </div>
-            <div class="status <?= strtolower($idee['statut']) ?>">
-                <?= htmlspecialchars($idee['statut']) ?>
-            </div>
-            <h1><?= htmlspecialchars($idee['titre']) ?></h1>
             <div class="idea-dates">
-                Créée le: <?= htmlspecialchars($idee['date_creation']) ?>
-                <br>
-                Dernière modification: <?= htmlspecialchars($idee['date_modification']) ?>
+                <div>Créé le: <?php echo $idee['date_creation']; ?></div>
+                <div>Dernière modification: <?php echo $idee['date_modification']; ?></div>
             </div>
-            <p><?= nl2br(htmlspecialchars($idee['contenu_idee'])) ?></p>
+            <h1><?php echo $idee['titre']; ?></h1>
+            <p><?php echo nl2br($idee['contenu_idee']); ?></p>
             <?php if ($idee['nom_fichier']): ?>
-                <div class="file">
-                    <strong>Fichier joint:</strong>
-                    <a href="data:<?= $idee['type'] ?>;base64,<?= base64_encode($idee['contenu_fichier']) ?>" download="<?= htmlspecialchars($idee['nom_fichier']) ?>">
-                        <?= htmlspecialchars($idee['nom_fichier']) ?>
-                    </a>
+                <div>
+                    <a href="data:<?php echo $idee['type']; ?>;base64,<?php echo base64_encode($idee['contenu_fichier']); ?>" download="<?php echo $idee['nom_fichier']; ?>">Télécharger le fichier associé</a>
                 </div>
             <?php endif; ?>
             <div class="like-container">
-                <button class="like-button <?= $idee['user_liked'] ? 'liked' : '' ?>" data-liked="<?= $idee['user_liked'] ? 'true' : 'false' ?>">
-                    <i class="fas fa-thumbs-up thumb-icon"></i>
-                </button>
-                <div class="like-count"><?= $idee['like_count'] ?></div>
+                <form id="likeForm" method="post">
+                    <input type="hidden" name="like" value="<?php echo $idee['user_liked'] ? 'false' : 'true'; ?>">
+                    <button type="submit" class="like-button">
+                        <i class="fas fa-thumbs-up" style="color:<?php echo $idee['user_liked'] ? 'blue' : 'grey'; ?>;"></i>
+                    </button>
+                </form>
+                <span class="like-count"><?php echo $idee['like_count']; ?></span>
+            </div>
+            <div class="status <?php echo strtolower($idee['statut']); ?>">
+                Statut: <?php echo ucfirst($idee['statut']); ?>
             </div>
         </div>
         <div class="comments-section">
             <h2>Commentaires</h2>
-            <div class="comment-form">
-                <form method="POST">
-                    <textarea name="comment_content" rows="3" placeholder="Ajouter un commentaire..." required></textarea>
-                    <button type="submit">Envoyer</button>
-                </form>
-            </div>
             <?php foreach ($comments as $comment): ?>
-                <div class="comment">
-                    <img src="data:image/jpeg;base64,<?= base64_encode($comment['photo_profil']) ?>" alt="Photo de profil">
-                    <div class="comment-content">
-                        <div class="comment-meta">
-                            <strong><?= htmlspecialchars($comment['prenom']) ?> <?= htmlspecialchars($comment['nom']) ?></strong>
-                            <br>
-                            <?= htmlspecialchars($comment['date_creation']) ?>
-                        </div>
-                        <p><?= nl2br(htmlspecialchars($comment['contenu'])) ?></p>
-                    </div>
-                </div>
-            <?php endforeach; ?>
+    <div class="comment">
+        <div class="creator-info">
+            <img src="<?php echo $comment['photo_profil']; ?>" alt="Photo de profil">
+            <div class="name"><?php echo $comment['prenom'] . ' ' . $comment['nom']; ?></div>
+        </div>
+        <p><?php echo nl2br($comment['contenu']); ?></p>
+        <div class="like-container">
+            <form class="likeCommentForm" method="post">
+                <input type="hidden" name="comment_id" value="<?php echo $comment['id_commentaire']; ?>">
+                <input type="hidden" name="like_comment" value="<?php echo $comment['user_liked'] ? 'false' : 'true'; ?>">
+                <button type="submit" class="like-button">
+                    <i class="fas fa-thumbs-up" style="color:<?php echo $comment['user_liked'] ? 'blue' : 'grey'; ?>;"></i>
+                </button>
+            </form>
+            <span class="like-count"><?php echo $comment['like_count']; ?></span>
+        </div>
+        <?php if ($comment['employe_id'] == $employe_id): ?>
+            <form method="post" class="edit-comment-form" style="display:none;">
+                <input type="hidden" name="edit_comment_id" value="<?php echo $comment['id_commentaire']; ?>">
+                <textarea name="new_content" rows="3"><?php echo htmlspecialchars($comment['contenu']); ?></textarea>
+                <button type="submit">Enregistrer</button>
+            </form>
+            <button class="edit-button" onclick="toggleEditForm(<?php echo $comment['id_commentaire']; ?>)">Modifier</button>
+            <form method="post" style="display:inline;">
+                <input type="hidden" name="delete_comment_id" value="<?php echo $comment['id_commentaire']; ?>">
+                <button type="submit" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce commentaire ?');">Supprimer</button>
+            </form>
+        <?php endif; ?>
+        <div class="comment-dates">
+            <div>Créé le: <?php echo $comment['date_creation']; ?></div>
+            <?php if ($comment['date_modification']): ?>
+                <div>Modifié le: <?php echo $comment['date_modification']; ?></div>
+            <?php endif; ?>
         </div>
     </div>
+<?php endforeach; ?>
 
-    <div class="espace"></div>
+            <form method="post">
+                <label for="comment_content">Ajouter un commentaire:</label>
+                <textarea name="comment_content" id="comment_content" rows="4" required></textarea>
+                <button type="submit">Envoyer</button>
+            </form>
+        </div>
+    </div>
+<div class="espace"></div>
     <div class="footer">
         <h4 class="footer-left"><a href="mailto:support@orange.com" style="text-decoration: none; color: white;">Contact</a></h4>
         <h4 class="footer-right">© Orange/Juin2024</h4>
     </div>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const likeButton = document.querySelector('.like-button');
-            const likeCount = document.querySelector('.like-count');
+        document.getElementById('likeForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            var formData = new FormData(this);
+            fetch('', {
+                method: 'POST',
+                body: formData
+            }).then(response => response.json())
+              .then(data => {
+                  if (data.success) {
+                      location.reload();
+                  }
+              });
+        });
 
-            likeButton.addEventListener('click', () => {
-                const liked = likeButton.dataset.liked === 'true';
-
-                fetch(window.location.href, {
+        document.querySelectorAll('.likeCommentForm').forEach(function(form) {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                var formData = new FormData(this);
+                fetch('', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        like: !liked
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        likeButton.dataset.liked = !liked;
-                        likeButton.classList.toggle('liked', !liked);
-                        likeCount.textContent = parseInt(likeCount.textContent) + (!liked ? 1 : -1);
-                    }
-                });
+                    body: formData
+                }).then(response => response.json())
+                  .then(data => {
+                      if (data.success) {
+                          location.reload();
+                      }
+                  });
             });
         });
+
+        function toggleEditForm(commentId) {
+        var form = document.querySelector(`.edit-comment-form input[value='${commentId}']`).parentNode;
+        if (form.style.display === "none") {
+            form.style.display = "block";
+        } else {
+            form.style.display = "none";
+        }
+    }
+
+    document.querySelectorAll('.likeCommentForm').forEach(function(form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            var formData = new FormData(this);
+            fetch('', {
+                method: 'POST',
+                body: formData
+            }).then(response => response.json())
+              .then(data => {
+                  if (data.success) {
+                      location.reload();
+                  }
+              });
+        });
+    });
     </script>
 </body>
 </html>

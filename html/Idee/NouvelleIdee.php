@@ -141,8 +141,6 @@ if (!isset($_SESSION['user_id'])) {
         }, 3000);
     }
 </script>
-
-
     <script src="../static/js/script1.js"></script>
     <script src="../static/js/script2.js"></script>
     <script>

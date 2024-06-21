@@ -1,5 +1,5 @@
 .container {
-    max-width: 800px;
+    max-width: 100%;
     margin: auto;
     padding: 20px;
 }
@@ -44,10 +44,10 @@
     font-weight: bold;
 }
 
-.status.soumis { background: #ffecb3; }
-.status.approuve { background: #c8e6c9; }
-.status.rejete { background: #ffcdd2; }
-.status.implemente { background: #b3e5fc; }
+.status.soumis { background: #e7b92d; }
+.status.approuve { background: #59ec5e; }
+.status.rejete { background: #f23434; }
+.status.implemente { background: #4ebdf0; }
 
 .like-container {
     display: flex;
@@ -170,3 +170,80 @@
 .comment-actions button:focus {
     outline: none;
 }
+
+#div1 {
+    width: 100%;
+    height: auto;
+    padding: 15px;
+    background-color: #d4e7f1;
+    border-radius: 5px;
+    align-items: start;
+}
+
+/*finalement le div2 n'a pas étté utilisé*/
+#div2{
+    width: 100%;
+    height: auto;
+    padding: 15px;
+    margin: 10px;
+    border-radius: 5px;
+}
+
+#ideepose{
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    text-shadow: 2px 4px 3px rgba(0,0,0,0.3);
+    background: linear-gradient(to right, #ff6600, #000);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+#enhauteur
+{
+    width: 100%;
+    height: auto;
+    padding: 15px;
+    background-color: #d4e7f135;
+    border-radius: 5px;
+    align-items: start;
+}
+
+.details{
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 8px;
+    background: #f9f9f9;
+    position: relative;
+    width: 100%;
+}
+
+.details img {
+    display: block;
+    margin-top: 10px;
+}
+
+.download-button {
+    background-color: #007BFF;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-top: 10px;
+    display: inline-block;
+}
+
+.download-button:hover {
+    background-color: #0056b3;
+}
+
+
+#editer{
+    margin-left: 1250px;
+}
+
+
+
+
+

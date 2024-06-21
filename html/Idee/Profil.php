@@ -51,32 +51,54 @@ if ($result->num_rows > 0) {
 }
 
 $update_message = "";
+$default_photo = "uploads/unknow.png";
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") 
 {
-    $nom = $_POST['nom'];
-    $prenom = $_POST['prenom'];
-    $poste = $_POST['poste'];
-    $photo_profil = $_FILES['photo_profil'];
-
-    if ($photo_profil['name']) 
-    {
-        $photo_profil_blob = file_get_contents($photo_profil['tmp_name']);
-        $update_query = $connexion->prepare("UPDATE employe SET nom=?, prenom=?, poste=?, photo_profil=? WHERE id_employe=?");
-        $update_query->bind_param("ssssi", $nom, $prenom, $poste, $photo_profil_blob, $user_id);
+    if (isset($_POST['delete_photo'])) {
+        $update_query = $connexion->prepare("UPDATE employe SET photo_profil=? WHERE id_employe=?");
+        $update_query->bind_param("si", $default_photo, $user_id);
+        if ($update_query->execute() === TRUE) 
+        {
+            $update_message = "Photo de profil supprimée.";
+            header("Location: Profil.php");
+            exit();
+        } 
+        else 
+        {
+            echo "Erreur lors de la mise à jour: " . $connexion->error;
+        }
     } else {
-        $update_query = $connexion->prepare("UPDATE employe SET nom=?, prenom=?, poste=? WHERE id_employe=?");
-        $update_query->bind_param("sssi", $nom, $prenom, $poste, $user_id);
-    }
+        $nom = $_POST['nom'];
+        $prenom = $_POST['prenom'];
+        $poste = $_POST['poste'];
+        $photo_profil = $_FILES['photo_profil'];
 
-    if ($update_query->execute() === TRUE) 
-    {
-        $update_message = "Mise à jour réussie.";
-        header("Location: Profil.php");
-        exit();
-    } 
-    else 
-    {
-        echo "Erreur lors de la mise à jour: " . $connexion->error;
+        if ($photo_profil['name']) 
+        {
+            $photo_profil_path = 'uploads/' . basename($photo_profil['name']);
+            if (move_uploaded_file($photo_profil['tmp_name'], $photo_profil_path)) {
+                $update_query = $connexion->prepare("UPDATE employe SET nom=?, prenom=?, poste=?, photo_profil=? WHERE id_employe=?");
+                $update_query->bind_param("ssssi", $nom, $prenom, $poste, $photo_profil_path, $user_id);
+            } else {
+                echo "Erreur lors du téléchargement de l'image.";
+                exit();
+            }
+        } else {
+            $update_query = $connexion->prepare("UPDATE employe SET nom=?, prenom=?, poste=? WHERE id_employe=?");
+            $update_query->bind_param("sssi", $nom, $prenom, $poste, $user_id);
+        }
+
+        if ($update_query->execute() === TRUE) 
+        {
+            $update_message = "Mise à jour réussie.";
+            header("Location: Profil.php");
+            exit();
+        } 
+        else 
+        {
+            echo "Erreur lors de la mise à jour: " . $connexion->error;
+        }
     }
 }
 ?>
@@ -117,12 +139,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
         <?php endif; ?>
         <form method="POST" action="" enctype="multipart/form-data">
             <div class="profile-photo">
-                <?php if ($row['photo_profil']): ?>
-                    <img src="data:image/jpeg;base64,<?php echo base64_encode($row['photo_profil']); ?>" alt="Photo de profil" id="profile-img">
-                <?php else: ?>
-                    <img src="uploads/unknow.png" alt="Photo par défaut" id="profile-img">
-                <?php endif; ?>
+                <img src="<?php echo $row['photo_profil'] ? $row['photo_profil'] : $default_photo; ?>" alt="Photo de profil" id="profile-img">
                 <input type="file" id="photo_profil" name="photo_profil" style="display: none;">
+                <button type="button" onclick="document.getElementById('photo_profil').click();"><i class="fas fa-pen"></i>Editer</button>
+                <?php if ($row['photo_profil'] && $row['photo_profil'] !== $default_photo): ?>
+                    <button type="submit" name="delete_photo"><i class="fas fa-trash"></i> Supprimer</button>
+                <?php endif; ?>
             </div>
             <div class="profile-item">
                 <label for="nom">Nom:</label>

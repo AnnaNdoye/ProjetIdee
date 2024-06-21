@@ -57,143 +57,7 @@ if (!$result) {
     <link rel="stylesheet" type="text/css" href="../../static/css/style1.css">
     <link rel="stylesheet" type="text/css" href="../../static/css/style5.css">
     <link rel="stylesheet" type="text/css" href="../../static/css/IdeePP.css">
-    <style>
-        .idea:hover {
-            transform: translateY(-5px);
-        }
-
-        .idea h2 {
-            margin-top: 0;
-            color: #333;
-            font-size: 1.5em;
-        }
-
-        .idea p {
-            margin-bottom: 10px;
-            color: #555;
-        }
-
-        .idea .status-circle {
-            display: inline-block;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            margin-right: 5px;
-        }
-
-        .status-soumis .status-circle {
-            background-color: #F39C12;
-        }
-
-        .status-approuve .status-circle {
-            background-color: #27AE60;
-        }
-
-        .status-rejete .status-circle {
-            background-color: #E74C3C;
-        }
-
-        .status-implemente .status-circle {
-            background-color: #3498DB;
-        }
-
-        .idea a {
-            display: inline-block;
-            margin-top: 15px;
-            padding: 8px 20px;
-            background-color: #007bff;
-            color: white;
-            border-radius: 5px;
-            text-decoration: none;
-            transition: background-color 0.3s ease;
-        }
-
-        .idea a:hover {
-            background-color: #0056b3;
-        }
-
-        .idea i {
-            margin-right: 5px;
-        }
-
-        .enveloppe {
-            background-color: #fff;
-            border: 2px solid #ddd;
-            border-radius: 10px;
-            padding: 20px;
-            margin: 10px 0;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease;
-            width: 100%;
-        }
-
-        @media screen and (max-width: 768px) {
-            .header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .search-bar {
-                margin: 10px 0;
-                width: 100%;
-            }
-
-            .navigation a {
-                margin-top: 10px;
-            }
-
-            .ideas {
-                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            }
-        }
-
-        @media (max-width: 480px) {
-            .header h1 {
-                font-size: 20px;
-            }
-        }
-
-        .like-container {
-            display: flex;
-            align-items: center;
-        }
-
-        .like-button {
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 2rem;
-            transition: transform 0.2s ease;
-        }
-
-        .like-button:focus {
-            outline: none;
-        }
-
-        .thumb-icon {
-            transition: color 0.2s ease, transform 0.2s ease;
-        }
-
-        .like-button:hover .thumb-icon {
-            color: #888;
-            transform: scale(1.1);
-        }
-
-        .liked .thumb-icon {
-            color: #007BFF;
-            transform: scale(1.2);
-        }
-
-        .like-count {
-            margin-left: 10px;
-            font-size: 1.5rem;
-            transition: color 0.2s ease;
-        }
-
-        .liked + .like-count {
-            color: #007BFF;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="../../static/css/style.css">
 </head>
 <body>
 <div class="header">
@@ -205,10 +69,10 @@ if (!$result) {
         </div>
     </div>
     <div class="search-bar">
-            <form method="GET" action="MesIdees.php">
-                <input type="text" name="search" placeholder="Rechercher des idées publiques..." value="<?php echo htmlspecialchars($search); ?>">
-                <button type="submit"><i class="fas fa-search"></i></button>
-            </form>
+        <form method="GET" action="MesIdees.php">
+            <input type="text" name="search" placeholder="Rechercher des idées publiques..." value="<?php echo htmlspecialchars($search); ?>">
+            <button type="submit"><i class="fas fa-search"></i></button>
+        </form>
     </div>
     <div class="navigation">
         <strong><a href="AccueilIdee.php">Accueil</a></strong>
@@ -221,23 +85,23 @@ if (!$result) {
         </a>
     </div>
     <div class="connect_entete">
-            <a href="../connexion.php">
-                <i class="fas fa-user"></i>
-                <span>Se déconnecter</span>
-            </a>
-        </div>
+        <a href="../connexion.php">
+            <i class="fas fa-user"></i>
+            <span>Se déconnecter</span>
+        </a>
+    </div>
 </div>
 
 <div class="filtre" style="float: right;">
-        <i class="fas fa-filter"></i>
-        <select name="filtre" id="filtre" onchange="this.form.submit()">
-            <option value="">Filtrer par:</option>
-            <option value="Date de création">Date de création</option>
-            <option value="Statut">Statut</option>
-            <option value="Privée">Privé</option>
-            <option value="Publique">Publique</option>
-        </select>
-    </div>
+    <i class="fas fa-filter"></i>
+    <select name="filtre" id="filtre" onchange="this.form.submit()">
+        <option value="">Filtrer par:</option>
+        <option value="Date de création">Date de création</option>
+        <option value="Statut">Statut</option>
+        <option value="Privée">Privé</option>
+        <option value="Publique">Publique</option>
+    </select>
+</div>
 
 <div class="menu-deroulant">
     <button><strong>Menu</strong></button>
@@ -250,39 +114,58 @@ if (!$result) {
     </ul>
 </div>
 
-<div class="enveloppe">
-    <?php
-    if ($result->num_rows > 0) {
-        while ($row = $result->fetch_assoc()) {
-            echo "<div class='idea'>";
-            echo "<h2>" . htmlspecialchars($row['titre']) . "</h2>";
-            echo "<p><strong>Par:</strong> " . htmlspecialchars($row['prenom']) . " " . htmlspecialchars($row['nom']) . "</p>";
-            echo "<p><strong>Catégorie:</strong> " . htmlspecialchars($row['nom_categorie']) . "</p>";
-            echo "<p>" . nl2br(htmlspecialchars($row['contenu_idee'])) . "</p>";
-            echo "<p><strong>Date de création:</strong> " . htmlspecialchars($row['date_creation']) . "</p>";
+<div class="container">
+    <h1 id="ideepose">Idées Publiques</h1>
+    <div id="ideas">
+        <?php
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+        ?>
+        <div class='enveloppe'>
+            <div class='idea' onclick="location.href='VoirIdeePublique.php?id=<?php echo htmlspecialchars($row['id_idee']); ?>'">
+                <div id="div1"> 
+                    <p><strong>Par :</strong> 
+                        <?php echo htmlspecialchars($row['prenom']) . " " . htmlspecialchars($row['nom']); ?>
+                        <img src="<?php echo htmlspecialchars($row['photo_profil']); ?>" style="height:150px;" alt="Photo de profil" id="profile-img">
+                    </p>
+                    <p><strong>Créé le :</strong> <?php echo htmlspecialchars($row['date_creation']); ?></p>
+                    <p><strong>Catégorie:</strong> <?php echo htmlspecialchars($row['nom_categorie']); ?></p>
+                </div>
 
-            $statutClass = strtolower($row['statut']);
-            echo "<p class='status-$statutClass'><span class='status-circle'></span>" . htmlspecialchars($row['statut']) . "</p>";
-            
-            echo "<div class='like-container'>";
-            echo "<form action='../../database/idee/like.php' method='POST'>";
-            echo "<input type='hidden' name='idee_id' value='" . $row['id_idee'] . "'>";
-            echo "<button type='submit' class='like-button" . ($row['user_liked'] ? ' liked' : '') . "'>";
-            echo "<i class='fas fa-thumbs-up thumb-icon'></i>";
-            echo "</button>";
-            echo "<span class='like-count'>" . $row['like_count'] . "</span>";
-            echo "</form>";
-            echo "</div>";
-            
-            echo "<a href='VoirIdeePublique.php?id=" . $row['id_idee'] . "'>Voir les détails</a>";
-            echo "</div>";
+                <div id="div2">
+                    <span>Titre :<h2><?php echo htmlspecialchars($row['titre']); ?></h2></span>
+                    <?php $statutClass = strtolower($row['statut']); ?>
+                    <p class='status-<?php echo $statutClass; ?>'>Statut : <span class='status-circle'></span><?php echo htmlspecialchars($row['statut']); ?></p>
+                </div>
+
+                <div class='like-container'>
+                    <form action='../../database/idee/like.php' method='POST'>
+                        <input type='hidden' name='idee_id' value='<?php echo $row['id_idee']; ?>'>
+                        <button type='submit' class='like-button<?php echo ($row['user_liked'] ? ' liked' : ''); ?>'>
+                            <i class='fas fa-thumbs-up thumb-icon'></i>
+                        </button>
+                        <span class='like-count'><?php echo $row['like_count']; ?></span>
+                    </form>
+                </div>
+            </div>
+            <a href='VoirIdeePublique.php?id=<?php echo $row['id_idee']; ?>'>Voir plus...</a>
+        </div> 
+        <?php
+            }
+        } else {
+            echo "<p>Aucune idée publique trouvée.</p>";
         }
-    } else {
-        echo "<p>Aucune idée publique trouvée.</p>";
-    }
-    $stmt->close();
-    $connexion->close();
-    ?>
+        
+        $stmt->close();
+        $connexion->close();
+        ?>
+    </div>
+</div>
+
+<div class="espace"></div>
+<div class="footer">
+    <h4 class="footer-left"><a href="mailto:support@orange.com" style="text-decoration: none; color: white;">Contact</a></h4>
+    <h4 class="footer-right">© Orange/Juin2024</h4>
 </div>
 </body>
 </html>

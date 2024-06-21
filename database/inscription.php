@@ -27,13 +27,13 @@ $connection = mysqli_connect($host, $user, $password, $database);
 if ($connection->connect_error) {
     die("Erreur de connexion à la base de données : " . $connection->connect_error);
 } 
-else  //la connexion a réussie
+else  //la connexion a réussi
 {
     // Vérifier si l'email existe déjà
     $everification_email = "SELECT * FROM employe WHERE email = '$email'";
     $resultat_email = mysqli_query($connection, $everification_email);
 
-    if (mysqli_num_rows($resultat_email) > 0) //créer des variables de sessions au cas où l'email existe déjà le formulaire sera regénéré avec les champs remplis avec un message d'erreur
+    if (mysqli_num_rows($resultat_email) > 0) // Si l'email existe déjà
     {
         session_start();
         $_SESSION['prenom'] = $prenom;
@@ -45,13 +45,18 @@ else  //la connexion a réussie
         header("Location: ../html/Inscription.php");
         exit();
     } 
-    else 
+    else // Si l'email n'existe pas encore
     {
         //filtrer le mot de passe pour s'assurer que c'est un vrai mot de passe 
         if (filter_var($email, FILTER_VALIDATE_EMAIL))
         {
+             // Copier unknown.png vers le répertoire ../html/idee/upload
+            $source_photo = "../html/idee/uploads/unknow.png";
+            $destination_photo = "uploads/unknow.png"; // Utilisation de l'email comme nom de fichier unique
+            copy($source_photo, $destination_photo);
+
              // Préparer la requête d'insertion
-            $requete1 = "INSERT INTO employe (is_admin, prenom, nom, email, mot_de_passe, sexe, poste, departement_id) VALUES ('$is_admin', '$prenom', '$nom', '$email', '$hash_mot_de_passe', '$sexe', '$poste', '$departement_id')";
+            $requete1 = "INSERT INTO employe (is_admin, prenom, nom, email, mot_de_passe, sexe, poste, departement_id, photo_profil) VALUES ('$is_admin', '$prenom', '$nom', '$email', '$hash_mot_de_passe', '$sexe', '$poste', '$departement_id', '$destination_photo')";
             $resultat1 = mysqli_query($connection, $requete1);
 
             // Vérifier si la requête a échoué
@@ -65,7 +70,7 @@ else  //la connexion a réussie
             }
         }
 
-        else  //l'email n'est donc pas un vrai on regénére le formulaire avec les champs remplis et un message d'erreur
+        else  // Si l'email est invalide
         {
             session_start();
             $_SESSION['prenom'] = $prenom;
@@ -82,3 +87,4 @@ else  //la connexion a réussie
     // Fermer la connexion à la base de données
     mysqli_close($connection);
 }
+?>

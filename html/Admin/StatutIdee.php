@@ -25,7 +25,7 @@ $query = "
     categorie.nom_categorie
     FROM idee
     JOIN categorie ON idee.categorie_id = categorie.id_categorie
-    WHERE idee.est_publique = 0
+    WHERE idee.est_publique = 1
     ";
 
 $result = $connection->query($query);
@@ -206,7 +206,6 @@ $connection->close();
                     updateButton.addEventListener('click', function () {
                         const titre = newRow.querySelector('input[name="new_titre"]').value;
                         const date_creation = newRow.querySelector('input[name="new_date_creation"]').value;
-                        const date_modification = newRow.querySelector('input[name="new_date_modification"]').value;
                         const statut = newRow.querySelector('select[name="new_statut"]').value;
                         const categorie = newRow.querySelector('input[name="new_categorie"]').value;
 

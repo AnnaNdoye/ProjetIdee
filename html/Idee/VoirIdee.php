@@ -59,10 +59,11 @@ $idee = $result->fetch_assoc();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://kit.fontawesome.com/64d58efce2.js" crossorigin="anonymous"></script>
     <link rel="icon" type="image/png" href="../../static/img/icon.png">
-    <link rel="stylesheet" href="../../static/css/style1.css">
-    <link rel="stylesheet" href="../../static/css/style5.css">
-    <link rel="stylesheet" href="../../static/css/IdeePP.css">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" type="text/css" href="../../static/css/style1.css">
+    <link rel="stylesheet" type="text/css" href="../../static/css/style5.css">
+    <link rel="stylesheet" type="text/css" href="../../static/css/IdeePP.css">
+    <link rel="stylesheet" type="text/css" href="../../static/css/style.css">
+    <link rel="stylesheet" type="text/css" href="../../static/css/VoirIdeePrive.css">
     <title>Voir Idée</title>
 </head>
 <body>
@@ -74,30 +75,66 @@ $idee = $result->fetch_assoc();
                 <h3><span class="for-ideas">for ideas</span></h3>
             </div>
         </div>
-        <div class="navigation">
+
+        <div class="connect_entete">
+            <a href="../../database/deconnexion.php">
+                <i class="fas fa-user"></i>
+                <span>Se déconnecter</span>
+            </a>
+        </div>
+
+        <div class="navigation" style="background-color: #f1f1f1; border-radius: 5px; padding: 10px 20px">
             <strong>
-                <a href="MesIdees.php"><i class="fas fa-arrow-left"></i> Retour</a>
+                <a href="AccueilIdee.php"><i class="fas fa-arrow-left"></i> Retour</a>
             </strong>
         </div>
     </div>
 
     <div class="container">
-        <h1>Voir Idée</h1>
-        <div class="idea-details">
-            <h2><?php echo htmlspecialchars($idee['titre']); ?></h2>
-            <p><strong>Contenu:</strong> <?php echo nl2br(htmlspecialchars($idee['contenu_idee'])); ?></p>
-            <p><strong>Catégorie:</strong> <?php echo htmlspecialchars($idee['nom_categorie']); ?></p>
-            <?php if ($idee['nom_fichier']) : ?>
-                <p><strong>Fichier :</strong> <a href="data:<?php echo htmlspecialchars($idee['type']); ?>;base64,<?php echo base64_encode($idee['contenu_fichier']); ?>" target="_blank"><?php echo htmlspecialchars($idee['nom_fichier']); ?></a></p>
-            <?php endif; ?>
-            <p><strong>Date de création:</strong> <?php echo htmlspecialchars($idee['date_creation']); ?></p>
-            <p><strong>Date de modification:</strong> <?php echo htmlspecialchars($idee['date_modification']); ?></p>
+        <div id="enhauteur">
+            <p><strong>Créer le :</strong> <?php echo htmlspecialchars($idee['date_creation']); ?></p>
+            <p><strong>Modifier le :</strong> <?php echo htmlspecialchars($idee['date_modification']); ?></p>
             <p class="status-<?php echo strtolower(htmlspecialchars($idee['statut'])); ?>">
                 <strong>Statut:</strong> <?php echo htmlspecialchars($idee['statut']); ?> <span class="status-circle"></span>
             </p>
             <p><strong>Visibilité:</strong> <?php echo $idee['est_publique'] == 1 ? 'Publique' : 'Privé'; ?></p>
-            <a href="ModifierIdee.php?id=<?php echo htmlspecialchars($idee['id_idee']); ?>" class="edit-button"><i class="fas fa-edit"></i> Éditer</a>
+            <p><strong>Catégorie:</strong> <?php echo htmlspecialchars($idee['nom_categorie']); ?></p>
         </div>
+
+        <div class="details">
+            <h4>Titre : </h4><h2><?php echo htmlspecialchars($idee['titre']); ?></h2> 
+        </div>
+
+        <div class="details">
+            <p><strong>Contenu:</strong> <?php echo $idee['contenu_idee']; ?></p>
+        </div>
+
+        <div class="details">
+            <p><strong>Catégorie:</strong> <?php echo htmlspecialchars($idee['nom_categorie']); ?></p>
+        </div>
+            
+        <div class="details">
+            <p>Fichier</p>
+            <?php if ($idee['nom_fichier']) : 
+                $file = "../../database/idee/" . $idee['contenu_fichier'];
+                $file_extension = pathinfo($file, PATHINFO_EXTENSION);
+            ?>
+                <?php if (in_array($file_extension, ['jpg', 'jpeg', 'png', 'gif', 'jpe', 'avi'])) : ?>
+                    <img src="<?php echo $file; ?>" alt="Fichier" style="max-width: 200px;">
+                    <a class="download-button" href="<?php echo $file; ?>" download>Télécharger</a>
+                <?php elseif (in_array($file_extension, ['pdf'])) : ?>
+                    <embed src="<?php echo $file; ?>" type="application/pdf" width="600" height="600">
+                    <a class="download-button" href="<?php echo $file; ?>" download>Télécharger</a>
+                <?php elseif (in_array($file_extension, ['doc', 'docx', '.mpp', '.gz','.zip', '.odp', '.odt', '.ods', '.xlsx', '.pptx', '.txt'])) : ?>
+                    <p><a href="<?php echo $file; ?>" target="_blank">Voir le document Word</a></p>
+                <?php else : ?>
+                <p>Type de fichier non supporté pour l'affichage</p>
+            <?php endif; ?>
+            <br>
+            <?php endif; ?>
+        </div>
+
+        <a class="edit" id="editer" href="ModifierIdee.php?id=<?php echo htmlspecialchars($idee['id_idee']); ?>" class="edit-button"><i class="fas fa-edit"></i> Éditer</a>
     </div>
 
     <div class="espace"></div>
@@ -112,4 +149,3 @@ $idee = $result->fetch_assoc();
 $stmt->close();
 $connexion->close();
 ?>
-

@@ -1,53 +1,48 @@
 <?php
 session_start();
 
-// Vérifier si l'utilisateur est connecté
 if (!isset($_SESSION['user_id'])) {
-    header("Location: ../connexion.php");
+    header("Location: ../../connexion.php");
     exit();
 }
 
-// Vérifier si l'identifiant de l'idée est fourni
-if (!isset($_GET['id'])) {
-    header("Location: MesIdees.php?error=missing_id");
-    exit();
-}
-
-// Informations de connexion à la base de données
 $host = "localhost";
 $user = "root";
 $password = "";
 $database = "idee";
 
-// Connexion à la base de données
 $connexion = new mysqli($host, $user, $password, $database);
 
-// Vérifier la connexion à la base de données
 if ($connexion->connect_error) {
     die("Erreur lors de la connexion: " . $connexion->connect_error);
 }
 
-// Récupérer l'identifiant de l'idée et de l'utilisateur
-$id_idee = intval($_GET['id']);
-$employe_id = $_SESSION['user_id'];
+$idee_id = $_GET['id'];
 
-// Préparer la requête de suppression
-$query = "DELETE FROM idee WHERE id_idee = ? AND employe_id = ?";
-$stmt = $connexion->prepare($query);
-
-if ($stmt === false) {
+// Supprimer d'abord les fichiers associés à cette idée
+$delete_fichiers_query = "DELETE FROM fichier WHERE idee_id = ?";
+$stmt_fichiers = $connexion->prepare($delete_fichiers_query);
+if ($stmt_fichiers === false) {
     die("Erreur lors de la préparation de la requête: " . $connexion->error);
 }
-
-// Lier les paramètres et exécuter la requête
-$stmt->bind_param('ii', $id_idee, $employe_id);
-
-if ($stmt->execute()) {
-    header("Location: MesIdees.php?success=idea_deleted");
-} else {
-    echo "Erreur lors de la suppression: " . $stmt->error;
+$stmt_fichiers->bind_param('i', $idee_id);
+if (!$stmt_fichiers->execute()) {
+    die("Erreur lors de l'exécution de la requête: " . $stmt_fichiers->error);
 }
+$stmt_fichiers->close();
 
-// Fermer la requête et la connexion
-$stmt->close();
+// Ensuite, supprimer l'idée
+$delete_idee_query = "DELETE FROM idee WHERE id_idee = ?";
+$stmt_idee = $connexion->prepare($delete_idee_query);
+if ($stmt_idee === false) {
+    die("Erreur lors de la préparation de la requête: " . $connexion->error);
+}
+$stmt_idee->bind_param('i', $idee_id);
+if (!$stmt_idee->execute()) {
+    die("Erreur lors de l'exécution de la requête: " . $stmt_idee->error);
+}
+$stmt_idee->close();
+
+header("Location: ../../html/idee/AccueilIdee.php");
+
 $connexion->close();
