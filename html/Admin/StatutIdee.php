@@ -21,7 +21,7 @@ if ($connection->connect_error) {
 
 // Récupérer les idées depuis la base de données
 $query = "
-    SELECT idee.id_idee, idee.titre, idee.date_creation, idee.date_modification, idee.statut,
+    SELECT idee.id_idee, idee.titre, idee.contenu_idee, idee.date_creation, idee.date_modification, idee.statut,
     categorie.nom_categorie
     FROM idee
     JOIN categorie ON idee.categorie_id = categorie.id_categorie
@@ -44,10 +44,11 @@ if ($result->num_rows > 0)
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_idee'])) {
     $statut = $_POST['statut'];
     $idIdee = $_POST['id_idee'];
+    $dateModification = date('Y-m-d H:i:s');
 
-    $updateQuery = "UPDATE idee SET statut = ? WHERE id_idee = ?";
+    $updateQuery = "UPDATE idee SET statut = ?, date_modification = ? WHERE id_idee = ?";
     $stmt = $connection->prepare($updateQuery);
-    $stmt->bind_param("si", $statut, $idIdee);
+    $stmt->bind_param("ssi", $statut, $dateModification, $idIdee);
 
     if ($stmt->execute()) {
         header("Location: " . $_SERVER['PHP_SELF']);
@@ -63,6 +64,54 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_idee'])) {
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_idee'])) {
     $idIdee = $_POST['id_idee'];
 
+    // Supprimer les likes associés aux commentaires de l'idée
+    $deleteLikeCommentQuery = "
+        DELETE lc FROM likecommentaire lc
+        INNER JOIN commentaire c ON lc.commentaire_id = c.id_commentaire
+        WHERE c.idee_id = ?";
+    $stmt = $connection->prepare($deleteLikeCommentQuery);
+    $stmt->bind_param("i", $idIdee);
+    $stmt->execute();
+    $stmt->close();
+
+    // Supprimer les commentaires associés à l'idée
+    $deleteCommentQuery = "DELETE FROM commentaire WHERE idee_id = ?";
+    $stmt = $connection->prepare($deleteCommentQuery);
+    $stmt->bind_param("i", $idIdee);
+    $stmt->execute();
+    $stmt->close();
+
+    // Supprimer les likes associés à l'idée
+    $deleteLikeIdeeQuery = "DELETE FROM likeidee WHERE idee_id = ?";
+    $stmt = $connection->prepare($deleteLikeIdeeQuery);
+    $stmt->bind_param("i", $idIdee);
+    $stmt->execute();
+    $stmt->close();
+
+    // Supprimer les fichiers associés
+    $fileQuery = "SELECT contenu_fichier FROM fichier WHERE idee_id = ?";
+    $stmt = $connection->prepare($fileQuery);
+    $stmt->bind_param("i", $idIdee);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    while ($row = $result->fetch_assoc()) {
+        $filePath = $row['contenu_fichier'];
+        if (file_exists($filePath)) {
+            unlink($filePath);
+        }
+    }
+
+    $stmt->close();
+
+    // Supprimer les enregistrements de fichiers associés
+    $deleteFileQuery = "DELETE FROM fichier WHERE idee_id = ?";
+    $stmt = $connection->prepare($deleteFileQuery);
+    $stmt->bind_param("i", $idIdee);
+    $stmt->execute();
+    $stmt->close();
+
+    // Supprimer l'idée
     $deleteQuery = "DELETE FROM idee WHERE id_idee = ?";
     $stmt = $connection->prepare($deleteQuery);
     $stmt->bind_param("i", $idIdee);
@@ -111,11 +160,10 @@ $connection->close();
 
     <div class="button-container">
         <a class="return-home-btn" href="AccueilAdmin.php"><i class="fas fa-arrow-left"></i>Retour à l'accueil</a>
-        <button class="add-category-btn" id="add-category-btn">Ajouter Catégorie</button>
     </div>
 
     <div>
-        <h2>SStatuts des idées</h2>
+        <h2>Statuts des idées</h2>
     </div>
 
     <div class="main-content">
@@ -123,6 +171,7 @@ $connection->close();
             <tr>
                 <th>ID</th>
                 <th>Titre</th>
+                <th>Contenu</th>
                 <th>Date de création</th>
                 <th>Date de modification</th>
                 <th>Statut</th>
@@ -133,6 +182,7 @@ $connection->close();
             <tr>
                 <td><?php echo $idee['id_idee']; ?></td>
                 <td><?php echo $idee['titre']; ?></td>
+                <td><?php echo $idee['contenu_idee']; ?></td>
                 <td><?php echo $idee['date_creation']; ?></td>
                 <td><?php echo $idee['date_modification']; ?></td>
                 <td class="statuts statut-<?php echo strtolower($idee['statut']); ?>"><?php echo $idee['statut']; ?></td>
@@ -149,9 +199,9 @@ $connection->close();
                             </select>
                             <button type="submit" name="update_idee" class="update">Mettre à jour</button>
                         </form>
-                        <form method="POST" action="">
+                        <form method="POST" action="" onsubmit="return confirmDelete();">
                             <input type="hidden" name="id_idee" value="<?php echo $idee['id_idee']; ?>">
-                            <button type="submit" name="delete_idee" class="delete">Supprimer</button>
+                            <button type="submit" name="delete_idee" class="delete">Supprimer l'idée</button>
                         </form>
                     </div>
                 </td>
@@ -162,7 +212,6 @@ $connection->close();
 
     <div class="button-container">
         <a class="return-home-btn" href="AccueilAdmin.php"><i class="fas fa-arrow-left"></i>Retour à l'accueil</a>
-        <button class="add-category-btn" id="add-category-btn">Ajouter Catégorie</button>
     </div>
 
     <div class="footer">
@@ -171,11 +220,13 @@ $connection->close();
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function () 
+        {
             const addCategoryBtn = document.getElementById('add-category-btn');
             const table = document.querySelector('table');
 
-            addEventListener('click', function () {
+            addEventListener('click', function () 
+            {
                     const newRow = document.createElement('tr');
                     newRow.innerHTML = `
                         <td>New</td>
@@ -203,7 +254,8 @@ $connection->close();
                     const updateButton = newRow.querySelector('.update');
                     const deleteButton = newRow.querySelector('.delete');
 
-                    updateButton.addEventListener('click', function () {
+                    updateButton.addEventListener('click', function () 
+                    {
                         const titre = newRow.querySelector('input[name="new_titre"]').value;
                         const date_creation = newRow.querySelector('input[name="new_date_creation"]').value;
                         const statut = newRow.querySelector('select[name="new_statut"]').value;
@@ -253,15 +305,18 @@ $connection->close();
                         form.submit();
                     });
 
-                    deleteButton.addEventListener('click', function () {
+                    deleteButton.addEventListener('click', function () 
+                    {
                         newRow.remove();
                     });
-                });
             });
+        });
 
             // Gérer la mise à jour et la suppression
-            document.querySelectorAll('.update').forEach(button => {
-                button.addEventListener('click', function () {
+            document.querySelectorAll('.update').forEach(button => 
+            {
+                button.addEventListener('click', function () 
+                {
                     const row = button.closest('tr');
                     const id = button.dataset.id;
                     const statut = row.querySelector('select[name="statut"]').value;
@@ -293,8 +348,10 @@ $connection->close();
                 });
             });
 
-            document.querySelectorAll('.delete').forEach(button => {
-                button.addEventListener('click', function () {
+            document.querySelectorAll('.delete').forEach(button => 
+            {
+                button.addEventListener('click', function () 
+                {
                     const id = button.dataset.id;
 
                     const form = document.createElement('form');
@@ -317,7 +374,10 @@ $connection->close();
                     form.submit();
                 });
             });
-        });
+        function confirmDelete() 
+        {
+            return confirm("Êtes-vous sûr de vouloir supprimer cette idée ?");
+        }
     </script>
 </body>
 </html>

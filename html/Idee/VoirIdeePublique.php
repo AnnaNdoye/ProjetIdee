@@ -30,7 +30,8 @@ $query = "
     categorie.nom_categorie, fichier.nom_fichier, fichier.type, fichier.contenu_fichier,
     employe.nom, employe.prenom, employe.photo_profil,
     (SELECT COUNT(*) FROM LikeIdee WHERE idee_id = idee.id_idee) AS like_count,
-    (SELECT COUNT(*) FROM LikeIdee WHERE idee_id = idee.id_idee AND employe_id = ?) AS user_liked
+    (SELECT COUNT(*) FROM LikeIdee WHERE idee_id = idee.id_idee AND employe_id = ?) AS user_liked,
+    (SELECT COUNT(*) FROM commentaire WHERE idee_id = idee.id_idee) AS comment_count
     FROM idee
     LEFT JOIN categorie ON idee.categorie_id = categorie.id_categorie
     LEFT JOIN fichier ON idee.id_idee = fichier.idee_id
@@ -210,7 +211,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_comment_id']))
     <script src="https://kit.fontawesome.com/64d58efce2.js" crossorigin="anonymous"></script>
     <link rel="icon" type="image/png" href="../../static/img/icon.png">
     <link rel="stylesheet" href="../../static/css/style1.css">
-    <link rel="stylesheet" href="../../static/css/styles.css">
+    <link rel="stylesheet" href="../../static/css/style.css">
     <title>Voir Idée</title>
     <style>
         .container {
@@ -255,9 +256,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_comment_id']))
             right: 10px;
         }
         .status.soumis { background: #ffecb3; }
-        .status.approuve { background: #c8e6c9; }
-        .status.rejete { background: #ffcdd2; }
-        .status.implemente { background: #b3e5fc; }
+        .status.approuvé { background: #c8e6c9; }
+        .status.rejeté { background: #ffcdd2; }
+        .status.implémenté { background: #b3e5fc; }
         .like-container {
             display: flex;
             align-items: center;
@@ -311,7 +312,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_comment_id']))
     margin-top: 10px;
     margin-right: 10px;
 }
-
     </style>
 </head>
 <body>
@@ -324,7 +324,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_comment_id']))
         </div>
     </div>
     <div class="navigation">
-        <i class="fa-solid fa-arrow-left"></i>
+        <i class="fas fa-arrow-left"></i>
         <strong><a href="IdeePublique.php">Retour</a></strong>
     </div>
 </div>
@@ -359,7 +359,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_comment_id']))
             </div>
         </div>
         <div class="comments-section">
-            <h2>Commentaires</h2>
+            <h2>Commentaires (<?php echo $idee['comment_count']; ?>)</h2>
             <?php foreach ($comments as $comment): ?>
     <div class="comment">
         <div class="creator-info">
@@ -377,7 +377,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_comment_id']))
             </form>
             <span class="like-count"><?php echo $comment['like_count']; ?></span>
         </div>
-        <?php if ($comment['employe_id'] == $employe_id): ?>
+        <?php if (isset($comment['employe_id']) && $comment['employe_id'] == $employe_id): ?>
             <form method="post" class="edit-comment-form" style="display:none;">
                 <input type="hidden" name="edit_comment_id" value="<?php echo $comment['id_commentaire']; ?>">
                 <textarea name="new_content" rows="3"><?php echo htmlspecialchars($comment['contenu']); ?></textarea>
@@ -411,33 +411,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_comment_id']))
         <h4 class="footer-right">© Orange/Juin2024</h4>
     </div>
     <script>
-        document.getElementById('likeForm').addEventListener('submit', function(e) {
+        document.getElementById('likeForm').addEventListener('submit', function(e) 
+        {
             e.preventDefault();
             var formData = new FormData(this);
-            fetch('', {
+            fetch('', 
+            {
                 method: 'POST',
                 body: formData
             }).then(response => response.json())
-              .then(data => {
-                  if (data.success) {
-                      location.reload();
-                  }
-              });
+            .then(data => 
+            {
+                if (data.success) 
+                {
+                    location.reload();
+                }
+            });
         });
 
-        document.querySelectorAll('.likeCommentForm').forEach(function(form) {
-            form.addEventListener('submit', function(e) {
+        document.querySelectorAll('.likeCommentForm').forEach(function(form) 
+        {
+            form.addEventListener('submit', function(e) 
+            {
                 e.preventDefault();
                 var formData = new FormData(this);
-                fetch('', {
+                fetch('', 
+                {
                     method: 'POST',
                     body: formData
                 }).then(response => response.json())
-                  .then(data => {
-                      if (data.success) {
-                          location.reload();
-                      }
-                  });
+                .then(data => 
+                {
+                    if (data.success) 
+                    {
+                        location.reload();
+                    }
+                });
             });
         });
 
@@ -451,18 +460,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_comment_id']))
     }
 
     document.querySelectorAll('.likeCommentForm').forEach(function(form) {
-        form.addEventListener('submit', function(e) {
+        form.addEventListener('submit', function(e) 
+        {
             e.preventDefault();
             var formData = new FormData(this);
-            fetch('', {
+            fetch('',
+            {
                 method: 'POST',
                 body: formData
             }).then(response => response.json())
-              .then(data => {
-                  if (data.success) {
-                      location.reload();
-                  }
-              });
+            .then(data => 
+            {
+                if (data.success) 
+                {
+                    location.reload();
+                }
+            });
         });
     });
     </script>

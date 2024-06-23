@@ -69,7 +69,7 @@ if (!$result) {
         </div>
     </div>
     <div class="search-bar">
-        <form method="GET" action="MesIdees.php">
+        <form method="GET" action="IddeePublique.php">
             <input type="text" name="search" placeholder="Rechercher des idées publiques..." value="<?php echo htmlspecialchars($search); ?>">
             <button type="submit"><i class="fas fa-search"></i></button>
         </form>
@@ -106,11 +106,9 @@ if (!$result) {
 <div class="menu-deroulant">
     <button><strong>Menu</strong></button>
     <ul class="sous">
-        <li><a href="NouvelleIdee.php">Nouvelle Idée</a></li>
-        <li><a href="MesIdees.php">Mes idées</a></li>
-        <li><a href="IdeePublique.php">Idées publiques</a></li>
-        <li><a href="IdeeComite.php">Idées comité</a></li>
-        <li><a href="IdeePrivee.php">Idées privées</a></li>
+        <li><a href="AccueilIdee.php">Mes idées</a></li>
+        <li><a href="NouvelleIdee.php">Nouvelle Idee</a></li>
+        <li><a href="Profil.php">Profil</a></li>
     </ul>
 </div>
 
@@ -118,15 +116,17 @@ if (!$result) {
     <h1 id="ideepose">Idées Publiques</h1>
     <div id="ideas">
         <?php
-        if ($result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) {
+        if ($result->num_rows > 0)
+        {
+            while ($row = $result->fetch_assoc()) 
+            {
         ?>
         <div class='enveloppe'>
             <div class='idea' onclick="location.href='VoirIdeePublique.php?id=<?php echo htmlspecialchars($row['id_idee']); ?>'">
                 <div id="div1"> 
-                    <p><strong>Par :</strong> 
+                    <p class="info"><strong>Par :</strong> 
+                        <img src="<?php echo htmlspecialchars($row['photo_profil']); ?>" alt="Photo de profil" id="profile-img">
                         <?php echo htmlspecialchars($row['prenom']) . " " . htmlspecialchars($row['nom']); ?>
-                        <img src="<?php echo htmlspecialchars($row['photo_profil']); ?>" style="height:150px;" alt="Photo de profil" id="profile-img">
                     </p>
                     <p><strong>Créé le :</strong> <?php echo htmlspecialchars($row['date_creation']); ?></p>
                     <p><strong>Catégorie:</strong> <?php echo htmlspecialchars($row['nom_categorie']); ?></p>
@@ -167,5 +167,33 @@ if (!$result) {
     <h4 class="footer-left"><a href="mailto:support@orange.com" style="text-decoration: none; color: white;">Contact</a></h4>
     <h4 class="footer-right">© Orange/Juin2024</h4>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+            const menuButton = document.querySelector('.menu-deroulant button');
+            const menuList = document.querySelector('.menu-deroulant ul');
+
+            menuButton.addEventListener('click', () => {
+                menuList.style.display = menuList.style.display === 'flex' ? 'none' : 'flex';
+            });
+
+            menuButton.addEventListener('mouseover', () => {
+                menuList.style.display = 'flex';
+            });
+
+            menuButton.addEventListener('mouseout', () => {
+                if (menuList.style.display !== 'flex') {
+                    menuList.style.display = 'none';
+                }
+            });
+
+            menuList.addEventListener('mouseover', () => {
+                menuList.style.display = 'flex';
+            });
+
+            menuList.addEventListener('mouseout', () => {
+                menuList.style.display = 'none';
+            });
+        });
+</script>
 </body>
 </html>

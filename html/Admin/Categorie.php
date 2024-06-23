@@ -98,8 +98,8 @@ $connection->close();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://kit.fontawesome.com/64d58efce2.js" crossorigin="anonymous"></script>
     <link rel="icon" type="image/png" href="../../static/img/icon.png">
-    <link rel="stylesheet" type="text/css"  href="../../static/css/style1.css">
-    <link rel="stylesheet" type="text/css"  href="../../static/css/style5.css">
+    <link rel="stylesheet" type="text/css" href="../../static/css/style1.css">
+    <link rel="stylesheet" type="text/css" href="../../static/css/style5.css">
     <title>Catégories</title>
     <style>
         table {
@@ -112,7 +112,7 @@ $connection->close();
         th, td {
             border: 1px solid #ddd;
             padding: 16px;
-            text-align: left;
+            text-align: center;
         }
 
         th {
@@ -261,6 +261,7 @@ $connection->close();
                     </td>
                 `;
                 table.appendChild(newRow);
+                newRow.scrollIntoView({ behavior: 'smooth' });
 
                 const updateButton = newRow.querySelector('.update');
                 const deleteButton = newRow.querySelector('.delete');
@@ -343,6 +344,10 @@ $connection->close();
 
             document.querySelectorAll('.delete').forEach(button => {
                 button.addEventListener('click', function () {
+                    if (!confirm('Êtes-vous sûr de vouloir supprimer cette catégorie ?')) {
+                        return;
+                    }
+
                     const id = button.dataset.id;
 
                     const form = document.createElement('form');

@@ -44,19 +44,19 @@
 }
 
 .status-soumis .status-circle {
-    background-color: #F39C12;
+    background-color: orange;
 }
 
-.status-approuve .status-circle {
-    background-color: #27AE60;
+.status-approuvé .status-circle {
+    background-color: green;
 }
 
-.status-rejete .status-circle {
-    background-color: #E74C3C;
+.status-rejeté .status-circle {
+    background-color: red;
 }
 
-.status-implemente .status-circle {
-    background-color: #3498DB;
+.status-implémenté .status-circle {
+    background-color: blue;
 }
 
 .idea a {

@@ -110,7 +110,7 @@ $connection->close();
         th, td {
             border: 1px solid #ddd;
             padding: 16px;
-            text-align: left;
+            text-align: center;
         }
 
         input[type="text"] {
@@ -191,7 +191,7 @@ $connection->close();
 
     <div class="button-container">
         <a class="return-home-btn" href="AccueilAdmin.php"><i class="fas fa-arrow-left"></i>Retour à l'accueil</a>
-        <button class="add-department-btn" id="add-department-btn">Ajouter Département</button>
+        <button class="add-department-btn" id="add-department-btn-top">Ajouter Département</button>
     </div>
 
     <div>
@@ -222,7 +222,7 @@ $connection->close();
 
     <div class="button-container">
         <a class="return-home-btn" href="AccueilAdmin.php"><i class="fas fa-arrow-left"></i>Retour à l'accueil</a>
-        <button class="add-department-btn" id="add-department-btn">Ajouter Département</button>
+        <button class="add-department-btn" id="add-department-btn-bottom">Ajouter Département</button>
     </div>
 
     <div class="footer">
@@ -232,51 +232,54 @@ $connection->close();
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const addDepartmentBtn = document.getElementById('add-department-btn');
+            const addDepartmentBtns = document.querySelectorAll('#add-department-btn-top, #add-department-btn-bottom');
             const table = document.querySelector('table');
 
-            addDepartmentBtn.addEventListener('click', function () {
-                const newRow = document.createElement('tr');
-                newRow.innerHTML = `
-                    <td>New</td>
-                    <td><input type="text" name="new_nom_departement" placeholder="Nom du département"></td>
-                    <td>
-                        <div class="button-group">
-                            <button class="update">Ajouter</button>
-                            <button class="delete">Annuler</button>
-                        </div>
-                    </td>
-                `;
-                table.appendChild(newRow);
+            addDepartmentBtns.forEach(button => {
+                button.addEventListener('click', function () {
+                    const newRow = document.createElement('tr');
+                    newRow.innerHTML = `
+                        <td>New</td>
+                        <td><input type="text" name="new_nom_departement" placeholder="Nom du département"></td>
+                        <td>
+                            <div class="button-group">
+                                <button class="update">Ajouter</button>
+                                <button class="delete">Annuler</button>
+                            </div>
+                        </td>
+                    `;
+                    table.appendChild(newRow);
+                    newRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
-                const updateButton = newRow.querySelector('.update');
-                const deleteButton = newRow.querySelector('.delete');
+                    const updateButton = newRow.querySelector('.update');
+                    const deleteButton = newRow.querySelector('.delete');
 
-                updateButton.addEventListener('click', function () {
-                    const nom = newRow.querySelector('input[name="new_nom_departement"]').value;
+                    updateButton.addEventListener('click', function () {
+                        const nom = newRow.querySelector('input[name="new_nom_departement"]').value;
 
-                    const form = document.createElement('form');
-                    form.method = 'POST';
-                    form.style.display = 'none';
+                        const form = document.createElement('form');
+                        form.method = 'POST';
+                        form.style.display = 'none';
 
-                    const nomInput = document.createElement('input');
-                    nomInput.type = 'hidden';
-                    nomInput.name = 'new_nom_departement';
-                    nomInput.value = nom;
-                    form.appendChild(nomInput);
+                        const nomInput = document.createElement('input');
+                        nomInput.type = 'hidden';
+                        nomInput.name = 'new_nom_departement';
+                        nomInput.value = nom;
+                        form.appendChild(nomInput);
 
-                    const addDepartmentInput = document.createElement('input');
-                    addDepartmentInput.type = 'hidden';
-                    addDepartmentInput.name = 'add_department';
-                    addDepartmentInput.value = '1';
-                    form.appendChild(addDepartmentInput);
+                        const addDepartmentInput = document.createElement('input');
+                        addDepartmentInput.type = 'hidden';
+                        addDepartmentInput.name = 'add_department';
+                        addDepartmentInput.value = '1';
+                        form.appendChild(addDepartmentInput);
 
-                    document.body.appendChild(form);
-                    form.submit();
-                });
+                        document.body.appendChild(form);
+                        form.submit();
+                    });
 
-                deleteButton.addEventListener('click', function () {
-                    newRow.remove();
+                    deleteButton.addEventListener('click', function () {
+                        newRow.remove();
+                    });
                 });
             });
 
@@ -316,26 +319,28 @@ $connection->close();
 
             document.querySelectorAll('.delete').forEach(button => {
                 button.addEventListener('click', function () {
-                    const id = button.dataset.id;
+                    if (confirm('Êtes-vous sûr de vouloir supprimer ce département ?')) {
+                        const id = button.dataset.id;
 
-                    const form = document.createElement('form');
-                    form.method = 'POST';
-                    form.style.display = 'none';
+                        const form = document.createElement('form');
+                        form.method = 'POST';
+                        form.style.display = 'none';
 
-                    const idInput = document.createElement('input');
-                    idInput.type = 'hidden';
-                    idInput.name = 'id_departement';
-                    idInput.value = id;
-                    form.appendChild(idInput);
+                        const idInput = document.createElement('input');
+                        idInput.type = 'hidden';
+                        idInput.name = 'id_departement';
+                        idInput.value = id;
+                        form.appendChild(idInput);
 
-                    const deleteDepartmentInput = document.createElement('input');
-                    deleteDepartmentInput.type = 'hidden';
-                    deleteDepartmentInput.name = 'delete_department';
-                    deleteDepartmentInput.value = '1';
-                    form.appendChild(deleteDepartmentInput);
+                        const deleteDepartmentInput = document.createElement('input');
+                        deleteDepartmentInput.type = 'hidden';
+                        deleteDepartmentInput.name = 'delete_department';
+                        deleteDepartmentInput.value = '1';
+                        form.appendChild(deleteDepartmentInput);
 
-                    document.body.appendChild(form);
-                    form.submit();
+                        document.body.appendChild(form);
+                        form.submit();
+                    }
                 });
             });
         });

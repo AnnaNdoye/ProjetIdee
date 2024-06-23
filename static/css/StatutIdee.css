@@ -8,7 +8,7 @@ table {
 th, td {
     border: 1px solid #ddd;
     padding: 16px;
-    text-align: left;
+    text-align: center;
 }
 
 th {
@@ -24,17 +24,17 @@ th {
     color: white;
 }
 
-.statut-approuve {
+.statut-approuvé {
     background-color: green;
     color: white;
 }
 
-.statut-rejete {
+.statut-rejeté {
     background-color: red;
     color: white;
 }
 
-.statut-implemente {
+.statut-implémenté {
     background-color: blue;
     color: white;
 }
@@ -84,4 +84,79 @@ th {
 
 .return-home-btn i {
     margin-right: 10px;
+}
+
+.button-container {
+    margin: 20px 0; /* Ajoute de la marge en haut et en bas du bouton */
+}
+
+
+.button-group form {
+    display: flex;
+    align-items: center;
+}
+
+.button-group form select {
+    margin-right: 10px; /* Ajoute un espacement entre le select et le bouton */
+}
+
+.button-group p {
+    margin: 0;
+    display: block;
+}
+
+.button-group p form {
+    display: inline-block; /* Pour éviter que le formulaire occupe toute la largeur */
+}
+
+.header, .footer {
+    width: 100%;
+    box-sizing: border-box; /* Pour inclure le padding dans la largeur totale */
+}
+
+/* CSS pour le tableau */
+.main-content {
+    width: 100%;
+    overflow-x: auto; /* Ajoute une barre de défilement horizontale si nécessaire */
+}
+
+table {
+    width: 100%;
+}
+
+th, td {
+    border: 1px solid #b7b4b4; /* Bordures des cellules */
+    padding: 8px; /* Espacement intérieur */
+    text-align: left; /* Alignement du texte à gauche */
+}
+
+.button-group {
+    display: flex;
+    gap: 5px; /* Espacement entre les boutons je viens de découvrir cet element */
+}
+
+.button-group form {
+    display: flex;
+    align-items: center;
+}
+
+.button-group form select {
+    margin-right: 10px; /* Espacement entre le select et le bouton */
+}
+
+.button-group p {
+    margin: 0;
+    display: block;
+}
+
+.button-group p form {
+    display: inline-block;
+}
+
+td .button-group {
+    width: 450px; /* Ajuster la largeur si nécessaire */
+}
+
+td{
+    width: 450px;
 }
