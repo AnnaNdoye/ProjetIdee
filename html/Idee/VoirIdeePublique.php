@@ -268,11 +268,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['like_comment'])) {
             font-weight: bolder;
             top: 10px;
             right: 10px;
+            text-align: right;
         }
-        .status.soumis { background: #ffecb3; }
-        .status.approuvé { background: #c8e6c9; }
-        .status.rejeté { background: #ffcdd2; }
-        .status.implémenté { background: #b3e5fc; }
+        .status.soumis { background: orange; color: white; margin-left: 1175px;}
+        .status.approuvé { background: green; color: white; margin-left: 1175px;}
+        .status.rejeté { background: red; color: white; margin-left: 1175px;}
+        .status.implémenté { background: blue; color: white; margin-left: 1175px;}
         .like-container {
             display: flex;
             align-items: center;
@@ -319,14 +320,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['like_comment'])) {
             margin-left: 5px;
         }
 
-        .edit-comment-form {
-    margin-top: 10px;
-}
+    .edit-comment-form {
+        margin-top: 10px;
+    }
 
-.edit-button {
-    margin-top: 10px;
-    margin-right: 10px;
-}
+    .edit-button {
+        margin-top: 10px;
+        margin-right: 10px;
+    }
         .container {
             width: 2000px;
             margin: auto;
@@ -343,11 +344,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['like_comment'])) {
         .comments-section {
             border: 1px solid #ddd;
             padding: 20px;
+            margin-bottom: 20px;
         }
         .comment {
             border-bottom: 1px solid #ddd;
             padding-bottom: 10px;
             margin-bottom: 10px;
+            padding: 20px;
         }
         .comment:last-child {
             border-bottom: none;
@@ -359,14 +362,91 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['like_comment'])) {
             color: #007BFF;
             cursor: pointer;
             text-align: right;
+            margin-left: 1250px;
         }
         .like-button.liked, .like-comment-button.liked {
-            color: #FF0000;
+            color: #FF6600;
         }
         .edit-comment, .delete-comment {
             cursor: pointer;
-            color: #007BFF;
+            color: #4f5964;
         }
+        .text{
+            width: 1350px;
+            resize: none;
+            border-radius: 5px;
+            padding: 10px;
+        }
+        .subouton{
+            background-color: #007BFF;
+            padding: 20px;
+            border-radius: 5px;
+            border: none;
+            color: white;
+            display: inline-block;
+            font-weight: bold;
+            margin-bottom: 50px;
+            cursor: pointer;
+        }
+        .subouton:hover {
+            background-color: #0056b3;
+        }
+        .download-button{
+            margin-left: 500px;
+        }
+        .navigation{
+            padding: 10px 20px;
+            background-color: #FF6600;
+            border-radius: 5px;
+            color: white;
+        }
+        .navigation a{
+            font-weight: bolder;
+            text-decoration: none;
+            color: white;
+        }
+        .contenu_idee{
+            padding: 20px;
+            border-radius: 5px;
+            background-color: #e3e5e7;
+            margin-bottom: 50px;
+        }
+        .edit-comment-form textarea{
+            width: 500px;
+            resize: none;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .delete-comment-form button, .edit-comment-form button{
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .delete-comment-form button{
+            background-color: red;
+        }
+
+        .edit-comment-form button{
+            background-color: green;
+            margin-top: 10px;
+        }
+
+        .delete-comment-form button:hover{
+            background-color: rgb(189, 1, 1);
+        }
+
+        .edit-comment-form button:hover{
+            background-color: rgb(1, 97, 1);
+        }
+        .comment-actions {
+            display: flex;
+            align-items: center;
+        }
+
     </style>
 </head>
 <body>
@@ -380,7 +460,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['like_comment'])) {
     </div>
     <div class="navigation">
         <i class="fas fa-arrow-left"></i>
-        <strong><a href="IdeePublique.php">Retour</a></strong>
+        <a href="IdeePublique.php">Retour</a>
     </div>
 </div>
 <div class="container">
@@ -390,27 +470,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['like_comment'])) {
                 <div class="name"><?php echo $idee['prenom'] . ' ' . $idee['nom']; ?></div>
         </div>
         <div class="idea-dates">
-            <div>Créé le: <?php echo $idee['date_creation']; ?></div>
-            <div>Dernière modification: <?php echo $idee['date_modification']; ?></div>
+            <div>Créée le : <?php echo $idee['date_creation']; ?></div>
+            <div>Modifiée le : <?php echo $idee['date_modification']; ?></div>
         </div>
-        <h1><?php echo $idee['titre']; ?></h1>
-        Contenu : <p><?php echo nl2br($idee['contenu_idee']); ?></p>
+        <h1>Titre : <?php echo $idee['titre']; ?></h1><br>
+        <div class="contenu_idee">
+            Contenu : <p><?php echo nl2br($idee['contenu_idee']); ?></p><br>
+        </div>
         <div class="status <?php echo strtolower($idee['statut']); ?>">
             Statut: <?php echo ucfirst($idee['statut']); ?>
-        </div>
-        <p><strong>Catégorie:</strong> <?php echo htmlspecialchars($idee['nom_categorie']); ?></p>
+        </div><br><br>
+        <p><strong>Catégorie:</strong> <?php echo htmlspecialchars($idee['nom_categorie']); ?></p><br>
         <?php if ($idee['nom_fichier']) : 
             $file = "../../database/idee/" . $idee['contenu_fichier'];
             $file_extension = pathinfo($file, PATHINFO_EXTENSION);
         ?>
             <?php if (in_array($file_extension, ['jpg', 'jpeg', 'png', 'gif', 'jpe', 'avi'])) : ?>
-                <img src="<?php echo $file; ?>" alt="Fichier" style="max-width: 200px;">
+                <img src="<?php echo $file; ?>" alt="Fichier" style="max-width: 600px;"><br>
                 <a class="download-button" href="<?php echo $file; ?>" download>Télécharger</a>
             <?php elseif (in_array($file_extension, ['pdf'])) : ?>
-            <embed src="<?php echo $file; ?>" type="application/pdf" width="600" height="600">
+            <embed src="<?php echo $file; ?>" type="application/pdf" width="600" height="600"><br>
             <a class="download-button" href="<?php echo $file; ?>" download>Télécharger</a>
             <?php elseif (in_array($file_extension, ['doc', 'docx', 'mpp', 'gz', 'zip', 'odp', 'odt', 'ods', 'xlsx', 'pptx', 'txt'])) : ?>
-            <p><a href="<?php echo $file; ?>" target="_blank">Voir le document</a></p>
+            <p><a href="<?php echo $file; ?>" target="_blank">Voir le document</a></p><br>
             <a class="download-button" href="<?php echo $file; ?>" download>Télécharger</a>
             <?php else : ?>
                 <p>Type de fichier non supporté pour l'affichage</p>
@@ -428,8 +510,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['like_comment'])) {
     <div class="comments-section">
         <h3>Commentaires (<?php echo $idee['comment_count']; ?>)</h3>
         <form method="POST">
-            <textarea name="comment_content" rows="4" cols="50" required></textarea><br>
-            <button type="submit">Ajouter un commentaire</button>
+            <textarea class="text" name="comment_content" rows="10" cols="50" placeholder="Ajouter un commentaire" required></textarea><br>
+            <button class="subouton" type="submit"> Ajouter un commentaire</button>
         </form>
         <?php foreach ($comments as $comment): ?>
             <div class="comment" id="comment-<?php echo $comment['id_commentaire']; ?>">
@@ -438,14 +520,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['like_comment'])) {
             <div class="name"><?php echo $comment['prenom'] . ' ' . $comment['nom']; ?></div>
         </div>
                 <p><?php echo nl2br(htmlspecialchars($comment['contenu'])); ?></p>
-                <p><small>Créé le : <?php echo htmlspecialchars($comment['date_creation']); ?></small></p>
-                <?php if ($comment['date_modification']): ?>
-                        <p><small>Date de modification : <?= htmlspecialchars($comment['date_modification']) ?></small></p>
-                <?php endif; ?>
+                <div class="idea-dates">
+                    <p><small>Créée le : <?php echo htmlspecialchars($comment['date_creation']); ?></small></p>
+                    <?php if ($comment['date_modification']): ?>
+                        <p><small>Modifiée le : <?= htmlspecialchars($comment['date_modification']) ?></small></p>
+                    <?php endif; ?>
+                </div>
                 <button class="like-comment-button <?php echo $comment['user_liked'] ? 'liked' : ''; ?>" data-comment-id="<?php echo $comment['id_commentaire']; ?>" onclick="toggleLikeComment(<?php echo $comment['id_commentaire']; ?>)">
                     <i class="fas fa-thumbs-up"></i> <span id="like-comment-count-<?php echo $comment['id_commentaire']; ?>"><?php echo $comment['like_count']; ?></span> J'aime
                 </button>
                 <?php if ($comment['comment_employe_id'] == $employe_id): ?>
+                    <div class="comment-actions">
                         <form method="post" class="edit-comment-form">
                             <input type="hidden" name="edit_comment_id" value="<?= $comment['id_commentaire'] ?>">
                             <textarea name="new_content" rows="2" required><?= htmlspecialchars($comment['contenu']) ?></textarea>
@@ -456,6 +541,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['like_comment'])) {
                             <input type="hidden" name="delete_comment_id" value="<?= $comment['id_commentaire'] ?>">
                             <button type="submit" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce commentaire ?')">Supprimer</button>
                         </form>
+                    </div>
                     <?php endif; ?>
             </div>
         <?php endforeach; ?>

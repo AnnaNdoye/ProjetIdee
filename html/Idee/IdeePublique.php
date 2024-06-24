@@ -82,10 +82,10 @@ $comment_count = $result->num_rows;
         </div>
     </div>
     <div class="search-bar">
-        <form method="GET" action="IdeePublique.php">
-            <input type="text" name="search" placeholder="Rechercher des idées publiques..." value="<?php echo htmlspecialchars($search); ?>">
-            <button type="submit"><i class="fas fa-search"></i></button>
-        </form>
+            <form method="GET" action="IdeePublique.php">
+                <input type="text" name="search" placeholder="Rechercher des idées" value="<?php echo htmlspecialchars($search); ?>">
+                <button type="submit"><i class="fas fa-search"></i></button>
+            </form>
     </div>
     <div class="navigation">
         <strong><a href="AccueilIdee.php">Accueil</a></strong>
@@ -123,7 +123,6 @@ $comment_count = $result->num_rows;
         <li><a href="Profil.php">Profil</a></li>
     </ul>
 </div>
-
 <div class="container">
     <h1 id="ideepose"><?php echo $comment_count; ?> Idées Publiques </h1>
     <div id="ideas">
@@ -133,19 +132,18 @@ $comment_count = $result->num_rows;
             while ($row = $result->fetch_assoc()) 
             {
         ?>
-        <div class='enveloppe'>
-            <div class='idea' onclick="location.href='VoirIdeePublique.php?id=<?php echo htmlspecialchars($row['id_idee']); ?>'">
-                <div id="div1"> 
-                    <p class="info"><strong>Par :</strong> 
+        <div class='enveloppe'> <!--j'avais fait en sorte que tout le div soit cliquable avec "onclick="location.href='VoirIdeePublique.php?id=<?php echo htmlspecialchars($row['id_idee']); ?>'"" -->
+            <div class='idea'>
+                <div id="div1">
+                    <p class="info">
                         <img src="<?php echo htmlspecialchars($row['photo_profil']); ?>" alt="Photo de profil" id="profile-img">
                         <?php echo htmlspecialchars($row['prenom']) . " " . htmlspecialchars($row['nom']); ?>
                     </p>
                     <p><strong>Créé le :</strong> <?php echo htmlspecialchars($row['date_creation']); ?></p>
                     <p><strong>Catégorie:</strong> <?php echo htmlspecialchars($row['nom_categorie']); ?></p>
                 </div>
-
                 <div id="div2">
-                    <span>Titre :<h2><?php echo htmlspecialchars($row['titre']); ?></h2></span>
+                    <span><h2>Titre : <?php echo htmlspecialchars($row['titre']); ?></h2></span>
                     <?php $statutClass = strtolower($row['statut']); ?>
                     <p class='status-<?php echo $statutClass; ?>'>Statut : <span class='status-circle'></span><?php echo htmlspecialchars($row['statut']); ?></p>
                 </div>
@@ -154,13 +152,14 @@ $comment_count = $result->num_rows;
                     <form action='../../database/idee/like.php' method='POST'>
                         <input type='hidden' name='idee_id' value='<?php echo $row['id_idee']; ?>'>
                         <button type='submit' class='like-button<?php echo ($row['user_liked'] ? ' liked' : ''); ?>'>
-                            <i class='fas fa-thumbs-up thumb-icon'></i>
+                            <i class='fas fa-thumbs-up'></i>
                         </button>
                         <span class='like-count'><?php echo $row['like_count']; ?> like</span> 
                     </form>
                 </div>
+                <a href='VoirIdeePublique.php?id=<?php echo $row['id_idee']; ?>'>Voir plus...</a>
+
             </div>
-            <a href='VoirIdeePublique.php?id=<?php echo $row['id_idee']; ?>'>Voir plus...</a>
         </div> 
         <?php
             }

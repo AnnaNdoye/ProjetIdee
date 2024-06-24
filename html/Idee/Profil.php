@@ -129,7 +129,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
 
     <div class="profile-container">
-        <h2>Mon Profil</h2>
+        <h2><i class="fas fa-user"></i> Mon Profil <i class="fas fa-user"></i></h2>
         <?php if ($update_message): ?>
             <div class="update-message"><?php echo $update_message; ?></div>
         <?php endif; ?>

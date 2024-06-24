@@ -194,6 +194,7 @@
     align-items: center;
     display: flex;
     justify-content: space-between;
+    text-align: center;
     text-shadow: 2px 4px 3px rgba(0,0,0,0.3);
     background: linear-gradient(to right, #ff6600, #000);
     -webkit-background-clip: text;

@@ -41,3 +41,40 @@
 .liked + .like-count {
     color: #007BFF;
 }
+
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    background: #ca895d;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-left: 30px;
+    flex: 1;
+    border: 2px solid #FF6600;
+    outline: none;
+    padding: 0;
+}
+
+.search-bar form {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin: 0;
+}
+
+.search-bar input {
+    border: none;
+    padding: 10px;
+    outline: none;
+    color: #000;
+    flex: 1;
+}
+
+.search-bar button {
+    background: #fff;
+    border: none;
+    color: #FF6600;
+    padding: 10px 15px;
+    cursor: pointer;
+}
