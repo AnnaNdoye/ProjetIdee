@@ -1,5 +1,4 @@
 <?php
-
 session_start();
 
 $host = "localhost";
@@ -43,32 +42,40 @@ if (mysqli_stmt_execute($stmt))
     if (!empty($_FILES['fichier']['name'])) {
         $fichierNom = $_FILES['fichier']['name'];
         $fichierType = $_FILES['fichier']['type'];
-        $fichierTaille = $_FILES['fichier']['size'];
-        $fichierContenu = file_get_contents($_FILES['fichier']['tmp_name']);
+        $fichierTaille = $_FILES['fichier']['size']; //on va l'avoir en octet dans la base de données
 
-        $requete2 = "INSERT INTO fichier (nom_fichier, type, taille, contenu_fichier, idee_id) VALUES (?, ?, ?, ?, ?)";
-        $stmt2 = mysqli_prepare($connexion, $requete2);
-        mysqli_stmt_bind_param($stmt2, "sssbi", $fichierNom, $fichierType, $fichierTaille, $fichierContenu, $idee_id);
-        if (mysqli_stmt_execute($stmt2)) 
-        {
-            echo "<script>
-                    alert('Nouvelle Idée Enregistrée');
-                    window.location.href = '../../html/idee/AccueilIdee.php';
-                </script>";
-        } 
-        else 
-        {
-            echo "Erreur lors de l'insertion du fichier: " . mysqli_error($connexion);
+        // Définir le chemin de sauvegarde
+        $dossierUpload = 'uploads/';
+        if (!is_dir($dossierUpload)) {
+            mkdir($dossierUpload, 0777, true);
         }
-        mysqli_stmt_close($stmt2);
+        $cheminFichier = $dossierUpload . basename($fichierNom);
+
+        // Déplacer le fichier téléchargé vers le dossier de destination
+        if (move_uploaded_file($_FILES['fichier']['tmp_name'], $cheminFichier)) {
+            $requete2 = "INSERT INTO fichier (nom_fichier, type, taille, contenu_fichier, idee_id) VALUES (?, ?, ?, ?, ?)";
+            $stmt2 = mysqli_prepare($connexion, $requete2);
+            mysqli_stmt_bind_param($stmt2, "ssisi", $fichierNom, $fichierType, $fichierTaille, $cheminFichier, $idee_id);
+
+            if (mysqli_stmt_execute($stmt2)) {
+                echo "<script>
+                        alert('Nouvelle Idée Enregistrée');
+                        window.location.href = '../../html/idee/AccueilIdee.php';
+                    </script>";
+            } else {
+                echo "Erreur lors de l'insertion du fichier: " . mysqli_error($connexion);
+            }
+            mysqli_stmt_close($stmt2);
+        } else {
+            echo "Erreur lors du téléchargement du fichier.";
+        }
     } else {
         echo "<script>
                 alert('Nouvelle Idée Enregistrée');
                 window.location.href = '../../html/idee/AccueilIdee.php';
             </script>";
     }
-} 
-else {
+} else {
     echo "Erreur lors de l'insertion de l'idée: " . mysqli_error($connexion);
 }
 

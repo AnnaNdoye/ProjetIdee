@@ -1,6 +1,7 @@
 <?php
 session_start();
 
+// Check if session variables are set
 if (!isset($_SESSION['user_id']) || !isset($_SESSION['mot_de_passe']) || !isset($_SESSION['email'])) {
     header("Location: ../connexion.php");
     exit();
@@ -11,8 +12,10 @@ $user = "root";
 $password = "";
 $database = "idee";
 
+// Create database connection
 $connexion = new mysqli($host, $user, $password, $database);
 
+// Check the connection
 if ($connexion->connect_error) {
     die("Erreur lors de la connexion: " . $connexion->connect_error);
 }
@@ -21,7 +24,8 @@ $user_id = $_SESSION['user_id'];
 $mot_de_passe = $_SESSION['mot_de_passe'];
 $email = $_SESSION['email'];
 
-$query = "SELECT nom, prenom, poste, photo_profil, departement_id FROM employe WHERE id_employe = ?";
+// Retrieve user information
+$query = "SELECT is_admin, nom, prenom, poste, photo_profil, departement_id FROM employe WHERE id_employe = ?";
 $stmt = $connexion->prepare($query);
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
@@ -31,6 +35,7 @@ if ($result->num_rows > 0) {
     $row = $result->fetch_assoc();
     $departement_id = $row['departement_id'];
 
+    // Retrieve department name
     $departement_query = "SELECT nom_departement FROM department WHERE id_departement = ?";
     $dept_stmt = $connexion->prepare($departement_query);
     $dept_stmt->bind_param("i", $departement_id);
@@ -45,30 +50,51 @@ if ($result->num_rows > 0) {
     }
 } else {
     echo "Aucun utilisateur trouvé.";
+    exit();
 }
 
 $update_message = "";
+$default_photo = "uploads/unknow.png";
+
+// Handle form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $nom = $_POST['nom'];
-    $prenom = $_POST['prenom'];
-    $poste = $_POST['poste'];
-    $photo_profil = $_FILES['photo_profil'];
-
-    if ($photo_profil['name']) {
-        $photo_profil_blob = file_get_contents($photo_profil['tmp_name']);
-        $update_query = $connexion->prepare("UPDATE employe SET nom=?, prenom=?, poste=?, photo_profil=? WHERE id_employe=?");
-        $update_query->bind_param("ssssi", $nom, $prenom, $poste, $photo_profil_blob, $user_id);
+    if (isset($_POST['delete_photo'])) {
+        $update_query = $connexion->prepare("UPDATE employe SET photo_profil=? WHERE id_employe=?");
+        $update_query->bind_param("si", $default_photo, $user_id);
+        if ($update_query->execute() === TRUE) {
+            $update_message = "Photo de profil supprimée.";
+            header("Location: Profil.php");
+            exit();
+        } else {
+            echo "Erreur lors de la mise à jour: " . $connexion->error;
+        }
     } else {
-        $update_query = $connexion->prepare("UPDATE employe SET nom=?, prenom=?, poste=? WHERE id_employe=?");
-        $update_query->bind_param("sssi", $nom, $prenom, $poste, $user_id);
-    }
+        $nom = $_POST['nom'];
+        $prenom = $_POST['prenom'];
+        $poste = $_POST['poste'];
+        $photo_profil = $_FILES['photo_profil'];
 
-    if ($update_query->execute() === TRUE) {
-        $update_message = "Mise à jour réussie.";
-        header("Location: Profil.php");
-        exit();
-    } else {
-        echo "Erreur lors de la mise à jour: " . $connexion->error;
+        if ($photo_profil['name']) {
+            $photo_profil_path = 'uploads/' . basename($photo_profil['name']);
+            if (move_uploaded_file($photo_profil['tmp_name'], $photo_profil_path)) {
+                $update_query = $connexion->prepare("UPDATE employe SET nom=?, prenom=?, poste=?, photo_profil=? WHERE id_employe=?");
+                $update_query->bind_param("ssssi", $nom, $prenom, $poste, $photo_profil_path, $user_id);
+            } else {
+                echo "Erreur lors du téléchargement de l'image.";
+                exit();
+            }
+        } else {
+            $update_query = $connexion->prepare("UPDATE employe SET nom=?, prenom=?, poste=? WHERE id_employe=?");
+            $update_query->bind_param("sssi", $nom, $prenom, $poste, $user_id);
+        }
+
+        if ($update_query->execute() === TRUE) {
+            $update_message = "Mise à jour réussie.";
+            header("Location: Profil.php");
+            exit();
+        } else {
+            echo "Erreur lors de la mise à jour: " . $connexion->error;
+        }
     }
 }
 ?>
@@ -87,7 +113,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 <body>
     <div class="header">
-        <div class="logo" onclick="location.href='../accueil.html'">
+        <div class="logo" onclick="location.href='../Accueil.html'">
             <img src="../../static/img/icon.png" alt="Logo">
             <div>
                 <h1>Orange</h1>
@@ -109,12 +135,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <?php endif; ?>
         <form method="POST" action="" enctype="multipart/form-data">
             <div class="profile-photo">
-                <?php if ($row['photo_profil']): ?>
-                    <img src="data:image/jpeg;base64,<?php echo base64_encode($row['photo_profil']); ?>" alt="Photo de profil" id="profile-img">
-                <?php else: ?>
-                    <img src="uploads/unknow.png" alt="Photo par défaut" id="profile-img">
-                <?php endif; ?>
+                <img src="<?php echo $row['photo_profil'] ? $row['photo_profil'] : $default_photo; ?>" alt="Photo de profil" id="profile-img">
                 <input type="file" id="photo_profil" name="photo_profil" style="display: none;">
+                <button type="button" onclick="document.getElementById('photo_profil').click();"><i class="fas fa-pen"></i> Editer</button>
+                <?php if ($row['photo_profil'] && $row['photo_profil'] !== $default_photo): ?>
+                    <button type="submit" name="delete_photo"><i class="fas fa-trash"></i> Supprimer</button>
+                <?php endif; ?>
             </div>
             <div class="profile-item">
                 <label for="nom">Nom:</label>
@@ -143,9 +169,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <label for="departement">Département:</label>
                 <p id="departement"><?php echo $nom_departement; ?></p>
             </div>
+            <div class="profile-item">
+                <label for="role">Rôle :</label>
+                <p id="role"><?php echo $row['is_admin'] ? "Administrateur" : "Utilisateur Simple"; ?></p>
+            </div>
             <div class="profile-item" style="display: flex; justify-content: space-between;">
                 <button type="submit">Mettre à jour</button>
-                <button><a href="AccueilIdee.php" style="color: white; text-decoration: none;">Quitter</a></button>
+                <button><a href="AccueilIdee.php" style="color: white; text-decoration: none; display: block;">Quitter</a></button>
             </div>
         </form>
     </div>

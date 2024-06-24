@@ -6,14 +6,14 @@
     <title>Bouton de Like</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        body {
+        /* body {
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             background-color: #f0f0f0;
             font-family: Arial, sans-serif;
-        }
+        } */
 
         .like-container {
             display: flex;

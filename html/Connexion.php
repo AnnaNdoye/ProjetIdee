@@ -12,7 +12,7 @@
             color: red;
         }
         .admin-button {
-            background-color: #ff6600;
+            background-color: #FF6600;
             color: white;
             border: none;
             border-radius: 5px;
@@ -26,9 +26,6 @@
             position: absolute;
             bottom: 60px;
             right: 20px;
-        }
-        .footer {
-            margin-top: 60px;
         }
     </style>
 </head>

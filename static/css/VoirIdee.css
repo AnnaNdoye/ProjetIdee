@@ -1,0 +1,88 @@
+/* styles.css */
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 0;
+}
+
+.header {
+    background-color: #ff7900;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+}
+
+.header .logo {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.header .logo img {
+    height: 50px;
+    margin-right: 10px;
+}
+
+.header .navigation a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+}
+
+.header .navigation a:hover {
+    text-decoration: underline;
+}
+
+.container {
+    padding: 20px;
+}
+
+.idea-details {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.idea-details h2 {
+    margin-top: 0;
+}
+
+.idea-details p {
+    margin: 10px 0;
+}
+
+.edit-button {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.edit-button:hover {
+    background-color: #0056b3;
+}
+
+.footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+}
+
+.footer a {
+    color: white;
+    text-decoration: none;
+}

@@ -117,7 +117,7 @@ if (!isset($_SESSION['user_id'])) {
                 </div>
                 
                 <div class="form-buttons">
-                    <a href="AccueilIdee.html">Annuler</a>
+                    <a href="AccueilIdee.php">Annuler</a>
                     <button type="submit">Créer</button>
                 </div>
             </form>
@@ -141,8 +141,6 @@ if (!isset($_SESSION['user_id'])) {
         }, 3000);
     }
 </script>
-
-
     <script src="../static/js/script1.js"></script>
     <script src="../static/js/script2.js"></script>
     <script>

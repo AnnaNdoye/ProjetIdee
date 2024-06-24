@@ -31,6 +31,7 @@ if ($result->num_rows > 0) {
     }
 }
 
+// Gérer l'ajout de département
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_department'])) {
     $nomDepartement = $_POST['new_nom_departement'];
 
@@ -47,6 +48,45 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_department'])) {
 
     $stmt->close();
 }
+
+// Gérer la mise à jour de département
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_department'])) {
+    $idDepartement = $_POST['id_departement'];
+    $nomDepartement = $_POST['nom_departement'];
+
+    $updateQuery = "UPDATE Department SET nom_departement = ? WHERE id_departement = ?";
+    $stmt = $connection->prepare($updateQuery);
+    $stmt->bind_param("si", $nomDepartement, $idDepartement);
+
+    if ($stmt->execute()) {
+        header("Location: " . $_SERVER['PHP_SELF']);
+        exit();
+    } else {
+        echo "Erreur lors de la mise à jour du département : " . $stmt->error;
+    }
+
+    $stmt->close();
+}
+
+// Gérer la suppression de département
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_department'])) {
+    $idDepartement = $_POST['id_departement'];
+
+    $deleteQuery = "DELETE FROM Department WHERE id_departement = ?";
+    $stmt = $connection->prepare($deleteQuery);
+    $stmt->bind_param("i", $idDepartement);
+
+    if ($stmt->execute()) {
+        header("Location: " . $_SERVER['PHP_SELF']);
+        exit();
+    } else {
+        echo "Erreur lors de la suppression du département : " . $stmt->error;
+    }
+
+    $stmt->close();
+}
+
+$connection->close();
 ?>
 
 <!DOCTYPE html>
@@ -64,18 +104,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_department'])) {
             border-collapse: collapse;
             width: 100%;
             margin-bottom: 20px;
-            table-layout: fixed; /* Ajouté pour fixer la taille des colonnes */
+            table-layout: fixed;
         }
 
         th, td {
             border: 1px solid #ddd;
-            padding: 16px; /* Agrandi la taille des cellules */
-            text-align: left;
+            padding: 16px;
+            text-align: center;
         }
 
         input[type="text"] {
             width: 100%;
-            padding: 10px; /* Agrandi les champs de saisie */
+            padding: 10px;
             border: 1px solid #ccc;
             border-radius: 4px;
             box-sizing: border-box;
@@ -95,7 +135,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_department'])) {
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            margin-right: 10px; /* Ajoute un espacement entre les boutons */
+            margin-right: 10px;
         }
 
         .button-group button.update {
@@ -103,7 +143,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_department'])) {
             color: white;
         }
 
-        .button-group button.cancel {
+        .button-group button.delete {
             background-color: #f44336;
             color: white;
         }
@@ -113,7 +153,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_department'])) {
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            margin: 20px 10px; /* Espacement entre les boutons */
+            margin: 20px 10px;
         }
 
         .add-department-btn {
@@ -149,6 +189,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_department'])) {
         </div>
     </div>
 
+    <div class="button-container">
+        <a class="return-home-btn" href="AccueilAdmin.php"><i class="fas fa-arrow-left"></i>Retour à l'accueil</a>
+        <button class="add-department-btn" id="add-department-btn-top">Ajouter Département</button>
+    </div>
+
     <div>
         <h2>Liste des Départements</h2>
     </div>
@@ -167,7 +212,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_department'])) {
                 <td>
                     <div class="button-group">
                         <button class="update" data-id="<?php echo $department['id_departement']; ?>">Mettre à jour</button>
-                        <button class="cancel">Annuler</button>
+                        <button class="delete" data-id="<?php echo $department['id_departement']; ?>">Supprimer</button>
                     </div>
                 </td>
             </tr>
@@ -177,7 +222,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_department'])) {
 
     <div class="button-container">
         <a class="return-home-btn" href="AccueilAdmin.php"><i class="fas fa-arrow-left"></i>Retour à l'accueil</a>
-        <button class="add-department-btn" id="add-department-btn">Ajouter Département</button>
+        <button class="add-department-btn" id="add-department-btn-bottom">Ajouter Département</button>
     </div>
 
     <div class="footer">
@@ -187,52 +232,118 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_department'])) {
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const addDepartmentBtn = document.getElementById('add-department-btn');
+            const addDepartmentBtns = document.querySelectorAll('#add-department-btn-top, #add-department-btn-bottom');
             const table = document.querySelector('table');
 
-            addDepartmentBtn.addEventListener('click', function () {
-                const newRow = document.createElement('tr');
-                newRow.innerHTML = `
-                    <td>New</td>
-                    <td><input type="text" name="new_nom_departement" placeholder="Nom du département"></td>
-                    <td>
-                        <div class="button-group">
-                            <button class="update">Ajouter</button>
-                            <button class="cancel">Annuler</button>
-                        </div>
-                    </td>
-                `;
-                table.appendChild(newRow);
-                const updateButton = newRow.querySelector('.update');
-            const cancelButton = newRow.querySelector('.cancel');
+            addDepartmentBtns.forEach(button => {
+                button.addEventListener('click', function () {
+                    const newRow = document.createElement('tr');
+                    newRow.innerHTML = `
+                        <td>New</td>
+                        <td><input type="text" name="new_nom_departement" placeholder="Nom du département"></td>
+                        <td>
+                            <div class="button-group">
+                                <button class="update">Ajouter</button>
+                                <button class="delete">Annuler</button>
+                            </div>
+                        </td>
+                    `;
+                    table.appendChild(newRow);
+                    newRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
-            updateButton.addEventListener('click', function () {
-                const nom = newRow.querySelector('input[name="new_nom_departement"]').value;
+                    const updateButton = newRow.querySelector('.update');
+                    const deleteButton = newRow.querySelector('.delete');
 
-                const form = document.createElement('form');
-                form.method = 'POST';
-                form.style.display = 'none';
+                    updateButton.addEventListener('click', function () {
+                        const nom = newRow.querySelector('input[name="new_nom_departement"]').value;
 
-                const nomInput = document.createElement('input');
-                nomInput.type = 'hidden';
-                nomInput.name = 'new_nom_departement';
-                nomInput.value = nom;
-                form.appendChild(nomInput);
+                        const form = document.createElement('form');
+                        form.method = 'POST';
+                        form.style.display = 'none';
 
-                const addDepartmentInput = document.createElement('input');
-                addDepartmentInput.type = 'hidden';
-                addDepartmentInput.name = 'add_department';
-                addDepartmentInput.value = '1';
-                form.appendChild(addDepartmentInput);
+                        const nomInput = document.createElement('input');
+                        nomInput.type = 'hidden';
+                        nomInput.name = 'new_nom_departement';
+                        nomInput.value = nom;
+                        form.appendChild(nomInput);
 
-                document.body.appendChild(form);
-                form.submit();
+                        const addDepartmentInput = document.createElement('input');
+                        addDepartmentInput.type = 'hidden';
+                        addDepartmentInput.name = 'add_department';
+                        addDepartmentInput.value = '1';
+                        form.appendChild(addDepartmentInput);
+
+                        document.body.appendChild(form);
+                        form.submit();
+                    });
+
+                    deleteButton.addEventListener('click', function () {
+                        newRow.remove();
+                    });
+                });
             });
 
-            cancelButton.addEventListener('click', function () {
-                newRow.remove();
+            // Gérer la mise à jour et la suppression
+            document.querySelectorAll('.update').forEach(button => {
+                button.addEventListener('click', function () {
+                    const row = button.closest('tr');
+                    const id = button.dataset.id;
+                    const nom = row.querySelector('input[name="nom_departement"]').value;
+
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.style.display = 'none';
+
+                    const idInput = document.createElement('input');
+                    idInput.type = 'hidden';
+                    idInput.name = 'id_departement';
+                    idInput.value = id;
+                    form.appendChild(idInput);
+
+                    const nomInput = document.createElement('input');
+                    nomInput.type = 'hidden';
+                    nomInput.name = 'nom_departement';
+                    nomInput.value = nom;
+                    form.appendChild(nomInput);
+
+                    const updateDepartmentInput = document.createElement('input');
+                    updateDepartmentInput.type = 'hidden';
+                    updateDepartmentInput.name = 'update_department';
+                    updateDepartmentInput.value = '1';
+                    form.appendChild(updateDepartmentInput);
+
+                    document.body.appendChild(form);
+                    form.submit();
+                });
+            });
+
+            document.querySelectorAll('.delete').forEach(button => {
+                button.addEventListener('click', function () {
+                    if (confirm('Êtes-vous sûr de vouloir supprimer ce département ?')) {
+                        const id = button.dataset.id;
+
+                        const form = document.createElement('form');
+                        form.method = 'POST';
+                        form.style.display = 'none';
+
+                        const idInput = document.createElement('input');
+                        idInput.type = 'hidden';
+                        idInput.name = 'id_departement';
+                        idInput.value = id;
+                        form.appendChild(idInput);
+
+                        const deleteDepartmentInput = document.createElement('input');
+                        deleteDepartmentInput.type = 'hidden';
+                        deleteDepartmentInput.name = 'delete_department';
+                        deleteDepartmentInput.value = '1';
+                        form.appendChild(deleteDepartmentInput);
+
+                        document.body.appendChild(form);
+                        form.submit();
+                    }
+                });
             });
         });
-    });
-</script>
-
+    </script>
+</body>
+</html>

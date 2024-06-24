@@ -1,147 +1,173 @@
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f5f5f5;
-}
-
-.header {
-    background-color: #333;
-    color: white;
-    padding: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.header h1,
-.header h3 {
-    margin: 0;
-}
-
-.logo img {
-    height: 40px;
-    margin-right: 10px;
-}
-
-.search-bar {
-    flex-grow: 1;
-    margin: 0 10px;
-}
-
-.search-bar input {
-    width: 100%;
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
-.search-bar button {
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.navigation a {
-    color: white;
-    text-decoration: none;
-    padding: 5px 10px;
-    border-radius: 5px;
-    background-color: #007bff;
-}
-
-.navigation a:hover {
-    background-color: #0056b3;
-}
-
-.connect_entete a,
-.profil a {
-    color: white;
+.connect_entete a, .profil a {
+    color: #ff6600;
     text-decoration: none;
     display: flex;
     align-items: center;
 }
 
-.connect_entete a:hover,
-.profil a:hover {
-    color: #ccc;
-}
-
-.footer {
-    background-color: #333;
-    color: white;
-    padding: 10px;
-    text-align: center;
-    margin-top: 20px;
+.connect_entete a:hover, .profil a:hover {
+    color: #000;
 }
 
 .idea {
-background-color: #fff;
-border-radius: 10px; /* Augmenter le rayon pour une apparence plus arrondie */
-padding: 20px; /* Augmenter l'espacement interne */
-box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ombre plus prononcée */
-transition: transform 0.3s ease; /* Ajouter une transition au survol */
+    background-color: #fff;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 10px 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+    width: 100%;
 }
 
 .idea:hover {
-transform: translateY(-5px); /* Léger effet de levitation au survol */
+    transform: translateY(-5px);
 }
 
 .idea h2 {
-margin-top: 0;
-color: #333; /* Couleur du titre */
-font-size: 1.5em; /* Taille du titre */
+    margin-top: 0;
+    color: #333;
+    font-size: 1.5em;
 }
 
 .idea p {
-margin-bottom: 10px; /* Espacement supplémentaire entre les paragraphes */
-color: #555; /* Couleur du texte */
+    margin-bottom: 10px;
+    color: #555;
+}
+
+.idea .status-circle {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+
+.status-soumis .status-circle {
+    background-color: orange;
+}
+
+.status-approuvé .status-circle {
+    background-color: green;
+}
+
+.status-rejeté .status-circle {
+    background-color: red;
+}
+
+.status-implémenté .status-circle {
+    background-color: blue;
 }
 
 .idea a {
-display: inline-block;
-margin-top: 15px; /* Espacement entre les liens et le contenu */
-padding: 8px 20px; /* Espacement interne des liens */
-background-color: #007bff;
-color: white;
-border-radius: 5px;
-text-decoration: none;
-transition: background-color 0.3s ease; /* Transition de couleur au survol */
+    display: inline-block;
+    margin-top: 15px;
+    padding: 8px 20px;
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
 }
 
 .idea a:hover {
-background-color: #0056b3;
+    background-color: #0056b3;
 }
 
-/* Agrandir la longueur des idées à 100% */
-.ideas {
-display: grid;
-grid-template-columns: repeat(auto-fit, minmax(100%, 1fr)); /* 100% de la largeur */
-gap: 20px;
-margin-top: 20px;
-}
-
-
-.footer-left,
-.footer-right {
-    margin: 0;
-    padding: 5px;
-}
-
-.footer-left a {
+.floating-button {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background-color: #FF6600;
     color: white;
+    border: none;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    z-index: 1000;
+    bottom: 80px;
+}
+
+.floating-button:hover {
+    background-color: #cc5200;
+}
+
+.enveloppe {
+    background-color: #fff;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 10px 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+    width: 100%;
+}
+
+.supprime {
+    background-color: red;
+    border-radius: 5px;
+    padding: 10px 20px;
     text-decoration: none;
+    color: #fff;
+    margin-left: 10px; /* Ajoute un espace à gauche */
 }
 
-.footer-left a:hover {
-    color: #ccc;
+.supprime:hover {
+    background-color: rgb(163, 3, 3);
 }
 
-.footer-right {
-    margin-left: auto;
+.edit {
+    background-color: green;
+    border-radius: 5px;
+    padding: 10px 20px;
+    text-decoration: none;
+    color: #fff;
+    margin-right: 10px; /* Ajoute un espace à droite */
+}
+
+.edit:hover {
+    background-color: rgb(2, 86, 2);
+}
+
+.groupe {
+    margin-left: 400px;
+    display: flex;
+    justify-content: space-between;
+}
+
+
+.filtre {
+    top: 115px;
+    right: 20px;
+    display: flex;
+    align-items: center;
+    background-color: #f1f1f1;
+    border: 1px solid #f1f1f1;
+    border-radius: 5px;
+    padding: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: absolute;
+    z-index: 1000;
+}
+
+.filtre i {
+    margin-right: 10px;
+    color: #000;
+}
+
+.filtre select {
+    padding: 5px;
+    border-radius: 5px;
+    background-color: #dfdede;
+    border: none;
+    font-size: 14px;
+    outline: none;
 }
 
 @media screen and (max-width: 768px) {
@@ -152,6 +178,7 @@ margin-top: 20px;
 
     .search-bar {
         margin: 10px 0;
+        width: 100%;
     }
 
     .navigation a {
@@ -160,5 +187,19 @@ margin-top: 20px;
 
     .ideas {
         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
+}
+
+@media (max-width: 480px) {
+    .header h1 {
+        font-size: 20px;
+    }
+
+    .form input {
+        width: 150px;
+    }
+
+    .form input:focus {
+        width: 200px;
     }
 }

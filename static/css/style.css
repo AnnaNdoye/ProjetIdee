@@ -1,0 +1,255 @@
+.container {
+    max-width: 100%;
+    margin: auto;
+    padding: 20px;
+}
+
+.idea-details {
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 8px;
+    background: #f9f9f9;
+    position: relative;
+}
+
+.creator-info {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.creator-info img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.creator-info .name {
+    font-weight: bold;
+}
+
+.idea-dates {
+    text-align: right;
+    font-size: 0.9em;
+    color: #666;
+}
+
+.status {
+    padding: 5px 10px;
+    border-radius: 5px;
+    display: inline-block;
+    font-weight: bold;
+}
+
+.status.soumis { background: #e7b92d; }
+.status.approuvé { background: #59ec5e; }
+.status.rejeté { background: #f23434; }
+.status.implémenté { background: #4ebdf0; }
+
+.like-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+.like-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5rem;
+    transition: transform 0.2s ease;
+}
+
+.like-button:focus {
+    outline: none;
+}
+
+.thumb-icon {
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.like-button:hover .thumb-icon {
+    color: #888;
+    transform: scale(1.1);
+}
+
+.liked .thumb-icon {
+    color: #007BFF;
+    transform: scale(1.2);
+}
+
+.like-count {
+    margin-left: 10px;
+    font-size: 1.5rem;
+    transition: color 0.2s ease;
+}
+
+.liked + .like-count {
+    color: #007BFF;
+}
+
+.comments-section {
+    margin-top: 40px;
+}
+
+.comment-form textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    resize: vertical;
+    margin-bottom: 10px;
+}
+
+.comment-form button {
+    background: #ff7f00;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.comment-form button:hover {
+    background: #e06b00;
+}
+
+.comment {
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    background: #fff;
+}
+
+.comment-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.comment-info img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.comment-info .name {
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.comment-info .date {
+    font-size: 0.9em;
+    color: #666;
+}
+
+.comment-content {
+    margin-bottom: 10px;
+}
+
+.comment-actions button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #007BFF;
+    padding: 0;
+    font-size: 0.9em;
+    margin-right: 10px;
+}
+
+.comment-actions button:hover {
+    text-decoration: underline;
+}
+
+.comment-actions button:focus {
+    outline: none;
+}
+
+#div1 {
+    width: 100%;
+    height: auto;
+    padding: 15px;
+    background-color: #d4e7f1;
+    border-radius: 5px;
+    align-items: start;
+}
+
+/*finalement le div2 n'a pas étté utilisé*/
+#div2{
+    width: 100%;
+    height: auto;
+    padding: 15px;
+    margin: 10px;
+    border-radius: 5px;
+}
+
+#ideepose{
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    text-shadow: 2px 4px 3px rgba(0,0,0,0.3);
+    background: linear-gradient(to right, #ff6600, #000);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+#enhauteur
+{
+    width: 100%;
+    height: auto;
+    padding: 15px;
+    background-color: #d4e7f135;
+    border-radius: 5px;
+    align-items: start;
+}
+
+.details{
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 8px;
+    background: #f9f9f9;
+    position: relative;
+    width: 100%;
+}
+
+.details img {
+    display: block;
+    margin-top: 10px;
+}
+
+.download-button {
+    background-color: #007BFF;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-top: 10px;
+    display: inline-block;
+}
+
+.download-button:hover {
+    background-color: #0056b3;
+}
+
+
+#editer{
+    margin-left: 1250px;
+}
+
+p img{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
+.info{
+    display: flex;
+    align-items: center;
+}

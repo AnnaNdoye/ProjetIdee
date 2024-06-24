@@ -1,0 +1,43 @@
+
+
+/*css pour le bouton de like */
+.like-container {
+    display: flex;
+    align-items: center;
+}
+
+.like-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 2rem;
+    transition: transform 0.2s ease;
+}
+
+.like-button:focus {
+    outline: none;
+}
+
+.thumb-icon {
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.like-button:hover .thumb-icon {
+    color: #888;
+    transform: scale(1.1);
+}
+
+.liked .thumb-icon {
+    color: #007BFF;
+    transform: scale(1.2);
+}
+
+.like-count {
+    margin-left: 10px;
+    font-size: 1.5rem;
+    transition: color 0.2s ease;
+}
+
+.liked + .like-count {
+    color: #007BFF;
+}
