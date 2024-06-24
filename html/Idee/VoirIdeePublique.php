@@ -62,7 +62,8 @@ $comments_query = "
     SELECT commentaire.id_commentaire, commentaire.contenu, commentaire.date_creation, commentaire.date_modification, 
     employe.nom, employe.prenom, employe.photo_profil,
     (SELECT COUNT(*) FROM LikeCommentaire WHERE commentaire_id = commentaire.id_commentaire) AS like_count,
-    (SELECT COUNT(*) FROM LikeCommentaire WHERE commentaire_id = commentaire.id_commentaire AND employe_id = ?) AS user_liked
+    (SELECT COUNT(*) FROM LikeCommentaire WHERE commentaire_id = commentaire.id_commentaire AND employe_id = ?) AS user_liked,
+    commentaire.employe_id AS comment_employe_id
     FROM commentaire
     LEFT JOIN employe ON commentaire.employe_id = employe.id_employe
     WHERE commentaire.idee_id = ?
@@ -101,7 +102,63 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['comment_content'])) {
     exit();
 }
 
-// Gérer les likes
+// Modifier un commentaire
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_comment_id'])) {
+    $edit_comment_id = $_POST['edit_comment_id'];
+    $new_content = $_POST['new_content'];
+    $edit_query = "
+        UPDATE commentaire 
+        SET contenu = ?, date_modification = NOW() 
+        WHERE id_commentaire = ? AND employe_id = ?
+    ";
+    $edit_stmt = $connexion->prepare($edit_query);
+    if ($edit_stmt === false) {
+        die("Erreur lors de la préparation de la requête: " . $connexion->error);
+    }
+    $edit_stmt->bind_param('sii', $new_content, $edit_comment_id, $employe_id);
+    if (!$edit_stmt->execute()) {
+        die("Erreur lors de l'exécution de la requête: " . $edit_stmt->error);
+    }
+    header("Location: " . $_SERVER['REQUEST_URI']);
+    exit();
+}
+
+// Supprimer un commentaire
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_comment_id'])) {
+    $delete_comment_id = $_POST['delete_comment_id'];
+
+    // D'abord, supprimer les likes associés au commentaire
+    $delete_likes_query = "
+        DELETE FROM LikeCommentaire 
+        WHERE commentaire_id = ?
+    ";
+    $delete_likes_stmt = $connexion->prepare($delete_likes_query);
+    if ($delete_likes_stmt === false) {
+        die("Erreur lors de la préparation de la requête: " . $connexion->error);
+    }
+    $delete_likes_stmt->bind_param('i', $delete_comment_id);
+    if (!$delete_likes_stmt->execute()) {
+        die("Erreur lors de l'exécution de la requête: " . $delete_likes_stmt->error);
+    }
+
+    // Puis, supprimer le commentaire
+    $delete_query = "
+        DELETE FROM commentaire 
+        WHERE id_commentaire = ? AND employe_id = ?
+    ";
+    $delete_stmt = $connexion->prepare($delete_query);
+    if ($delete_stmt === false) {
+        die("Erreur lors de la préparation de la requête: " . $connexion->error);
+    }
+    $delete_stmt->bind_param('ii', $delete_comment_id, $employe_id);
+    if (!$delete_stmt->execute()) {
+        die("Erreur lors de l'exécution de la requête: " . $delete_stmt->error);
+    }
+    header("Location: " . $_SERVER['REQUEST_URI']);
+    exit();
+}
+
+// Gérer les likes des idées
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['like'])) {
     $like = $_POST['like'];
     
@@ -159,49 +216,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['like_comment'])) {
     $like_comment_stmt->close();
     exit(json_encode(['success' => true]));
 }
-
-//modifier commentaires
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_comment_id'])) {
-    $edit_comment_id = $_POST['edit_comment_id'];
-    $new_content = $_POST['new_content'];
-    $edit_query = "
-        UPDATE commentaire 
-        SET contenu = ?, date_modification = NOW() 
-        WHERE id_commentaire = ? AND employe_id = ?
-    ";
-    $edit_stmt = $connexion->prepare($edit_query);
-    if ($edit_stmt === false) {
-        die("Erreur lors de la préparation de la requête: " . $connexion->error);
-    }
-    $edit_stmt->bind_param('sii', $new_content, $edit_comment_id, $employe_id);
-    if (!$edit_stmt->execute()) {
-        die("Erreur lors de l'exécution de la requête: " . $edit_stmt->error);
-    }
-    header("Location: " . $_SERVER['REQUEST_URI']);
-    exit();
-}
-
-
-//supprimer commenaires
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_comment_id'])) {
-    $delete_comment_id = $_POST['delete_comment_id'];
-    $delete_query = "
-        DELETE FROM commentaire 
-        WHERE id_commentaire = ? AND employe_id = ?
-    ";
-    $delete_stmt = $connexion->prepare($delete_query);
-    if ($delete_stmt === false) {
-        die("Erreur lors de la préparation de la requête: " . $connexion->error);
-    }
-    $delete_stmt->bind_param('ii', $delete_comment_id, $employe_id);
-    if (!$delete_stmt->execute()) {
-        die("Erreur lors de l'exécution de la requête: " . $delete_stmt->error);
-    }
-    header("Location: " . $_SERVER['REQUEST_URI']);
-    exit();
-}
-
-
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -215,7 +229,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_comment_id']))
     <title>Voir Idée</title>
     <style>
         .container {
-            max-width: 1500px;
+            width: 2000px;
             margin: auto;
             padding: 20px;
         }
@@ -269,6 +283,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_comment_id']))
             background: none;
             border: none;
             cursor: pointer;
+            text-align: right;
             font-size: 1.5rem;
             transition: transform 0.2s ease-in-out;
         }
@@ -312,6 +327,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_comment_id']))
     margin-top: 10px;
     margin-right: 10px;
 }
+        .container {
+            width: 2000px;
+            margin: auto;
+            padding: 20px;
+        }
+        .idea-details {
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .idea-details h2 {
+            margin-top: 0;
+        }
+        .comments-section {
+            border: 1px solid #ddd;
+            padding: 20px;
+        }
+        .comment {
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+        }
+        .comment:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        .like-button, .like-comment-button {
+            background: none;
+            border: none;
+            color: #007BFF;
+            cursor: pointer;
+            text-align: right;
+        }
+        .like-button.liked, .like-comment-button.liked {
+            color: #FF0000;
+        }
+        .edit-comment, .delete-comment {
+            cursor: pointer;
+            color: #007BFF;
+        }
     </style>
 </head>
 <body>
@@ -328,90 +383,175 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_comment_id']))
         <strong><a href="IdeePublique.php">Retour</a></strong>
     </div>
 </div>
-    <div class="container">
-        <div class="idea-details">
-            <div class="creator-info">
+<div class="container">
+    <div class="idea-details">
+        <div class="creator-info">
                 <img src="<?php echo $idee['photo_profil']; ?>" alt="Photo de profil">
                 <div class="name"><?php echo $idee['prenom'] . ' ' . $idee['nom']; ?></div>
-            </div>
-            <div class="idea-dates">
-                <div>Créé le: <?php echo $idee['date_creation']; ?></div>
-                <div>Dernière modification: <?php echo $idee['date_modification']; ?></div>
-            </div>
-            <h1><?php echo $idee['titre']; ?></h1>
-            <p><?php echo nl2br($idee['contenu_idee']); ?></p>
-            <?php if ($idee['nom_fichier']): ?>
-                <div>
-                    <a href="data:<?php echo $idee['type']; ?>;base64,<?php echo base64_encode($idee['contenu_fichier']); ?>" download="<?php echo $idee['nom_fichier']; ?>">Télécharger le fichier associé</a>
-                </div>
-            <?php endif; ?>
-            <div class="like-container">
-                <form id="likeForm" method="post">
-                    <input type="hidden" name="like" value="<?php echo $idee['user_liked'] ? 'false' : 'true'; ?>">
-                    <button type="submit" class="like-button">
-                        <i class="fas fa-thumbs-up" style="color:<?php echo $idee['user_liked'] ? 'blue' : 'grey'; ?>;"></i>
-                    </button>
-                </form>
-                <span class="like-count"><?php echo $idee['like_count']; ?></span>
-            </div>
-            <div class="status <?php echo strtolower($idee['statut']); ?>">
-                Statut: <?php echo ucfirst($idee['statut']); ?>
-            </div>
         </div>
-        <div class="comments-section">
-            <h2>Commentaires (<?php echo $idee['comment_count']; ?>)</h2>
-            <?php foreach ($comments as $comment): ?>
-    <div class="comment">
-        <div class="creator-info">
+        <div class="idea-dates">
+            <div>Créé le: <?php echo $idee['date_creation']; ?></div>
+            <div>Dernière modification: <?php echo $idee['date_modification']; ?></div>
+        </div>
+        <h1><?php echo $idee['titre']; ?></h1>
+        Contenu : <p><?php echo nl2br($idee['contenu_idee']); ?></p>
+        <div class="status <?php echo strtolower($idee['statut']); ?>">
+            Statut: <?php echo ucfirst($idee['statut']); ?>
+        </div>
+        <p><strong>Catégorie:</strong> <?php echo htmlspecialchars($idee['nom_categorie']); ?></p>
+        <?php if ($idee['nom_fichier']) : 
+            $file = "../../database/idee/" . $idee['contenu_fichier'];
+            $file_extension = pathinfo($file, PATHINFO_EXTENSION);
+        ?>
+            <?php if (in_array($file_extension, ['jpg', 'jpeg', 'png', 'gif', 'jpe', 'avi'])) : ?>
+                <img src="<?php echo $file; ?>" alt="Fichier" style="max-width: 200px;">
+                <a class="download-button" href="<?php echo $file; ?>" download>Télécharger</a>
+            <?php elseif (in_array($file_extension, ['pdf'])) : ?>
+            <embed src="<?php echo $file; ?>" type="application/pdf" width="600" height="600">
+            <a class="download-button" href="<?php echo $file; ?>" download>Télécharger</a>
+            <?php elseif (in_array($file_extension, ['doc', 'docx', 'mpp', 'gz', 'zip', 'odp', 'odt', 'ods', 'xlsx', 'pptx', 'txt'])) : ?>
+            <p><a href="<?php echo $file; ?>" target="_blank">Voir le document</a></p>
+            <a class="download-button" href="<?php echo $file; ?>" download>Télécharger</a>
+            <?php else : ?>
+                <p>Type de fichier non supporté pour l'affichage</p>
+            <?php endif; ?>
+            <br>
+        <?php endif; ?>
+
+        <p>
+            <button class="like-button <?php echo $idee['user_liked'] ? 'liked' : ''; ?>" onclick="toggleLike()">
+                <i class="fas fa-thumbs-up"></i> <span id="like-count"><?php echo $idee['like_count']; ?></span>
+            </button>
+        </p>
+    </div>
+
+    <div class="comments-section">
+        <h3>Commentaires (<?php echo $idee['comment_count']; ?>)</h3>
+        <form method="POST">
+            <textarea name="comment_content" rows="4" cols="50" required></textarea><br>
+            <button type="submit">Ajouter un commentaire</button>
+        </form>
+        <?php foreach ($comments as $comment): ?>
+            <div class="comment" id="comment-<?php echo $comment['id_commentaire']; ?>">
+            <div class="creator-info">
             <img src="<?php echo $comment['photo_profil']; ?>" alt="Photo de profil">
             <div class="name"><?php echo $comment['prenom'] . ' ' . $comment['nom']; ?></div>
         </div>
-        <p><?php echo nl2br($comment['contenu']); ?></p>
-        <div class="like-container">
-            <form class="likeCommentForm" method="post">
-                <input type="hidden" name="comment_id" value="<?php echo $comment['id_commentaire']; ?>">
-                <input type="hidden" name="like_comment" value="<?php echo $comment['user_liked'] ? 'false' : 'true'; ?>">
-                <button type="submit" class="like-button">
-                    <i class="fas fa-thumbs-up" style="color:<?php echo $comment['user_liked'] ? 'blue' : 'grey'; ?>;"></i>
+                <p><?php echo nl2br(htmlspecialchars($comment['contenu'])); ?></p>
+                <p><small>Créé le : <?php echo htmlspecialchars($comment['date_creation']); ?></small></p>
+                <?php if ($comment['date_modification']): ?>
+                        <p><small>Date de modification : <?= htmlspecialchars($comment['date_modification']) ?></small></p>
+                <?php endif; ?>
+                <button class="like-comment-button <?php echo $comment['user_liked'] ? 'liked' : ''; ?>" data-comment-id="<?php echo $comment['id_commentaire']; ?>" onclick="toggleLikeComment(<?php echo $comment['id_commentaire']; ?>)">
+                    <i class="fas fa-thumbs-up"></i> <span id="like-comment-count-<?php echo $comment['id_commentaire']; ?>"><?php echo $comment['like_count']; ?></span> J'aime
                 </button>
-            </form>
-            <span class="like-count"><?php echo $comment['like_count']; ?></span>
-        </div>
-        <?php if (isset($comment['employe_id']) && $comment['employe_id'] == $employe_id): ?>
-            <form method="post" class="edit-comment-form" style="display:none;">
-                <input type="hidden" name="edit_comment_id" value="<?php echo $comment['id_commentaire']; ?>">
-                <textarea name="new_content" rows="3"><?php echo htmlspecialchars($comment['contenu']); ?></textarea>
-                <button type="submit">Enregistrer</button>
-            </form>
-            <button class="edit-button" onclick="toggleEditForm(<?php echo $comment['id_commentaire']; ?>)">Modifier</button>
-            <form method="post" style="display:inline;">
-                <input type="hidden" name="delete_comment_id" value="<?php echo $comment['id_commentaire']; ?>">
-                <button type="submit" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce commentaire ?');">Supprimer</button>
-            </form>
-        <?php endif; ?>
-        <div class="comment-dates">
-            <div>Créé le: <?php echo $comment['date_creation']; ?></div>
-            <?php if ($comment['date_modification']): ?>
-                <div>Modifié le: <?php echo $comment['date_modification']; ?></div>
-            <?php endif; ?>
-        </div>
-    </div>
-<?php endforeach; ?>
+                <?php if ($comment['comment_employe_id'] == $employe_id): ?>
+                        <form method="post" class="edit-comment-form">
+                            <input type="hidden" name="edit_comment_id" value="<?= $comment['id_commentaire'] ?>">
+                            <textarea name="new_content" rows="2" required><?= htmlspecialchars($comment['contenu']) ?></textarea>
+                            <button type="submit">Modifier</button>
+                        </form>
 
-            <form method="post">
-                <label for="comment_content">Ajouter un commentaire:</label>
-                <textarea name="comment_content" id="comment_content" rows="4" required></textarea>
-                <button type="submit">Envoyer</button>
-            </form>
-        </div>
+                        <form method="post" class="delete-comment-form">
+                            <input type="hidden" name="delete_comment_id" value="<?= $comment['id_commentaire'] ?>">
+                            <button type="submit" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce commentaire ?')">Supprimer</button>
+                        </form>
+                    <?php endif; ?>
+            </div>
+        <?php endforeach; ?>
     </div>
+</div>
+
 <div class="espace"></div>
     <div class="footer">
         <h4 class="footer-left"><a href="mailto:support@orange.com" style="text-decoration: none; color: white;">Contact</a></h4>
         <h4 class="footer-right">© Orange/Juin2024</h4>
     </div>
-    <script>
-        document.getElementById('likeForm').addEventListener('submit', function(e) 
+
+<script>
+function toggleLike() {
+    var xhr = new XMLHttpRequest();
+    var url = window.location.href;
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            var response = JSON.parse(xhr.responseText);
+            if (response.success) {
+                var likeButton = document.querySelector(".like-button");
+                var likeCount = document.getElementById("like-count");
+                if (likeButton.classList.contains("liked")) {
+                    likeButton.classList.remove("liked");
+                    likeCount.textContent = parseInt(likeCount.textContent) - 1;
+                } else {
+                    likeButton.classList.add("liked");
+                    likeCount.textContent = parseInt(likeCount.textContent) + 1;
+                }
+            }
+        }
+    };
+    xhr.send("like=" + (document.querySelector(".like-button").classList.contains("liked") ? "false" : "true"));
+}
+
+function toggleLikeComment(commentId) {
+    var xhr = new XMLHttpRequest();
+    var url = window.location.href;
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            var response = JSON.parse(xhr.responseText);
+            if (response.success) {
+                var likeButton = document.querySelector(".like-comment-button[data-comment-id='" + commentId + "']");
+                var likeCount = document.getElementById("like-comment-count-" + commentId);
+                if (likeButton.classList.contains("liked")) {
+                    likeButton.classList.remove("liked");
+                    likeCount.textContent = parseInt(likeCount.textContent) - 1;
+                } else {
+                    likeButton.classList.add("liked");
+                    likeCount.textContent = parseInt(likeCount.textContent) + 1;
+                }
+            }
+        }
+    };
+    xhr.send("like_comment=" + (document.querySelector(".like-comment-button[data-comment-id='" + commentId + "']").classList.contains("liked") ? "false" : "true") + "&comment_id=" + commentId);
+}
+
+function editComment(commentId) {
+    var commentContent = document.getElementById("comment-content-" + commentId).textContent.trim();
+    var newContent = prompt("Modifier le commentaire :", commentContent);
+    if (newContent !== null && newContent.trim() !== "") {
+        var xhr = new XMLHttpRequest();
+        var url = window.location.href;
+        xhr.open("POST", url, true);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                window.location.reload(); // Recharger la page après modification
+            }
+        };
+        xhr.send("edit_comment_id=" + commentId + "&new_content=" + encodeURIComponent(newContent));
+    }
+}
+
+// Fonction pour supprimer un commentaire
+function deleteComment(commentId) {
+    var confirmDelete = confirm("Voulez-vous vraiment supprimer ce commentaire ?");
+    if (confirmDelete) {
+        var xhr = new XMLHttpRequest();
+        var url = window.location.href;
+        xhr.open("POST", url, true);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                window.location.reload(); // Recharger la page après suppression
+            }
+        };
+        xhr.send("delete_comment_id=" + commentId);
+    }
+}
+
+document.getElementById('likeForm').addEventListener('submit', function(e) 
         {
             e.preventDefault();
             var formData = new FormData(this);
@@ -478,6 +618,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_comment_id']))
             });
         });
     });
-    </script>
+</script>
 </body>
 </html>

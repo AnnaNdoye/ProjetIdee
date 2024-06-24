@@ -29,7 +29,8 @@ $query = "
     FROM idee
     LEFT JOIN categorie ON idee.categorie_id = categorie.id_categorie
     LEFT JOIN employe ON idee.employe_id = employe.id_employe
-    WHERE idee.est_publique = 1 AND idee.titre LIKE ?";
+    WHERE idee.est_publique = 1 AND idee.titre LIKE ?
+    ORDER BY idee.date_creation DESC";
 
 $stmt = $connexion->prepare($query);
 if ($stmt === false) {
@@ -45,6 +46,9 @@ $result = $stmt->get_result();
 if (!$result) {
     die("Erreur lors de la requête: " . $connexion->error);
 }
+
+$comment_count = $result->num_rows;
+
 ?>
 
 <!DOCTYPE html>
@@ -58,6 +62,15 @@ if (!$result) {
     <link rel="stylesheet" type="text/css" href="../../static/css/style5.css">
     <link rel="stylesheet" type="text/css" href="../../static/css/IdeePP.css">
     <link rel="stylesheet" type="text/css" href="../../static/css/style.css">
+    <style>
+        .filtre select {
+            width: 100px;
+            transition: width 0.5s;
+        }
+        .filtre select:focus {
+            width: 200px;
+        }
+    </style>
 </head>
 <body>
 <div class="header">
@@ -69,7 +82,7 @@ if (!$result) {
         </div>
     </div>
     <div class="search-bar">
-        <form method="GET" action="IddeePublique.php">
+        <form method="GET" action="IdeePublique.php">
             <input type="text" name="search" placeholder="Rechercher des idées publiques..." value="<?php echo htmlspecialchars($search); ?>">
             <button type="submit"><i class="fas fa-search"></i></button>
         </form>
@@ -92,16 +105,15 @@ if (!$result) {
     </div>
 </div>
 
-<div class="filtre" style="float: right;">
+<form method="GET" action="IdeePublique.php" class="filtre" style="float: right;">
     <i class="fas fa-filter"></i>
     <select name="filtre" id="filtre" onchange="this.form.submit()">
         <option value="">Filtrer par:</option>
-        <option value="Date de création">Date de création</option>
-        <option value="Statut">Statut</option>
-        <option value="Privée">Privé</option>
-        <option value="Publique">Publique</option>
+        <option value="Statut" <?php if ($filtre == 'Statut') echo 'selected'; ?>>Statut</option>
+        <option value="Date de création" <?php if ($filtre == 'Date de création') echo 'selected'; ?>>Plus populaire</option>
     </select>
-</div>
+    <input type="hidden" name="search" value="<?php echo htmlspecialchars($search); ?>">
+</form>
 
 <div class="menu-deroulant">
     <button><strong>Menu</strong></button>
@@ -113,7 +125,7 @@ if (!$result) {
 </div>
 
 <div class="container">
-    <h1 id="ideepose">Idées Publiques</h1>
+    <h1 id="ideepose"><?php echo $comment_count; ?> Idées Publiques </h1>
     <div id="ideas">
         <?php
         if ($result->num_rows > 0)
@@ -144,7 +156,7 @@ if (!$result) {
                         <button type='submit' class='like-button<?php echo ($row['user_liked'] ? ' liked' : ''); ?>'>
                             <i class='fas fa-thumbs-up thumb-icon'></i>
                         </button>
-                        <span class='like-count'><?php echo $row['like_count']; ?></span>
+                        <span class='like-count'><?php echo $row['like_count']; ?> like</span> 
                     </form>
                 </div>
             </div>

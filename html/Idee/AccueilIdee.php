@@ -58,6 +58,9 @@ $result = $stmt->get_result();
 if (!$result) {
     die("Erreur lors de la requête: " . $connexion->error);
 }
+
+$comment_count = $result->num_rows;
+
 ?>
 
 <!DOCTYPE html>
@@ -166,7 +169,7 @@ if (!$result) {
         <div id="ideas">
             <?php
                 if ($result->num_rows > 0) {
-                    echo '<h1 id="ideepose">Toutes mes idées</h1>';
+                    echo '<h1 id="ideepose">Toutes mes idées (' .$comment_count. ')</h1>'; 
                 while ($row = $result->fetch_assoc()) {
             ?>
                 <div class="enveloppe">
