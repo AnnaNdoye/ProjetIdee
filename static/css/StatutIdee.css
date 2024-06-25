@@ -154,16 +154,9 @@ th, td {
 }
 
 td .button-group {
-    width: 450px;
+    width: 450px; /* Ajuster la largeur si nécessaire */
 }
 
 td{
     width: 450px;
-}
-
-.delete{
-}
-
-.update{
-
 }

@@ -67,6 +67,8 @@ $conn->close();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://kit.fontawesome.com/64d58efce2.js" crossorigin="anonymous"></script>
     <link rel="icon" type="image/png" href="../../static/img/icon.png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="../../static/css/style1.css">
     <link rel="stylesheet" href="../../static/css/style5.css">
     <title>Accueil Admin</title>
@@ -123,6 +125,9 @@ $conn->close();
             color: #77aaff;
             margin-bottom: 10px;
         }
+        .container h1{
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -134,16 +139,18 @@ $conn->close();
                 <h3><span class="for-ideas">for ideas</span></h3>
             </div>
         </div>
-        <div class="connect_entete">
-            <a href="ConnexionAdmin.php">
-                <i class="fas fa-user"></i>
-                <span>Se déconnecter</span>
-            </a>
-        </div>
+
         <div class="profil">
             <a href="../idee/Profil.php">
                 <i class="fas fa-user-circle"></i>
                 <strong>Profil</strong>
+            </a>
+        </div>
+
+        <div class="connect_entete">
+            <a href="ConnexionAdmin.php">
+                <i class="fas fa-user"></i>
+                <span>Se déconnecter</span>
             </a>
         </div>
     </div>

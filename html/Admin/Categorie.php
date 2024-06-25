@@ -109,8 +109,17 @@ $connection->close();
             table-layout: fixed;
         }
 
+        th{
+            color: white;
+            background-color: #ff6600;
+        }
+
+        th:hover{
+            color: #000;
+        }
+
         th, td {
-            border: 1px solid #ddd;
+            border: 3px solid #ddd;
             padding: 16px;
             text-align: center;
         }
@@ -179,6 +188,26 @@ $connection->close();
 
         .return-home-btn i {
             margin-right: 10px;
+        }
+
+        textarea{
+            resize: none;
+        }
+
+        .return-home-btn:hover{
+            background-color: #565e67;
+        }
+
+        .add-category-btn:hover{
+            background-color: #005abb;
+        }
+
+        .button-group .update:hover{
+            background-color: rgb(0, 115, 15);
+        }
+
+        .button-group .delete:hover{
+            background-color: #930000;
         }
     </style>
 </head>
