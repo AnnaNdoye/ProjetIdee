@@ -1,5 +1,24 @@
+<?php
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../connexion.php");
+    exit();
+}
+
+$host = "localhost";
+$user = "root";
+$password = "";
+$database = "idee";
+
+// Créer une connexion
+$connexion = mysqli_connect($host, $user, $password, $database);
+
+// Vérifier la connexion
+if (!$connexion) {
+    die("Erreur lors de la connexion: " . mysqli_connect_error());
+}
+?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,6 +29,22 @@
     <style>
         .error {
             color: red;
+        }
+        .user-button {
+            background-color: #FF6600;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            text-align: center;
+            display: inline-block;
+            font-size: 16px;
+            margin: 20px 0 20px 0;
+            cursor: pointer;
+            text-decoration: none;
+            position: absolute;
+            bottom: 60px;
+            right: 20px;
         }
     </style>
 </head>
@@ -66,6 +101,7 @@
             </div>
         </form>
     </div>
+    <a href="../Connexion.php" class="user-button">Connexion Employé</a>
     <div class="footer">
         <h4 class="footer-left"><a href="mailto:support@orange.com" style="text-decoration: none; color: white;">Contact</a></h4>
         <h4 class="footer-right">©Orange/Juin2024</h4>

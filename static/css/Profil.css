@@ -250,6 +250,9 @@
     transform: scale(1.2);
 }
 
+.profile-photo button{
+    transition: 0.5s;
+}
 .update-message {
     color: green;
     font-weight: bold;

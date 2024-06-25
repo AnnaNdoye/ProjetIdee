@@ -98,7 +98,6 @@ $idee = $result->fetch_assoc();
                 <strong>Statut:</strong> <?php echo htmlspecialchars($idee['statut']); ?> <span class="status-circle"></span>
             </p>
             <p><strong>Visibilité:</strong> <?php echo $idee['est_publique'] == 1 ? 'Publique' : 'Privé'; ?></p>
-            <p><strong>Catégorie:</strong> <?php echo htmlspecialchars($idee['nom_categorie']); ?></p>
         </div>
 
         <div class="details">

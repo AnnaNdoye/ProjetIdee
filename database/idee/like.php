@@ -48,5 +48,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 
 $connexion->close();
-header("Location: IdeePublique.php");
+header("Location: ../../html/idee/IdeePublique.php");
 exit();

@@ -56,7 +56,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     die("Erreur lors de l'insertion du fichier: " . $file_stmt->error);
                 }
                 $file_stmt->close();
-            } else {
+            } 
+            else 
+            {
                 die("Erreur lors du téléchargement du fichier.");
             }
         }

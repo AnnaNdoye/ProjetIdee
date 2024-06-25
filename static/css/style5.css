@@ -199,7 +199,8 @@
     border: none;
     padding: 10px;
     outline: none;
-    color: red;
+    color: #414141;
+    font-weight: bold;
     flex: 1;
 }
 

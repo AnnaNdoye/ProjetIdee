@@ -20,7 +20,9 @@ if (!$connexion) {
 }
 
 $search = isset($_GET['search']) ? $_GET['search'] : ''; 
+$filtre = isset($_GET['filtre']) ? $_GET['filtre'] : ''; 
 
+// la requête SQL en fonction du filtre
 $query = "
     SELECT idee.id_idee, idee.titre, idee.contenu_idee, idee.est_publique, idee.date_creation, idee.date_modification, idee.statut,
     categorie.nom_categorie, employe.photo_profil, employe.prenom, employe.nom,
@@ -29,15 +31,31 @@ $query = "
     FROM idee
     LEFT JOIN categorie ON idee.categorie_id = categorie.id_categorie
     LEFT JOIN employe ON idee.employe_id = employe.id_employe
-    WHERE idee.est_publique = 1 AND idee.titre LIKE ?
-    ORDER BY idee.date_creation DESC";
+    WHERE idee.est_publique = 1 AND idee.titre LIKE ?";
+
+if ($filtre == 'Soumis' || $filtre == 'Approuvé' || $filtre == 'Rejeté' || $filtre == 'Implémenté') {
+    $query .= " AND idee.statut = ?";
+} elseif ($filtre == 'Plus') {
+    $query .= " ORDER BY like_count DESC, idee.date_creation DESC";
+} elseif ($filtre == 'Moins') {
+    $query .= " ORDER BY like_count ASC, idee.date_creation DESC";
+} else {
+    $query .= " ORDER BY idee.date_creation DESC";
+}
 
 $stmt = $connexion->prepare($query);
 if ($stmt === false) {
     die("Erreur lors de la préparation de la requête: " . $connexion->error);
 }
+
 $like_search = '%' . $search . '%';
-$stmt->bind_param('is', $_SESSION['user_id'], $like_search);
+
+if ($filtre == 'Soumis' || $filtre == 'Approuvé' || $filtre == 'Rejeté' || $filtre == 'Implémenté') {
+    $stmt->bind_param('iss', $_SESSION['user_id'], $like_search, $filtre);
+} else {
+    $stmt->bind_param('is', $_SESSION['user_id'], $like_search);
+}
+
 if (!$stmt->execute()) {
     die("Erreur lors de l'exécution de la requête: " . $stmt->error);
 }
@@ -57,20 +75,12 @@ $comment_count = $result->num_rows;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Idées Publiques</title>
+    <script src="https://kit.fontawesome.com/64d58efce2.js" crossorigin="anonymous"></script>
     <link rel="icon" type="image/png" href="../../static/img/icon.png">
     <link rel="stylesheet" type="text/css" href="../../static/css/style1.css">
     <link rel="stylesheet" type="text/css" href="../../static/css/style5.css">
     <link rel="stylesheet" type="text/css" href="../../static/css/IdeePP.css">
     <link rel="stylesheet" type="text/css" href="../../static/css/style.css">
-    <style>
-        .filtre select {
-            width: 100px;
-            transition: width 0.5s;
-        }
-        .filtre select:focus {
-            width: 200px;
-        }
-    </style>
 </head>
 <body>
 <div class="header">
@@ -106,11 +116,19 @@ $comment_count = $result->num_rows;
 </div>
 
 <form method="GET" action="IdeePublique.php" class="filtre" style="float: right;">
-    <i class="fas fa-filter"></i>
-    <select name="filtre" id="filtre" onchange="this.form.submit()">
-        <option value="">Filtrer par:</option>
-        <option value="Statut" <?php if ($filtre == 'Statut') echo 'selected'; ?>>Statut</option>
-        <option value="Date de création" <?php if ($filtre == 'Date de création') echo 'selected'; ?>>Plus populaire</option>
+    <i class="fas fa-filter"></i> 
+    <select class="selectionne" name="filtre" id="filtre" onchange="this.form.submit()">
+        <option value="">Date création</option>
+        <optgroup label="Statut">
+            <option value="Soumis" <?php echo $filtre == 'Soumis' ? 'selected' : ''; ?>>Soumis</option>
+            <option value="Approuvé" <?php echo $filtre == 'Approuvé' ? 'selected' : ''; ?>>Approuvé</option>
+            <option value="Rejeté" <?php echo $filtre == 'Rejeté' ? 'selected' : ''; ?>>Rejeté</option>
+            <option value="Implémenté" <?php echo $filtre == 'Implémenté' ? 'selected' : ''; ?>>Implémenté</option>
+        </optgroup>
+        <optgroup label="Popularité">
+            <option value="Plus" <?php echo $filtre == 'Plus' ? 'selected' : ''; ?>>Plus Liké</option>
+            <option value="Moins" <?php echo $filtre == 'Moins' ? 'selected' : ''; ?>>Moins Liké</option>
+        </optgroup>
     </select>
     <input type="hidden" name="search" value="<?php echo htmlspecialchars($search); ?>">
 </form>
@@ -127,7 +145,7 @@ $comment_count = $result->num_rows;
     <h1 id="ideepose"><?php echo $comment_count; ?> Idées Publiques </h1>
     <div id="ideas">
         <?php
-        if ($result->num_rows > 0)
+        if ($result->num_rows > 0) 
         {
             while ($row = $result->fetch_assoc()) 
             {
@@ -164,7 +182,7 @@ $comment_count = $result->num_rows;
         <?php
             }
         } else {
-            echo "<p>Aucune idée publique trouvée.</p>";
+            echo '<h2 id="ideepose">Aucune idée publique trouvée.</h2>';
         }
         
         $stmt->close();
