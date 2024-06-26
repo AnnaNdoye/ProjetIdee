@@ -7,4 +7,3 @@ $motDePasseChiffre = password_hash($motDePasse, PASSWORD_DEFAULT);
 
 // Affichage du mot de passe chiffré
 echo "Mot de passe chiffré : " . $motDePasseChiffre;
-?>

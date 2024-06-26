@@ -143,10 +143,9 @@ $categories = $connexion->query($query);
             </form>
         </main>
         
-        <footer class="footer">
-            <h4 class="footer-left"><a href="mailto:support@orange.com" style="text-decoration: none; color: white;">Contact</a></h4>
-            <h4 class="footer-right">©Orange/Juin2024</h4>
-        </footer>
+        <?php
+            include("../barrefooter.html");
+        ?>
     </div>
     <div id="alert-container"></div>
 <script>

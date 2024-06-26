@@ -247,10 +247,9 @@ $connection->close();
         <button class="add-department-btn" id="add-department-btn-bottom">Ajouter Département</button>
     </div>
 
-    <div class="footer">
-        <h4 class="footer-left"><a href="mailto:support@orange.com" style="text-decoration: none; color: white;">Contact</a></h4>
-        <h4 class="footer-right">© Orange/Juin2024</h4>
-    </div>
+    <?php
+        include("../barrefooter.html");
+    ?>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {

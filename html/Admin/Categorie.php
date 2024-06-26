@@ -263,10 +263,9 @@ $connection->close();
         <button class="add-category-btn" id="add-category-btn">Ajouter Catégorie</button>
     </div>
 
-    <div class="footer">
-        <h4 class="footer-left"><a href="mailto:support@orange.com" style="text-decoration: none; color: white;">Contact</a></h4>
-        <h4 class="footer-right">© Orange/Juin2024</h4>
-    </div>
+    <?php
+        include("../barrefooter.html");
+    ?>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {

@@ -53,9 +53,7 @@ CREATE TABLE Fichier (
 
 CREATE TABLE Commentaire (
     id_commentaire INTEGER PRIMARY KEY AUTO_INCREMENT,
-    titre VARCHAR(255),
     contenu TEXT NOT NULL,
-    est_publique BOOLEAN,
     date_creation DATETIME DEFAULT CURRENT_TIMESTAMP,
     date_modification DATETIME ON UPDATE CURRENT_TIMESTAMP,
     employe_id INTEGER,

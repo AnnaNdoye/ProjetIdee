@@ -73,17 +73,17 @@
 }
 
 .like-button .thumb-icon {
-    color: #5986ed; /* Couleur grise par défaut */
+    color: #7d7e7f; /* Couleur grise par défaut */
     transition: color 0.2s ease, transform 0.2s ease;
 }
 
 .like-button:hover .thumb-icon {
-    color: #5986ed;
+    color: #7d7e7f;
     transform: scale(1.1);
 }
 
 .liked .thumb-icon {
-    color: orange; /* Couleur orange pour les "liked" */
+    color: rgb(0, 145, 255); /* Couleur bleu pour les "liked" */
     transform: scale(1.2);
 }
 
@@ -94,7 +94,7 @@
 }
 
 .liked + .like-count {
-    color: orange; /* Couleur du texte pour les "liked" */
+    color: rgb(0, 145, 255); /* Couleur du texte pour les "liked" */
 }
 
 
@@ -295,4 +295,17 @@ p img{
 
 #voir:hover{
     background-color: #0454aa;
+}
+
+.licons{
+    padding: 20px 20px;
+    margin-left: 1200px;
+}
+
+#modifier{
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    color: white;
+    background-color: #19b91e;
 }

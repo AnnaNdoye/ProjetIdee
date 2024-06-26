@@ -515,6 +515,10 @@ textarea {
         </p>
     </div>
 
+    <p class="licons">
+        <a id="modifier" href="ModifierIdee.php?id=<?php echo $idee['id_idee']; ?>"><i class="fas fa-edit"> Modifier l'idée</i></a>
+    </p>
+
     <div class="comments-section">
         <h3>Commentaires (<?php echo $idee['comment_count']; ?>)</h3>
         <form method="POST">
@@ -555,10 +559,9 @@ textarea {
 </div>
 
 <div class="espace"></div>
-    <div class="footer">
-        <h4 class="footer-left"><a href="mailto:support@orange.com" style="text-decoration: none; color: white;">Contact</a></h4>
-        <h4 class="footer-right">© Orange/Juin2024</h4>
-    </div>
+<?php
+    include(" ../barrefooter.html");
+?>
 
 <script>
 function toggleLike() {

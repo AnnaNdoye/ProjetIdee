@@ -25,7 +25,6 @@ $query = "
     categorie.nom_categorie, employe.photo_profil, employe.prenom, employe.nom,
     (SELECT COUNT(*) FROM LikeIdee WHERE LikeIdee.idee_id = idee.id_idee) AS like_count,
     (SELECT COUNT(*) FROM LikeIdee WHERE LikeIdee.idee_id = idee.id_idee AND LikeIdee.employe_id = ?) AS user_liked
-    (SELECT COUNT(*) FROM LikeCommentaire WHERE LikeCommentaire.employe_id = ?) AS com_count
     FROM idee
     LEFT JOIN categorie ON idee.categorie_id = categorie.id_categorie
     LEFT JOIN employe ON idee.employe_id = employe.id_employe
@@ -46,8 +45,6 @@ $stmt = $connexion->prepare($query);
 if ($stmt === false) {
     die("Erreur lors de la préparation de la requête: " . $connexion->error);
 }
-
-var_dump($stmt);
 
 $like_search = '%' . $search . '%';
 
@@ -146,7 +143,7 @@ $comment_count = $result->num_rows;
     </ul>
 </div>
 <div class="container">
-    <h1 id="ideepose"><?php echo $comment_count; ?>Idées Publiques</h1>
+    <h1 id="ideepose"><?php echo $comment_count; ?> Idées Publiques</h1>
     <div id="ideas">
         <?php
         if ($result->num_rows > 0) 
@@ -178,8 +175,10 @@ $comment_count = $result->num_rows;
                         </button>
                         <span class='like-count'><?php echo $row['like_count']; ?> like</span> 
                     </form>
+                <!--
                     <i class='fas fa-comments'></i>
-                    <span class='like-count'><?php echo $row['com_count']; ?> commentaires</span> 
+                    <span class='like-count'><?php echo $row['com_count']; ?> commentaires</span>
+                --> 
                 </div>
                 <a href='VoirIdeePublique.php?id=<?php echo $row['id_idee']; ?>'>Voir plus...</a>
 
@@ -198,10 +197,9 @@ $comment_count = $result->num_rows;
 </div>
 
 <div class="espace"></div>
-<div class="footer">
-    <h4 class="footer-left"><a href="mailto:support@orange.com" style="text-decoration: none; color: white;">Contact</a></h4>
-    <h4 class="footer-right">© Orange/Juin2024</h4>
-</div>
+<?php
+    include("../barrefooter.html");
+?>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
             const menuButton = document.querySelector('.menu-deroulant button');
