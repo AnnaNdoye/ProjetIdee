@@ -9,7 +9,7 @@ if (!isset($_SESSION['user_id'])) {
 $host = "localhost";
 $user = "root";
 $password = "";
-$database = "idee";
+$database = "idee";    
 
 $connexion = mysqli_connect($host, $user, $password, $database);
 
