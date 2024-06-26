@@ -267,7 +267,7 @@ $connection->close();
                 button.addEventListener('click', function () {
                     const newRow = document.createElement('tr');
                     newRow.innerHTML = `
-                        <td>New</td>
+                        <td>Nouveau</td>
                         <td><input type="text" name="new_nom_departement" placeholder="Nom du département"></td>
                         <td>
                             <div class="button-group">

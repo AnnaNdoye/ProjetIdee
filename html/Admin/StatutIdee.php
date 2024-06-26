@@ -44,11 +44,10 @@ if ($result->num_rows > 0)
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_idee'])) {
     $statut = $_POST['statut'];
     $idIdee = $_POST['id_idee'];
-    $dateModification = date('Y-m-d H:i:s');
 
-    $updateQuery = "UPDATE idee SET statut = ?, date_modification = ? WHERE id_idee = ?";
+    $updateQuery = "UPDATE idee SET statut = ? WHERE id_idee = ?";
     $stmt = $connection->prepare($updateQuery);
-    $stmt->bind_param("ssi", $statut, $dateModification, $idIdee);
+    $stmt->bind_param("si", $statut, $idIdee);
 
     if ($stmt->execute()) {
         header("Location: " . $_SERVER['PHP_SELF']);

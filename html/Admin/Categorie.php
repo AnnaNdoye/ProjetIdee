@@ -279,7 +279,7 @@ $connection->close();
             addCategoryBtn.addEventListener('click', function () {
                 const newRow = document.createElement('tr');
                 newRow.innerHTML = `
-                    <td>New</td>
+                    <td>Nouveau</td>
                     <td><input type="text" name="new_nom_categorie" placeholder="Nom de la catégorie"></td>
                     <td class="description-col"><textarea name="new_description_categorie" placeholder="Description de la catégorie"></textarea></td>
                     <td>
