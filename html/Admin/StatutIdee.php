@@ -2,8 +2,8 @@
 session_start();
 
 // Vérifiez si l'utilisateur est connecté en tant qu'administrateur, sinon redirigez vers la page de connexion
-if (!isset($_SESSION['user_id']) || !empty($_SESSION['user_id'])) {
-    header("Location: ../Connexion.php");
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ConnexionAdmin.php");
     exit();
 }
 
@@ -152,7 +152,7 @@ $connection->close();
             </div>
         </div>
         <div class="connect_entete">
-            <a href="../connexion.php">
+            <a href="ConnexionAdmin.php">
                 <i class="fas fa-user"></i>
                 <span>Se déconnecter</span>
             </a>

@@ -2,7 +2,7 @@
 session_start();
 
 // Check if session variables are set
-if (!isset($_SESSION['user_id']) || !isset($_SESSION['mot_de_passe']) || !isset($_SESSION['email'])|| !empty($_SESSION['user_id'])) {
+if (!isset($_SESSION['user_id']) || !isset($_SESSION['mot_de_passe']) || !isset($_SESSION['email'])) {
     header("Location: ../Connexion.php");
     exit();
 }

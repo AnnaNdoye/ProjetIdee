@@ -1,13 +1,11 @@
 <?php
 session_start();
 
-// Vérifiez si l'utilisateur est connecté en tant qu'administrateur, sinon redirigez vers la page de connexion
-if (!isset($_SESSION['user_id']) || !empty($_SESSION['user_id'])) {
-    header("Location: ../Connexion.php");
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ConnexionAdmin.php");
     exit();
 }
 
-// Connexion à la base de données
 $host = "localhost";
 $user = "root";
 $password = "";
@@ -19,7 +17,6 @@ if ($connection->connect_error) {
     die("Erreur de connexion à la base de données : " . $connection->connect_error);
 }
 
-// Récupérer les catégories depuis la base de données
 $query = "SELECT id_categorie, nom_categorie, description_categorie FROM Categorie";
 $result = $connection->query($query);
 
@@ -221,7 +218,7 @@ $connection->close();
             </div>
         </div>
         <div class="connect_entete">
-            <a href="../connexion.php">
+            <a href="ConnexionAdmin.php.php">
                 <i class="fas fa-user"></i>
                 <span>Se déconnecter</span>
             </a>

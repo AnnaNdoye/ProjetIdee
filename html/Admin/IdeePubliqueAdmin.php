@@ -1,8 +1,8 @@
 <?php
 session_start();
 
-if (!isset($_SESSION['user_id']) || !empty($_SESSION['user_id'])) {
-    header("Location: ../Connexion.php");
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ConnexionAdmin.php");
     exit();
 }
 
@@ -110,7 +110,7 @@ $comment_count = $result->num_rows;
         </a>
     </div>
     <div class="connect_entete">
-        <a href="../connexion.php">
+        <a href="ConnexionAdmin.php">
             <i class="fas fa-user"></i>
             <span>Se déconnecter</span>
         </a>

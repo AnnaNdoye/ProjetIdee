@@ -1,13 +1,11 @@
 <?php
 session_start();
 
-// Vérifiez si l'utilisateur est connecté en tant qu'administrateur, sinon redirigez vers la page de connexion
-if (!isset($_SESSION['user_id']) || !empty($_SESSION['user_id'])) {
-    header("Location: ../Connexion.php");
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ConnexionAdmin.php");
     exit();
 }
 
-// Connexion à la base de données
 $host = "localhost";
 $user = "root";
 $password = "";
@@ -19,7 +17,6 @@ if ($connection->connect_error) {
     die("Erreur de connexion à la base de données : " . $connection->connect_error);
 }
 
-// Récupérer les départements depuis la base de données
 $query = "SELECT id_departement, nom_departement FROM Department";
 $result = $connection->query($query);
 
@@ -31,7 +28,6 @@ if ($result->num_rows > 0) {
     }
 }
 
-// Gérer l'ajout de département
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_department'])) {
     $nomDepartement = $_POST['new_nom_departement'];
 
@@ -49,7 +45,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_department'])) {
     $stmt->close();
 }
 
-// Gérer la mise à jour de département
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_department'])) {
     $idDepartement = $_POST['id_departement'];
     $nomDepartement = $_POST['nom_departement'];
@@ -68,7 +63,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_department'])) 
     $stmt->close();
 }
 
-// Gérer la suppression de département
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_department'])) {
     $idDepartement = $_POST['id_departement'];
 
@@ -210,7 +204,7 @@ $connection->close();
             </div>
         </div>
         <div class="connect_entete">
-            <a href="../connexion.php">
+            <a href="ConnexionAdmin.php">
                 <i class="fas fa-user"></i>
                 <span>Se déconnecter</span>
             </a>
