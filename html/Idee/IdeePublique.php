@@ -15,7 +15,7 @@ $connexion = mysqli_connect($host, $user, $password, $database);
 
 if (!$connexion) {
     die("Erreur lors de la connexion: " . mysqli_connect_error());
-}
+}                  
 
 $search = isset($_GET['search']) ? $_GET['search'] : ''; 
 $filtre = isset($_GET['filtre']) ? $_GET['filtre'] : ''; 
