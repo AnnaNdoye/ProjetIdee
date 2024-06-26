@@ -21,7 +21,7 @@ $result = $stmt->get_result();
 session_start();
 if ($result->num_rows > 0) 
 {
-    header("Location: ../html/ChangePassword.html");
+    header("Location: ../html/ChangePassword.php");
     $_SESSION['email'] = $email; // Stocker l'email dans la session pour la prochaine étape
 } 
 else 

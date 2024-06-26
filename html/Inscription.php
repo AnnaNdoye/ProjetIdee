@@ -1,3 +1,12 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['user_id']) || !empty($_SESSION['user_id'])) {
+    header("Location: Connexion.php");
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -120,7 +129,7 @@
             <div class="accept-conditions-container">
                 <input type="checkbox" id="acceptConditions" required/>
                 <strong for="acceptConditions" style="color: #FF6600;">
-                    J'accepte <a href="ConditionUtilisation.html" style="color: #FF6600; text-decoration: none;">les conditions d'utilisation</a>
+                    J'accepte <a href="ConditionUtilisation.php" style="color: #FF6600; text-decoration: none;">les conditions d'utilisation</a>
                 </strong>
             </div>
 

@@ -1,7 +1,7 @@
 .container {
     max-width: 100%;
     margin: auto;
-    padding: 20px;
+    padding: 30px;
 }
 
 .idea-details {
@@ -198,7 +198,6 @@
 #ideepose{
     justify-content: center;
     align-items: center;
-    display: flex;
     justify-content: space-between;
     text-align: center;
     text-shadow: 2px 4px 3px rgba(0,0,0,0.3);
@@ -262,7 +261,7 @@ p img{
 }
 
 .filtre select {
-    width: 100px;
+    width: 130px;
     transition: width 0.5s;
 }
 

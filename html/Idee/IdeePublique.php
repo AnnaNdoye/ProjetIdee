@@ -2,7 +2,7 @@
 session_start();
 
 if (!isset($_SESSION['user_id'])) {
-    header("Location: ../connexion.php");
+    header("Location: ../Connexion.php");
     exit();
 }
 
@@ -11,10 +11,8 @@ $user = "root";
 $password = "";
 $database = "idee";
 
-// Créer une connexion
 $connexion = mysqli_connect($host, $user, $password, $database);
 
-// Vérifier la connexion
 if (!$connexion) {
     die("Erreur lors de la connexion: " . mysqli_connect_error());
 }
@@ -22,16 +20,17 @@ if (!$connexion) {
 $search = isset($_GET['search']) ? $_GET['search'] : ''; 
 $filtre = isset($_GET['filtre']) ? $_GET['filtre'] : ''; 
 
-// la requête SQL en fonction du filtre
 $query = "
     SELECT idee.id_idee, idee.titre, idee.contenu_idee, idee.est_publique, idee.date_creation, idee.date_modification, idee.statut,
     categorie.nom_categorie, employe.photo_profil, employe.prenom, employe.nom,
     (SELECT COUNT(*) FROM LikeIdee WHERE LikeIdee.idee_id = idee.id_idee) AS like_count,
     (SELECT COUNT(*) FROM LikeIdee WHERE LikeIdee.idee_id = idee.id_idee AND LikeIdee.employe_id = ?) AS user_liked
+    (SELECT COUNT(*) FROM LikeCommentaire WHERE LikeCommentaire.employe_id = ?) AS com_count
     FROM idee
     LEFT JOIN categorie ON idee.categorie_id = categorie.id_categorie
     LEFT JOIN employe ON idee.employe_id = employe.id_employe
-    WHERE idee.est_publique = 1 AND idee.titre LIKE ?";
+    WHERE idee.est_publique = 1 AND idee.titre LIKE ?
+    ";
 
 if ($filtre == 'Soumis' || $filtre == 'Approuvé' || $filtre == 'Rejeté' || $filtre == 'Implémenté') {
     $query .= " AND idee.statut = ?";
@@ -47,6 +46,8 @@ $stmt = $connexion->prepare($query);
 if ($stmt === false) {
     die("Erreur lors de la préparation de la requête: " . $connexion->error);
 }
+
+var_dump($stmt);
 
 $like_search = '%' . $search . '%';
 
@@ -69,6 +70,7 @@ $comment_count = $result->num_rows;
 
 ?>
 
+<!-- j'ai utilisé un peu de bootstrap ça a aidé à amélioré les pages de mon codes sans trop d'éfforts -->
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -119,7 +121,7 @@ $comment_count = $result->num_rows;
 
 <form method="GET" action="IdeePublique.php" class="filtre" style="float: right;">
     <i class="fas fa-filter"></i> 
-    <select class="selectionne" name="filtre" id="filtre" onchange="this.form.submit()">
+    <select name="filtre" id="filtre" onchange="this.form.submit()">
         <option value="">Date création</option>
         <optgroup label="Statut">
             <option value="Soumis" <?php echo $filtre == 'Soumis' ? 'selected' : ''; ?>>Soumis</option>
@@ -144,7 +146,7 @@ $comment_count = $result->num_rows;
     </ul>
 </div>
 <div class="container">
-    <h1 id="ideepose"><?php echo $comment_count; ?> Idées Publiques </h1>
+    <h1 id="ideepose"><?php echo $comment_count; ?>Idées Publiques</h1>
     <div id="ideas">
         <?php
         if ($result->num_rows > 0) 
@@ -152,7 +154,7 @@ $comment_count = $result->num_rows;
             while ($row = $result->fetch_assoc()) 
             {
         ?>
-        <div class='enveloppe'> <!--j'avais fait en sorte que tout le div soit cliquable avec "onclick="location.href='VoirIdeePublique.php?id=<?php echo htmlspecialchars($row['id_idee']); ?>'"" -->
+        <div class='enveloppe'> <!--j'avais fait en sorte que tout le div soit cliquable le onclick c'est du javascript avec "onclick="location.href='VoirIdeePublique.php?id=<?php echo htmlspecialchars($row['id_idee']); ?>'"" -->
             <div class='idea'>
                 <div id="div1">
                     <p class="info">
@@ -176,6 +178,8 @@ $comment_count = $result->num_rows;
                         </button>
                         <span class='like-count'><?php echo $row['like_count']; ?> like</span> 
                     </form>
+                    <i class='fas fa-comments'></i>
+                    <span class='like-count'><?php echo $row['com_count']; ?> commentaires</span> 
                 </div>
                 <a href='VoirIdeePublique.php?id=<?php echo $row['id_idee']; ?>'>Voir plus...</a>
 

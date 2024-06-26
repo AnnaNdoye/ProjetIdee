@@ -170,7 +170,7 @@
     outline: none;
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 100%) {
     .header {
         flex-direction: column;
         align-items: flex-start;
@@ -184,9 +184,9 @@
     .navigation a {
         margin-top: 10px;
     }
-
+        /*pour ideas j'avais utilisés auto-fit pour ajuster automatiquement la taille en fonction du plus long*/
     .ideas {
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        grid-template-columns: repeat(3, 250px);
     }
 }
 

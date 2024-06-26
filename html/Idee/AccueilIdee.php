@@ -1,8 +1,8 @@
 <?php
 session_start();
 
-if (!isset($_SESSION['user_id'])) {
-    header("Location: ../connexion.php");
+if (!isset($_SESSION['user_id']) || !empty($_SESSION['user_id'])) {
+    header("Location: ../Connexion.php");
     exit();
 }
 
@@ -158,25 +158,23 @@ $comment_count = $result->num_rows;
         </div>
     </div>
 
-    <div class="filtre">
-        <form method="GET" action="AccueilIdee.php" class="filtre" style="float: right;">
-            <i class="fas fa-filter"></i> 
-            <select class="selectionne" name="filtre" id="filtre" onchange="this.form.submit()">
-                <option value="">Date création</option>
-                <optgroup label="Statut">
-                    <option value="Soumis" <?php echo $filtre == 'Soumis' ? 'selected' : ''; ?>>Soumis</option>
-                    <option value="Approuvé" <?php echo $filtre == 'Approuvé' ? 'selected' : ''; ?>>Approuvé</option>
-                    <option value="Rejeté" <?php echo $filtre == 'Rejeté' ? 'selected' : ''; ?>>Rejeté</option>
-                    <option value="Implémenté" <?php echo $filtre == 'Implémenté' ? 'selected' : ''; ?>>Implémenté</option>
-                </optgroup>
-                <optgroup label="Visibilité">
-                    <option value="Publique" <?php echo $filtre == 'Publique' ? 'selected' : ''; ?>>Publique</option>
-                    <option value="Privé" <?php echo $filtre == 'Privé' ? 'selected' : ''; ?>>Privé</option>
-                </optgroup>
-            </select>
-            <input type="hidden" name="search" value="<?php echo htmlspecialchars($search); ?>">
-        </form>
-    </div>
+    <form method="GET" action="AccueilIdee.php" class="filtre" style="float: right;">
+        <i class="fas fa-filter"></i> 
+        <select class="selectionne" name="filtre" id="filtre" onchange="this.form.submit()">
+            <option value="">Date création</option>
+            <optgroup label="Statut">
+                <option value="Soumis" <?php echo $filtre == 'Soumis' ? 'selected' : ''; ?>>Soumis</option>
+                <option value="Approuvé" <?php echo $filtre == 'Approuvé' ? 'selected' : ''; ?>>Approuvé</option>
+                <option value="Rejeté" <?php echo $filtre == 'Rejeté' ? 'selected' : ''; ?>>Rejeté</option>
+                <option value="Implémenté" <?php echo $filtre == 'Implémenté' ? 'selected' : ''; ?>>Implémenté</option>
+            </optgroup>
+            <optgroup label="Visibilité">
+                <option value="Publique" <?php echo $filtre == 'Publique' ? 'selected' : ''; ?>>Publique</option>
+                <option value="Privé" <?php echo $filtre == 'Privé' ? 'selected' : ''; ?>>Privé</option>
+            </optgroup>
+        </select>
+        <input type="hidden" name="search" value="<?php echo htmlspecialchars($search); ?>">
+    </form>
 
     <div class="menu-deroulant">
         <button><strong>Menu</strong></button>
