@@ -110,7 +110,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link rel="icon" type="image/png" href="../../static/img/icon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
     <link rel="stylesheet" href="../../static/css/style1.css">
-    <link rel="stylesheet" href="../../static/css/profil.css">
+    <link rel="stylesheet" href="../../static/css/Profil.css">
     <title>Profil</title>
 </head>
 <body>

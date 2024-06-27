@@ -70,6 +70,8 @@ $conn->close();
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="../../static/css/style1.css">
     <link rel="stylesheet" href="../../static/css/style5.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/style4.css">
+
     <title>Accueil Admin</title>
     <style>
         body {
@@ -127,6 +129,10 @@ $conn->close();
         .container h1{
             text-align: center;
         }
+
+        .header .profil, .header .connect-entete{
+            margin-left: auto;
+        }
     </style>
 </head>
 <body>
@@ -161,6 +167,8 @@ $conn->close();
             <li><a href="Categorie.php">Catégories</a></li>
             <li><a href="Departement.php">Départements</a></li>
             <li><a href="IdeePubliqueAdmin.php">Idées publiques</a></li>
+            <li><a href="../Profil.php">Profil</a></li>
+            <li><a href="../../database/deconnexion.php">Deconnexion</a></li>
         </ul>
     </div>
 

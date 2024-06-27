@@ -80,3 +80,6 @@
     background: #e66900;
 }
 
+.header .profil, .header .connect-entete{
+    margin-left: auto;
+}

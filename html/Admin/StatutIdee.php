@@ -160,7 +160,7 @@ $connection->close();
     </div>
 
     <div class="button-container">
-        <a class="return-home-btn" href="AccueilAdmin.php"><i class="fas fa-arrow-left"></i>Retour à l'accueil</a>
+        <a class="return-home-btn" href="AccueilAdmin.php"><i class="fas fa-arrow-left"></i> Retour à l'accueil</a>
     </div>
 
     <div>
@@ -188,7 +188,7 @@ $connection->close();
                 <td><?php echo $idee['date_modification']; ?></td>
                 <td class="statuts statut-<?php echo strtolower($idee['statut']); ?>"><?php echo $idee['statut']; ?></td>
                 <td><?php echo $idee['nom_categorie']; ?></td>
-                <td>
+                <td class="action">
                     <div class="button-group">
                         <form method="POST" action="">
                             <input type="hidden" name="id_idee" value="<?php echo $idee['id_idee']; ?>">

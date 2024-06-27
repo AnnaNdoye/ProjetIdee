@@ -153,6 +153,7 @@ $comment_count = $result->num_rows;
             <li><a href="AccueilIdee.php">Mes idées</a></li>
             <li><a href="IdeePublique.php">Idées publiques</a></li>
             <li><a href="Profil.php">Profil</a></li>
+            <li><a href="../../database/deconnexion.php">Deconnexion</a></li>
         </ul>
     </div>
 

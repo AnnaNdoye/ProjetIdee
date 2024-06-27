@@ -1,10 +1,13 @@
 .header {
     display: flex;
-    justify-content: space-between;
     align-items: center;
     padding: 20px;
     background-color: #fff;
     color: #ff6600;
+}
+
+.header .profil, .header .connect_entete{
+    justify-content: flex-end;
 }
 
 .header .logo {
@@ -255,5 +258,9 @@
     .search-bar form:focus {
         width: 200px;
     }
+}
+
+.header .profil, .header .connect-entete{
+    margin-left: auto;
 }
 

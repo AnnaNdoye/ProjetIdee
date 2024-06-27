@@ -97,7 +97,7 @@ th {
 }
 
 .button-group form select {
-    margin-right: 10px; /* Ajoute un espacement entre le select et le bouton */
+    margin-right: 10px; /* Ajoute un espacement entre le select et le bouton pour que l'on puisse bien mieux lire */
 }
 
 .button-group p {
@@ -124,10 +124,8 @@ table {
     width: 100%;
 }
 
-th, td {
-    border: 1px solid #b7b4b4; /* Bordures des cellules */
-    padding: 8px; /* Espacement intérieur */
-    text-align: left; /* Alignement du texte à gauche */
+.action{
+    width: 500px;
 }
 
 .button-group {
@@ -151,12 +149,4 @@ th, td {
 
 .button-group p form {
     display: inline-block;
-}
-
-td .button-group {
-    width: 450px; /* Ajuster la largeur si nécessaire */
-}
-
-td{
-    width: 450px;
 }

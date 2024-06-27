@@ -24,7 +24,8 @@ $query = "
     SELECT idee.id_idee, idee.titre, idee.contenu_idee, idee.est_publique, idee.date_creation, idee.date_modification, idee.statut,
     categorie.nom_categorie, employe.photo_profil, employe.prenom, employe.nom,
     (SELECT COUNT(*) FROM LikeIdee WHERE LikeIdee.idee_id = idee.id_idee) AS like_count,
-    (SELECT COUNT(*) FROM LikeIdee WHERE LikeIdee.idee_id = idee.id_idee AND LikeIdee.employe_id = ?) AS user_liked
+    (SELECT COUNT(*) FROM LikeIdee WHERE LikeIdee.idee_id = idee.id_idee AND LikeIdee.employe_id = ?) AS user_liked,
+    (SELECT COUNT(*) FROM Commentaire WHERE Commentaire.idee_id = idee.id_idee) AS commentaire_count
     FROM idee
     LEFT JOIN categorie ON idee.categorie_id = categorie.id_categorie
     LEFT JOIN employe ON idee.employe_id = employe.id_employe
@@ -138,8 +139,9 @@ $comment_count = $result->num_rows;
     <button><strong>Menu</strong></button>
     <ul class="sous">
         <li><a href="AccueilIdee.php">Mes idées</a></li>
-        <li><a href="NouvelleIdee.php">Nouvelle Idee</a></li>
+        <li><a href="NouvelleIdee.php"></i>Nouvelle Idee</a></li>
         <li><a href="Profil.php">Profil</a></li>
+        <li><a href="../../database/deconnexion.php">Deconnexion</a></li>
     </ul>
 </div>
 <div class="container">
@@ -175,10 +177,11 @@ $comment_count = $result->num_rows;
                         </button>
                         <span class='like-count'><?php echo $row['like_count']; ?> like</span> 
                     </form>
-                <!--
+                    <div class="online">
                     <i class='fas fa-comments'></i>
-                    <span class='like-count'><?php echo $row['com_count']; ?> commentaires</span>
-                --> 
+                    <span class='online'><?php echo $row['commentaire_count']; ?> commentaires</span>
+                    </div>
+                    
                 </div>
                 <a href='VoirIdeePublique.php?id=<?php echo $row['id_idee']; ?>'>Voir plus...</a>
 
