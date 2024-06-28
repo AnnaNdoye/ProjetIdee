@@ -94,17 +94,17 @@ $comment_count = $result->num_rows;
         </div>
     </div>
     <div class="search-bar">
-            <form method="GET" action="IdeePublique.php">
+            <form method="GET" action="IdeePubliqueAdmin.php">
                 <input type="text" name="search" placeholder="Rechercher des idées" value="<?php echo htmlspecialchars($search); ?>">
                 <button type="submit"><i class="fas fa-search"></i></button>
             </form>
     </div>
     <div class="navigation">
-        <strong><a href="AccueilIdee.php">Accueil</a></strong>
+        <strong><a href="AccueilAdmin.php">Accueil</a></strong>
     </div>
     
     <div class="profil">
-        <a href="Profil.php">
+        <a href="profilAdmin.php">
             <i class="fas fa-user-circle"></i>
             <strong>Profil</strong>
         </a>
@@ -117,7 +117,7 @@ $comment_count = $result->num_rows;
     </div>
 </div>
 
-<form method="GET" action="IdeePublique.php" class="filtre" style="float: right;">
+<form method="GET" action="IdeePubliqueAdmin.php" class="filtre" style="float: right;">
     <i class="fas fa-filter"></i> 
     <select class="selectionne" name="filtre" id="filtre" onchange="this.form.submit()">
         <option value="">Date création</option>
@@ -138,13 +138,16 @@ $comment_count = $result->num_rows;
 <div class="menu-deroulant">
     <button><strong>Menu</strong></button>
     <ul class="sous">
-        <li><a href="AccueilIdee.php">Mes idées</a></li>
-        <li><a href="NouvelleIdee.php">Nouvelle Idee</a></li>
-        <li><a href="Profil.php">Profil</a></li>
+        <li><a href="AccueilAdmin.php">Mes idées</a></li>
+        <li><a href="StatutIdee.php">Statut Idée</a></li>
+        <li><a href="Categorie.php">Catégorie</a></li>
+        <li><a href="Departement.php">Département</a></li>
+        <li><a href="profilAdmin.php">Profil</a></li>
+        <li><a href="ConnexionAdmin.php">Deconnexion</a></li>
     </ul>
 </div>
 <div class="container">
-    <h1 id="ideepose"><?php echo $comment_count; ?>Idées Publiques</h1>
+    <h1 id="ideepose"><?php echo $comment_count; ?> Idées Publiques</h1>
     <div id="ideas">
         <?php
         if ($result->num_rows > 0) 
@@ -177,7 +180,7 @@ $comment_count = $result->num_rows;
                         <span class='like-count'><?php echo $row['like_count']; ?> like</span> 
                     </form>
                 </div>
-                <a href='VoirIdeePublique.php?id=<?php echo $row['id_idee']; ?>'>Voir plus...</a>
+                <a href='VoirIdeePubliqueAdmin.php?id=<?php echo $row['id_idee']; ?>'>Voir plus...</a>
                 <a id="supprimer" href="javascript:confirmDeletion(<?php echo $row['id_idee']; ?>)"><i class="fas fa-trash-alt"> Supprimer</i></a>
             </div>
         </div> 
@@ -225,10 +228,13 @@ $comment_count = $result->num_rows;
             });
         });
 
-        function confirmDeletion(id) {
-    if (confirm('Êtes-vous sûr de vouloir supprimer cette idée ?')) {
-        window.location.href = '../../database/idee/supprimer_idee.php?id=' + id;
-    }
+        function confirmDeletion(id) 
+        {
+            if (confirm('Êtes-vous sûr de vouloir supprimer cette idée ?')) 
+            {
+                window.location.href = '../../database/idee/supprimer_idee_admin.php?id=' + id;
+            }
+        }
 </script>
 </body>
 </html>

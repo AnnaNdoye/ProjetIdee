@@ -177,13 +177,13 @@ $connection->close();
                 <th>Date de modification</th>
                 <th>Statut</th>
                 <th>Categorie</th>
-                <th>Actions</th>
+                <th class="large">Actions</th>
             </tr>
             <?php foreach ($ideearray as $idee): ?>
             <tr>
                 <td><?php echo $idee['id_idee']; ?></td>
                 <td><?php echo $idee['titre']; ?></td>
-                <td><?php echo $idee['contenu_idee']; ?></td>
+                <td class="noncentre"><?php echo $idee['contenu_idee']; ?></td>
                 <td><?php echo $idee['date_creation']; ?></td>
                 <td><?php echo $idee['date_modification']; ?></td>
                 <td class="statuts statut-<?php echo strtolower($idee['statut']); ?>"><?php echo $idee['statut']; ?></td>
@@ -221,98 +221,6 @@ $connection->close();
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () 
-        {
-            const addCategoryBtn = document.getElementById('add-category-btn');
-            const table = document.querySelector('table');
-
-            addEventListener('click', function () 
-            {
-                    const newRow = document.createElement('tr');
-                    newRow.innerHTML = `
-                        <td>New</td>
-                        <td><input type="text" name="new_titre" placeholder="Nom de la catégorie"></td>
-                        <td><input type="date" name="new_date_creation"></td>
-                        <td><input type="date" name="new_date_modification"></td>
-                        <td>
-                            <select name="new_statut">
-                                <option value="Soumis">Soumis</option>
-                                <option value="Approuvé">Approuvé</option>
-                                <option value="Rejeté">Rejeté</option>
-                                <option value="Implémenté">Implémenté</option>
-                            </select>
-                        </td>
-                        <td><input type="text" name="new_categorie" placeholder="Nom de la catégorie"></td>
-                        <td>
-                            <div class="button-group">
-                                <button class="update" data-action="add">Ajouter</button>
-                                <button class="delete">Annuler</button>
-                            </div>
-                        </td>
-                    `;
-                    table.appendChild(newRow);
-
-                    const updateButton = newRow.querySelector('.update');
-                    const deleteButton = newRow.querySelector('.delete');
-
-                    updateButton.addEventListener('click', function () 
-                    {
-                        const titre = newRow.querySelector('input[name="new_titre"]').value;
-                        const date_creation = newRow.querySelector('input[name="new_date_creation"]').value;
-                        const statut = newRow.querySelector('select[name="new_statut"]').value;
-                        const categorie = newRow.querySelector('input[name="new_categorie"]').value;
-
-                        const form = document.createElement('form');
-                        form.method = 'POST';
-                        form.style.display = 'none';
-
-                        const titreInput = document.createElement('input');
-                        titreInput.type = 'hidden';
-                        titreInput.name = 'new_titre';
-                        titreInput.value = titre;
-                        form.appendChild(titreInput);
-
-                        const dateCreationInput = document.createElement('input');
-                        dateCreationInput.type = 'hidden';
-                        dateCreationInput.name = 'new_date_creation';
-                        dateCreationInput.value = date_creation;
-                        form.appendChild(dateCreationInput);
-
-                        const dateModificationInput = document.createElement('input');
-                        dateModificationInput.type = 'hidden';
-                        dateModificationInput.name = 'new_date_modification';
-                        dateModificationInput.value = date_modification;
-                        form.appendChild(dateModificationInput);
-
-                        const statutInput = document.createElement('input');
-                        statutInput.type = 'hidden';
-                        statutInput.name = 'new_statut';
-                        statutInput.value = statut;
-                        form.appendChild(statutInput);
-
-                        const categorieInput = document.createElement('input');
-                        categorieInput.type = 'hidden';
-                        categorieInput.name = 'new_categorie';
-                        categorieInput.value = categorie;
-                        form.appendChild(categorieInput);
-
-                        const addCategoryInput = document.createElement('input');
-                        addCategoryInput.type = 'hidden';
-                        addCategoryInput.name = 'add_category';
-                        addCategoryInput.value = '1';
-                        form.appendChild(addCategoryInput);
-
-                        document.body.appendChild(form);
-                        form.submit();
-                    });
-
-                    deleteButton.addEventListener('click', function () 
-                    {
-                        newRow.remove();
-                    });
-            });
-        });
-
             // Gérer la mise à jour et la suppression
             document.querySelectorAll('.update').forEach(button => 
             {

@@ -146,7 +146,7 @@ $conn->close();
         </div>
 
         <div class="profil">
-            <a href="../idee/Profil.php">
+            <a href="profilAdmin.php">
                 <i class="fas fa-user-circle"></i>
                 <strong>Profil</strong>
             </a>
@@ -167,8 +167,8 @@ $conn->close();
             <li><a href="Categorie.php">Catégories</a></li>
             <li><a href="Departement.php">Départements</a></li>
             <li><a href="IdeePubliqueAdmin.php">Idées publiques</a></li>
-            <li><a href="../Profil.php">Profil</a></li>
-            <li><a href="../../database/deconnexion.php">Deconnexion</a></li>
+            <li><a href="profilAdmin.php">Profil</a></li>
+            <li><a href="ConnexionAdmin.php">Deconnexion</a></li>
         </ul>
     </div>
 

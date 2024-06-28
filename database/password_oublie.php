@@ -1,4 +1,12 @@
 <?php
+
+session_start();
+
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../../html/Connexion.php");
+    exit();
+}
+
 $host = "localhost";
 $user = "root";
 $password = "";

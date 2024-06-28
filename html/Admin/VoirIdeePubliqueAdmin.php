@@ -222,7 +222,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['like_comment'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
     <script src="https://kit.fontawesome.com/64d58efce2.js" crossorigin="anonymous"></script>
     <link rel="icon" type="image/png" href="../../static/img/icon.png">
     <link rel="stylesheet" href="../../static/css/style1.css">
@@ -470,12 +469,12 @@ textarea {
             <h3><span class="for-ideas">for ideas</span></h3>
         </div>
     </div>
-    <a href="IdeePublique.php" class="navigation"><i class="fas fa-arrow-left"></i>Retour</a>
+    <a href="IdeePubliqueAdmin.php" class="navigation"><i class="fas fa-arrow-left"></i>Retour</a>
 </div>
 <div class="container">
     <div class="idea-details">
         <div class="creator-info">
-                <img src="<?php echo $idee['photo_profil']; ?>" alt="Photo de profil">
+                <img src="../idee/<?php echo $idee['photo_profil']; ?>" alt="Photo de profil">
                 <div class="name"><?php echo $idee['prenom'] . ' ' . $idee['nom']; ?></div>
         </div>
         <div class="idea-dates">
@@ -516,16 +515,16 @@ textarea {
         </p>
     </div>
 
+    <p class="licons">
+        <a id="modifier" href="ModifierIdee.php?id=<?php echo $idee['id_idee']; ?>"><i class="fas fa-edit"> Modifier l'idée</i></a>
+    </p>
+
     <div class="comments-section">
         <h3>Commentaires (<?php echo $idee['comment_count']; ?>)</h3>
-        <form method="POST">
-            <textarea class="text" name="comment_content" rows="10" cols="50" placeholder="Ajouter un commentaire" required></textarea><br>
-            <button class="subouton" type="submit"> Ajouter un commentaire</button>
-        </form>
         <?php foreach ($comments as $comment): ?>
             <div class="comment" id="comment-<?php echo $comment['id_commentaire']; ?>">
             <div class="creator-info">
-            <img src="<?php echo $comment['photo_profil']; ?>" alt="Photo de profil">
+            <img src="../idee/<?php echo $comment['photo_profil']; ?>" alt="Photo de profil">
             <div class="name"><?php echo $comment['prenom'] . ' ' . $comment['nom']; ?></div>
         </div>
                 <p><?php echo nl2br(htmlspecialchars($comment['contenu'])); ?></p>
@@ -538,18 +537,6 @@ textarea {
                 <button class="like-comment-button <?php echo $comment['user_liked'] ? 'liked' : ''; ?>" data-comment-id="<?php echo $comment['id_commentaire']; ?>" onclick="toggleLikeComment(<?php echo $comment['id_commentaire']; ?>)">
                     <span id="like-comment-count-<?php echo $comment['id_commentaire']; ?>"> <i class="fas fa-thumbs-up"></i>  <?php echo $comment['like_count']; ?></span> J'aime
                 </button>
-                <?php if ($comment['comment_employe_id'] == $employe_id): ?>
-                    <div class="button-group">
-                        <form method="post" class="edit-comment-form">
-                            <input type="hidden" name="edit_comment_id" value="<?= $comment['id_commentaire'] ?>">
-                            <textarea name="new_content" rows="4" required><?= htmlspecialchars($comment['contenu']) ?></textarea>
-                            <div class="button-container">
-                                <button class="modifier-bouton" type="submit">Modifier commentaire</button>
-                                <button type="button" class="delete-button" onclick="deleteComment(<?= $comment['id_commentaire'] ?>)">Supprimer commentaire</button>
-                            </div>
-                        </form>
-                    </div>
-                <?php endif; ?>
             </div>
         <?php endforeach; ?>
     </div>

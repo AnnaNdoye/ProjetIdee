@@ -176,7 +176,7 @@ $comment_count = $result->num_rows;
                         <div id="div2">
                             <h2><?php echo htmlspecialchars($row['titre']); ?></h2>
                             <p class="categorie"><strong>Catégorie:</strong> <?php echo htmlspecialchars($row['nom_categorie']); ?></p>
-                            <p class="paragraphe"><?php echo nl2br(htmlspecialchars($row['contenu_idee'])); ?></p>
+                            <p class="paragraphe"><?php echo nl2br($row['contenu_idee']); ?></p>
                             
                         </div>
                         <div id="div3">

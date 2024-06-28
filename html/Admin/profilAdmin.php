@@ -90,7 +90,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if ($update_query->execute() === TRUE) {
             $update_message = "Mise à jour réussie.";
-            header("Location: Profil.php");
+            header("Location: profilAdmin.php");
             exit();
         } else {
             echo "Erreur lors de la mise à jour: " . $connexion->error;
@@ -122,8 +122,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <h3><span class="for-ideas">for ideas</span></h3>
             </div>
         </div>
-        <div class="navigation">
-            <a href="AccueilIdee.php" id="zero">Accueil</a>
+        <div class="navigation" id="zero">
+            <a href="AccueilAdmin.php">Accueil</a>
         
             <a href="../Connexion.php"><i class="fas fa-user"></i> Se déconnecter</a>
         </div>
@@ -136,7 +136,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <?php endif; ?>
         <form method="POST" action="" enctype="multipart/form-data">
             <div class="profile-photo">
-                <img src="<?php echo $row['photo_profil'] ? $row['photo_profil'] : $default_photo; ?>" alt="Photo de profil" id="profile-img">
+                <img src="../idee/<?php echo $row['photo_profil'] ? $row['photo_profil'] : $default_photo; ?>" alt="Photo de profil" id="profile-img">
                 <input type="file" id="photo_profil" name="photo_profil" style="display: none;">
                 <button type="button" onclick="document.getElementById('photo_profil').click();"><i class="fas fa-pen"></i> Editer</button>
                 <?php if ($row['photo_profil'] && $row['photo_profil'] !== $default_photo): ?>
@@ -158,7 +158,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="profile-item">
                 <label for="password">Mot de passe:</label>
                 <div style="position: relative;">
-                    <input type="password" id="password" name="mot_de_passe" value="<?php echo $mot_de_passe; ?>" onclick="location.href='ChangePassword2.php'" readonly>
+                    <input type="password" id="password" name="mot_de_passe" value="<?php echo $mot_de_passe; ?>" onclick="location.href='AdminChangePassword.php'" readonly>
                     <i class="fas fa-eye" id="togglePassword" style="position: absolute; top: 50%; right: 10px; cursor: pointer;"></i>
                 </div>
             </div>
@@ -176,7 +176,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
             <div class="profile-item" style="display: flex; justify-content: space-between;">
                 <button type="submit">Mettre à jour</button>
-                <button><a href="AccueilIdee.php" style="color: white; text-decoration: none; display: block;">Quitter</a></button>
+                <button><a href="AccueilAdmin.php" style="color: white; text-decoration: none; display: block;">Quitter</a></button>
             </div>
         </form>
     </div>

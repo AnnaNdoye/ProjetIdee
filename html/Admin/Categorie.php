@@ -121,10 +121,6 @@ $connection->close();
             text-align: center;
         }
 
-        th {
-            background-color: #f2f2f2;
-        }
-
         th.description-col, td.description-col {
             width: 50%;
         }

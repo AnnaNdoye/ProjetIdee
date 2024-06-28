@@ -6,13 +6,17 @@ table {
 }
 
 th, td {
-    border: 1px solid #ddd;
+    border: 2px solid #ddd;
     padding: 16px;
     text-align: center;
 }
 
 th {
     background-color: #f2f2f2;
+}
+
+.large{
+    width: 500px;
 }
 
 .statuts {
@@ -87,7 +91,7 @@ th {
 }
 
 .button-container {
-    margin: 20px 0; /* Ajoute de la marge en haut et en bas du bouton */
+    margin: 20px 0; 
 }
 
 
@@ -97,7 +101,7 @@ th {
 }
 
 .button-group form select {
-    margin-right: 10px; /* Ajoute un espacement entre le select et le bouton pour que l'on puisse bien mieux lire */
+    margin-right: 10px; 
 }
 
 .button-group p {
@@ -106,31 +110,30 @@ th {
 }
 
 .button-group p form {
-    display: inline-block; /* Pour éviter que le formulaire occupe toute la largeur */
+    display: inline-block; 
 }
 
 .header, .footer {
     width: 100%;
-    box-sizing: border-box; /* Pour inclure le padding dans la largeur totale */
+    box-sizing: border-box; 
 }
 
-/* CSS pour le tableau */
 .main-content {
     width: 100%;
-    overflow-x: auto; /* Ajoute une barre de défilement horizontale si nécessaire */
+    overflow-x: auto; 
 }
 
 table {
     width: 100%;
 }
 
-.action{
-    width: 500px;
+.centre{
+    text-align: left;
 }
 
 .button-group {
     display: flex;
-    gap: 5px; /* Espacement entre les boutons je viens de découvrir cet element */
+    gap: 5px; 
 }
 
 .button-group form {
@@ -139,7 +142,7 @@ table {
 }
 
 .button-group form select {
-    margin-right: 10px; /* Espacement entre le select et le bouton */
+    margin-right: 10px; 
 }
 
 .button-group p {
@@ -149,4 +152,8 @@ table {
 
 .button-group p form {
     display: inline-block;
+}
+
+td .button-group {
+    width: 450px;
 }

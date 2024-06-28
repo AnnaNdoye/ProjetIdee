@@ -29,6 +29,17 @@
             bottom: 60px;
             right: 20px;
         }
+
+        .connect_entete{
+            display: flex;
+            flex-wrap: wrap;
+            position: relative;
+            float:  left;
+        }
+
+        .connect_entete a strong{
+            margin-right: 20px;
+        }
     </style>
 </head>
 <body>
@@ -38,7 +49,11 @@
             <h1>Orange</h1>
             <h3><span class="for-ideas">for ideas</span></h3>
         </div>
-        <div class="connect_entete">
+        <div class="connect_entete"">
+            <a href="Accueil.html">
+                <strong>Accueil</strong>
+            </a>
+
             <a href="inscription.php">
                 <i class="fas fa-user"></i>
                 <strong>S'inscrire</strong>

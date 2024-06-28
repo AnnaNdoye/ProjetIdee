@@ -205,12 +205,6 @@
     transition: color 0.3s;
 }
 
-.header .navigation{
-    display: grid;
-    margin-left: auto;
-    justify-content: flex-end;
-}
-
 .header .navigation a:hover {
     color: #000;
 }
@@ -260,4 +254,11 @@
     color: white;
     padding: 10px 20px;
     border-radius: 5px;
+}
+
+.header .navigation {
+    display: flex;
+    flex-wrap: wrap;
+    position: relative;
+    float:  left;
 }

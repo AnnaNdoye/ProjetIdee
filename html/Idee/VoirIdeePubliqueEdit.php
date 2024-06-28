@@ -497,11 +497,10 @@ textarea {
                 <img src="<?php echo $file; ?>" alt="Fichier" style="max-width: 600px;"><br>
                 <a class="download-button" href="<?php echo $file; ?>" download>Télécharger</a>
             <?php elseif (in_array($file_extension, ['pdf'])) : ?>
-            <embed src="<?php echo $file; ?>" type="application/pdf" width="600" height="600"><br>
-            <a class="download-button" href="<?php echo $file; ?>" download>Télécharger</a>
+                <embed src="<?php echo $file; ?>" type="application/pdf" width="600" height="600"><br>
+                <a class="download-button" href="<?php echo $file; ?>" download>Télécharger</a>
             <?php elseif (in_array($file_extension, ['doc', 'docx', 'mpp', 'gz', 'zip', 'odp', 'odt', 'ods', 'xlsx', 'pptx', 'txt'])) : ?>
-            <p><a href="<?php echo $file; ?>" target="_blank">Voir le document</a></p><br>
-            <a class="download-button" href="<?php echo $file; ?>" download>Télécharger</a>
+            <p><a href="<?php echo $file; ?>" target="_blank" class="download-button" >Voir le document</a></p><br>
             <?php else : ?>
                 <p>Type de fichier non supporté pour l'affichage</p>
             <?php endif; ?>
@@ -559,9 +558,10 @@ textarea {
 </div>
 
 <div class="espace"></div>
-<?php
-    include(" ../barrefooter.html");
-?>
+<div class="footer">
+    <h4 class="footer-left"><a href="mailto:support@orange.com" style="text-decoration: none; color: white;">Contact</a></h4>
+    <h4 class="footer-right">© Orange/Juin2024</h4>
+</div>
 
 <script>
 function toggleLike() {

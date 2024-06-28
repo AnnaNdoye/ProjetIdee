@@ -1,4 +1,5 @@
 <?php
+
 // Initialiser les paramètres de connexion à la base de données
 $host = "localhost";
 $user = "root";

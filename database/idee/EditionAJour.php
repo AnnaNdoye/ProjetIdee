@@ -40,9 +40,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $fileType = $file['type'];
 
             $upload_dir = 'uploads/';
-            if (!is_dir($upload_dir)) {
-                mkdir($upload_dir, 0777, true);
-            }
 
             $filePath = $upload_dir . basename($fileName);
             if (move_uploaded_file($fileTmpName, $filePath)) {
@@ -52,7 +49,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     die("Erreur lors de la préparation de la requête de fichier: " . $connexion->error);
                 }
                 $file_stmt->bind_param('sssi', $fileName, $filePath, $fileType, $idee_id);
-                if (!$file_stmt->execute()) {
+                if (!$file_stmt->execute()) 
+                {
                     die("Erreur lors de l'insertion du fichier: " . $file_stmt->error);
                 }
                 $file_stmt->close();
