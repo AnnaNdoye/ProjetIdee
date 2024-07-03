@@ -9,6 +9,18 @@
     <script src="https://kit.fontawesome.com/64d58efce2.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="../static/css/style1.css">
     <title>Inscription</title>
+    <style>
+        .connect_entete{
+            display: flex;
+            flex-wrap: wrap;
+            position: relative;
+            float:  left;
+        }
+
+        .connect_entete a strong{
+            margin-right: 20px;
+        }
+    </style>
 </head>
 <body>
     <div class="header">
@@ -18,6 +30,10 @@
             <h3><span class="for-ideas">for ideas</span></h3>
         </div>
         <div class="connect_entete">
+        <a href="Accueil.html">
+                <strong>Accueil</strong>
+            </a>
+
             <a href="connexion.php">
                 <i class="fas fa-user"></i>
                 <strong>Se connecter</strong>

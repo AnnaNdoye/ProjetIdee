@@ -48,7 +48,7 @@ if (!$connexion) {
 </head>
 <body>
     <div class="header">
-        <div class="logo" onclick="location.href='Accueil.html'">
+        <div class="logo" onclick="location.href='../Accueil.html'">
             <img src="../../static/img/icon.png">
             <h1>Orange</h1>
             <h3><span class="for-ideas">for ideas</span></h3>

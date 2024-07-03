@@ -27,7 +27,8 @@ $query = "
     SELECT idee.id_idee, idee.titre, idee.contenu_idee, idee.est_publique, idee.date_creation, idee.date_modification, idee.statut,
     categorie.nom_categorie, employe.photo_profil, employe.prenom, employe.nom,
     (SELECT COUNT(*) FROM LikeIdee WHERE LikeIdee.idee_id = idee.id_idee) AS like_count,
-    (SELECT COUNT(*) FROM LikeIdee WHERE LikeIdee.idee_id = idee.id_idee AND LikeIdee.employe_id = ?) AS user_liked
+    (SELECT COUNT(*) FROM LikeIdee WHERE LikeIdee.idee_id = idee.id_idee AND LikeIdee.employe_id = ?) AS user_liked,
+    (SELECT COUNT(*) FROM Commentaire WHERE commentaire.idee_id = idee.id_idee) AS commentaire_count
     FROM idee
     LEFT JOIN categorie ON idee.categorie_id = categorie.id_categorie
     LEFT JOIN employe ON idee.employe_id = employe.id_employe
@@ -174,11 +175,15 @@ $comment_count = $result->num_rows;
                 <div class='like-container'>
                     <form action='../../database/idee/like.php' method='POST'>
                         <input type='hidden' name='idee_id' value='<?php echo $row['id_idee']; ?>'>
-                        <button type='submit' class='like-button<?php echo ($row['user_liked'] ? ' liked' : ''); ?>'>
+                        <button class='like-button<?php echo ($row['user_liked'] ? ' liked' : ''); ?>'>
                             <i class='fas fa-thumbs-up'></i>
                         </button>
                         <span class='like-count'><?php echo $row['like_count']; ?> like</span> 
                     </form>
+                    <div class="online">
+                    <i class='fas fa-comments'></i>
+                    <span class='online'><?php echo $row['commentaire_count']; ?> commentaires</span>
+                    </div>
                 </div>
                 <a href='VoirIdeePubliqueAdmin.php?id=<?php echo $row['id_idee']; ?>'>Voir plus...</a>
                 <a id="supprimer" href="javascript:confirmDeletion(<?php echo $row['id_idee']; ?>)"><i class="fas fa-trash-alt"> Supprimer</i></a>

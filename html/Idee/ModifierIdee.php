@@ -24,8 +24,9 @@ $idee_id = $_GET['id'];
 $employe_id = $_SESSION['user_id'];
 
 $query = "
-    SELECT idee.id_idee, idee.titre, idee.contenu_idee, idee.est_publique, idee.categorie_id
+    SELECT idee.id_idee, idee.titre, idee.contenu_idee, idee.est_publique, idee.categorie_id, fichier.nom_fichier
     FROM idee
+    LEFT JOIN fichier on idee.id_idee = fichier.idee_id
     WHERE idee.id_idee = ? AND idee.employe_id = ?
 ";
 
@@ -133,11 +134,14 @@ $categories = $connexion->query($query);
 
                 <div class="form-group">
                     <label for="fichier">Choisissez un fichier :</label>
-                    <input type="file" id="fichier" name="fichier" accept=".doc,.docx,.mpp,.avi,.gif,.gz,.zip,.jpeg,.jpg,.jpe,.png,.odp,.odt,.ods,.pdf,.xlsx,.pptx,.txt">
+                    <?php if(!empty($idee['nom_fichier'])) : ?>
+                        <p>Fichier actuel : <?php echo htmlspecialchars($idee['nom_fichier']); ?></p>
+                    <?php endif ?>
+                        <input type="file" id="fichier" name="fichier" accept=".doc,.docx,.mpp,.avi,.gif,.gz,.zip,.jpeg,.jpg,.jpe,.png,.odp,.odt,.ods,.pdf,.xlsx,.pptx,.txt">
                 </div>
                 
                 <div class="form-buttons">
-                    <a href="AccueilIdee.html">Annuler</a>
+                    <a href="AccueilIdee.php">Annuler</a>
                     <button type="submit">Enregistrer</button>
                 </div>
             </form>
