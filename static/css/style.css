@@ -1,7 +1,7 @@
 .container {
     max-width: 100%;
     margin: auto;
-    padding: 20px;
+    padding: 30px;
 }
 
 .idea-details {
@@ -72,25 +72,31 @@
     transition: color 0.2s ease, transform 0.2s ease;
 }
 
+.like-button .thumb-icon {
+    color: #7d7e7f; /* Couleur grise par défaut */
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
 .like-button:hover .thumb-icon {
-    color: #888;
+    color: #7d7e7f;
     transform: scale(1.1);
 }
 
 .liked .thumb-icon {
-    color: #007BFF;
+    color: rgb(0, 145, 255); /* Couleur bleu pour les "liked" */
     transform: scale(1.2);
 }
 
-.like-count {
+.like-button .like-count {
     margin-left: 10px;
     font-size: 1.5rem;
     transition: color 0.2s ease;
 }
 
 .liked + .like-count {
-    color: #007BFF;
+    color: rgb(0, 145, 255); /* Couleur du texte pour les "liked" */
 }
+
 
 .comments-section {
     margin-top: 40px;
@@ -192,8 +198,8 @@
 #ideepose{
     justify-content: center;
     align-items: center;
-    display: flex;
     justify-content: space-between;
+    text-align: center;
     text-shadow: 2px 4px 3px rgba(0,0,0,0.3);
     background: linear-gradient(to right, #ff6600, #000);
     -webkit-background-clip: text;
@@ -252,4 +258,54 @@ p img{
 .info{
     display: flex;
     align-items: center;
+}
+
+.filtre select {
+    width: 130px;
+    transition: width 0.5s;
+}
+
+.filtre select:focus {
+    width: 200px;
+}
+
+.info{
+    font-weight: bold;
+}
+
+#modifier{
+    background-color: green;
+}
+
+#supprimer{
+    background-color: red;
+}
+
+#voir{
+    background-color: #007BFF;
+}
+
+#modifier:hover{
+    background-color: rgb(1, 87, 1);
+}
+
+#supprimer:hover{
+    background-color: rgb(165, 0, 0);
+}
+
+#voir:hover{
+    background-color: #0454aa;
+}
+
+.licons{
+    padding: 20px 20px;
+    margin-left: 1200px;
+}
+
+#modifier{
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    color: white;
+    background-color: #19b91e;
 }

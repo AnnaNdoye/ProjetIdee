@@ -2,7 +2,7 @@
 session_start();
 
 if (!isset($_SESSION['user_id'])) {
-    header("Location: ../connexion.php");
+    header("Location: ../../html/Connexion.php");
     exit();
 }
 
@@ -48,5 +48,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 
 $connexion->close();
-header("Location: IdeePublique.php");
+header("Location: ../../html/idee/IdeePublique.php");
 exit();

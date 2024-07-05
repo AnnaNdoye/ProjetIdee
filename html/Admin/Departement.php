@@ -1,13 +1,11 @@
 <?php
 session_start();
 
-// Vérifiez si l'utilisateur est connecté en tant qu'administrateur, sinon redirigez vers la page de connexion
 if (!isset($_SESSION['user_id'])) {
-    header("Location: ../connexion.php");
+    header("Location: ConnexionAdmin.php");
     exit();
 }
 
-// Connexion à la base de données
 $host = "localhost";
 $user = "root";
 $password = "";
@@ -19,7 +17,6 @@ if ($connection->connect_error) {
     die("Erreur de connexion à la base de données : " . $connection->connect_error);
 }
 
-// Récupérer les départements depuis la base de données
 $query = "SELECT id_departement, nom_departement FROM Department";
 $result = $connection->query($query);
 
@@ -31,7 +28,6 @@ if ($result->num_rows > 0) {
     }
 }
 
-// Gérer l'ajout de département
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_department'])) {
     $nomDepartement = $_POST['new_nom_departement'];
 
@@ -49,7 +45,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_department'])) {
     $stmt->close();
 }
 
-// Gérer la mise à jour de département
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_department'])) {
     $idDepartement = $_POST['id_departement'];
     $nomDepartement = $_POST['nom_departement'];
@@ -68,7 +63,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_department'])) 
     $stmt->close();
 }
 
-// Gérer la suppression de département
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_department'])) {
     $idDepartement = $_POST['id_departement'];
 
@@ -95,6 +89,9 @@ $connection->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://kit.fontawesome.com/64d58efce2.js" crossorigin="anonymous"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <link rel="icon" type="image/png" href="../../static/img/icon.png">
     <link rel="stylesheet" href="../../static/css/style1.css">
     <link rel="stylesheet" href="../../static/css/style5.css">
@@ -107,8 +104,17 @@ $connection->close();
             table-layout: fixed;
         }
 
+        th{
+            background-color: #ff6600;
+            color: white;
+        }
+
+        th:hover{
+            color: #000;
+        }
+
         th, td {
-            border: 1px solid #ddd;
+            border: 3px solid #ddd;
             padding: 16px;
             text-align: center;
         }
@@ -170,6 +176,22 @@ $connection->close();
         .return-home-btn i {
             margin-right: 10px;
         }
+
+        .return-home-btn:hover{
+            background-color: #565e67;
+        }
+
+        .add-department-btn:hover{
+            background-color: #005abb;
+        }
+
+        .button-group .update:hover{
+            background-color: rgb(0, 115, 15);
+        }
+
+        .button-group .delete:hover{
+            background-color: #930000;
+        }
     </style>
 </head>
 <body>
@@ -182,7 +204,7 @@ $connection->close();
             </div>
         </div>
         <div class="connect_entete">
-            <a href="../connexion.php">
+            <a href="ConnexionAdmin.php">
                 <i class="fas fa-user"></i>
                 <span>Se déconnecter</span>
             </a>
@@ -225,10 +247,9 @@ $connection->close();
         <button class="add-department-btn" id="add-department-btn-bottom">Ajouter Département</button>
     </div>
 
-    <div class="footer">
-        <h4 class="footer-left"><a href="mailto:support@orange.com" style="text-decoration: none; color: white;">Contact</a></h4>
-        <h4 class="footer-right">© Orange/Juin2024</h4>
-    </div>
+    <?php
+        include("../barrefooter.html");
+    ?>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -239,7 +260,7 @@ $connection->close();
                 button.addEventListener('click', function () {
                     const newRow = document.createElement('tr');
                     newRow.innerHTML = `
-                        <td>New</td>
+                        <td>Nouveau</td>
                         <td><input type="text" name="new_nom_departement" placeholder="Nom du département"></td>
                         <td>
                             <div class="button-group">

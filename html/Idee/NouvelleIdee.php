@@ -2,7 +2,7 @@
 session_start();
 // Vérifiez si l'utilisateur est connecté, sinon redirigez vers la page de connexion
 if (!isset($_SESSION['user_id'])) {
-    header("Location: ../connexion.php");
+    header("Location: ../Connexion.php");
     exit();
 }
 ?>
@@ -14,9 +14,9 @@ if (!isset($_SESSION['user_id'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://kit.fontawesome.com/64d58efce2.js" crossorigin="anonymous"></script>
     <link rel="icon" type="image/png" href="../../static/img/icon.png">
-    <link rel="stylesheet" href="../../static/css/style6.css">
-    <link rel="stylesheet" href="../../static/css/style7.css">
-    <title>Nouvelle Idée</title>
+    <link rel="stylesheet" type="text/css" href="../../static/css/style6.css">
+    <link rel="stylesheet" type="text/css" href="../../static/css/style7.css">
+    <title>Créer Idée</title>
 </head>
 <body>
     <div class="container">
@@ -123,10 +123,9 @@ if (!isset($_SESSION['user_id'])) {
             </form>
         </main>
         
-        <footer class="footer">
-            <h4 class="footer-left"><a href="mailto:support@orange.com" style="text-decoration: none; color: white;">Contact</a></h4>
-            <h4 class="footer-right">©Orange/Juin2024</h4>
-        </footer>
+        <?php
+            include("../barrefooter.html");
+        ?>
     </div>
     <div id="alert-container"></div>
 <script>
@@ -158,7 +157,8 @@ if (!isset($_SESSION['user_id'])) {
             }
         }
 
-        function syncContent() {
+        function syncContent() 
+        {
             const contentEditableDiv = document.getElementById('contenu');
             const hiddenTextarea = document.getElementById('hiddenContent');
             hiddenTextarea.value = contentEditableDiv.innerHTML;

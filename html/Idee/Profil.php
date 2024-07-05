@@ -3,7 +3,7 @@ session_start();
 
 // Check if session variables are set
 if (!isset($_SESSION['user_id']) || !isset($_SESSION['mot_de_passe']) || !isset($_SESSION['email'])) {
-    header("Location: ../connexion.php");
+    header("Location: ../Connexion.php");
     exit();
 }
 
@@ -105,10 +105,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://kit.fontawesome.com/64d58efce2.js" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <link rel="icon" type="image/png" href="../../static/img/icon.png">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+    <link rel="stylesheet" href="../../static/css/Profil.css">
     <link rel="stylesheet" href="../../static/css/style1.css">
-    <link rel="stylesheet" href="../../static/css/profil.css">
     <title>Profil</title>
 </head>
 <body>
@@ -121,15 +122,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
         </div>
         <div class="navigation">
-            <a href="AccueilIdee.php">Accueil</a>
-        </div>
-        <div class="navigation">
+            <a href="AccueilIdee.php" id="zero">Accueil</a>
+        
             <a href="../Connexion.php"><i class="fas fa-user"></i> Se déconnecter</a>
         </div>
     </div>
 
     <div class="profile-container">
-        <h2>Mon Profil</h2>
+        <h2><i class="fas fa-user"></i> Mon Profil <i class="fas fa-user"></i></h2>
         <?php if ($update_message): ?>
             <div class="update-message"><?php echo $update_message; ?></div>
         <?php endif; ?>
@@ -137,9 +137,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="profile-photo">
                 <img src="<?php echo $row['photo_profil'] ? $row['photo_profil'] : $default_photo; ?>" alt="Photo de profil" id="profile-img">
                 <input type="file" id="photo_profil" name="photo_profil" style="display: none;">
-                <button type="button" onclick="document.getElementById('photo_profil').click();"><i class="fas fa-pen"></i> Editer</button>
+                <button id="edit" type="button" onclick="document.getElementById('photo_profil').click();"><i class="fas fa-pen"></i> Editer</button>
                 <?php if ($row['photo_profil'] && $row['photo_profil'] !== $default_photo): ?>
-                    <button type="submit" name="delete_photo"><i class="fas fa-trash"></i> Supprimer</button>
+                    <button id="edit" type="submit" name="delete_photo"><i class="fas fa-trash"></i> Supprimer</button>
                 <?php endif; ?>
             </div>
             <div class="profile-item">
@@ -180,10 +180,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </form>
     </div>
 
-    <div class="footer">
-        <h4 class="footer-left"><a href="mailto:support@orange.com">Contact</a></h4>
-        <h4 class="footer-right">© Orange/Juin2024</h4>
-    </div>
+    <?php
+        include("../barrefooter.html");
+    ?>
 
     <script>
         const togglePassword = document.querySelector('#togglePassword');

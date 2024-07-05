@@ -2,7 +2,7 @@
 session_start();
 
 if (!isset($_SESSION['user_id'])) {
-    header("Location: ../connexion.php");
+    header("Location: ../Connexion.php");
     exit();
 }
 
@@ -58,6 +58,7 @@ $idee = $result->fetch_assoc();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://kit.fontawesome.com/64d58efce2.js" crossorigin="anonymous"></script>
+    
     <link rel="icon" type="image/png" href="../../static/img/icon.png">
     <link rel="stylesheet" type="text/css" href="../../static/css/style1.css">
     <link rel="stylesheet" type="text/css" href="../../static/css/style5.css">
@@ -98,7 +99,6 @@ $idee = $result->fetch_assoc();
                 <strong>Statut:</strong> <?php echo htmlspecialchars($idee['statut']); ?> <span class="status-circle"></span>
             </p>
             <p><strong>Visibilité:</strong> <?php echo $idee['est_publique'] == 1 ? 'Publique' : 'Privé'; ?></p>
-            <p><strong>Catégorie:</strong> <?php echo htmlspecialchars($idee['nom_categorie']); ?></p>
         </div>
 
         <div class="details">
@@ -138,10 +138,9 @@ $idee = $result->fetch_assoc();
     </div>
 
     <div class="espace"></div>
-    <div class="footer">
-        <h4 class="footer-left"><a href="mailto:support@orange.com" style="text-decoration: none; color: white;">Contact</a></h4>
-        <h4 class="footer-right">© Orange/Juin2024</h4>
-    </div>
+    <?php
+        include("../barrefooter.html");
+    ?>
 </body>
 </html>
 

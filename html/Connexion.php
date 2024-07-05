@@ -1,9 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="../static/img/icon.png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/64d58efce2.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="../static/css/style1.css">
     <title>Connexion</title>
@@ -27,6 +29,17 @@
             bottom: 60px;
             right: 20px;
         }
+
+        .connect_entete{
+            display: flex;
+            flex-wrap: wrap;
+            position: relative;
+            float:  left;
+        }
+
+        .connect_entete a strong{
+            margin-right: 20px;
+        }
     </style>
 </head>
 <body>
@@ -36,7 +49,11 @@
             <h1>Orange</h1>
             <h3><span class="for-ideas">for ideas</span></h3>
         </div>
-        <div class="connect_entete">
+        <div class="connect_entete"">
+            <a href="Accueil.html">
+                <strong>Accueil</strong>
+            </a>
+
             <a href="inscription.php">
                 <i class="fas fa-user"></i>
                 <strong>S'inscrire</strong>
@@ -83,10 +100,9 @@
         </form>
     </div>
     <a href="admin/ConnexionAdmin.php" class="admin-button">Connexion Administrateur</a>
-    <div class="footer">
-        <h4 class="footer-left"><a href="mailto:support@orange.com" style="text-decoration: none; color: white;">Contact</a></h4>
-        <h4 class="footer-right">©Orange/Juin2024</h4>
-    </div>
+    <?php
+        include("barrefooter.html");
+    ?>
     <script src="../static/js/script1.js"></script>
     <script>
         const togglePassword = document.querySelector('#togglePassword');

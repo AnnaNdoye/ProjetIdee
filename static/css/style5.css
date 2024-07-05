@@ -1,10 +1,13 @@
 .header {
     display: flex;
-    justify-content: space-between;
     align-items: center;
     padding: 20px;
     background-color: #fff;
     color: #ff6600;
+}
+
+.header .profil, .header .connect_entete{
+    justify-content: flex-end;
 }
 
 .header .logo {
@@ -199,7 +202,8 @@
     border: none;
     padding: 10px;
     outline: none;
-    color: #000;
+    color: #414141;
+    font-weight: bold;
     flex: 1;
 }
 
@@ -210,7 +214,6 @@
     padding: 10px 15px;
     cursor: pointer;
 }
-
 
 @media (max-width: 768px) {
     .header {
@@ -255,5 +258,9 @@
     .search-bar form:focus {
         width: 200px;
     }
+}
+
+.header .profil, .header .connect-entete{
+    margin-left: auto;
 }
 

@@ -1,13 +1,11 @@
 <?php
 session_start();
 
-// Vérifiez si l'utilisateur est connecté en tant qu'administrateur, sinon redirigez vers la page de connexion
 if (!isset($_SESSION['user_id'])) {
-    header("Location: ../connexion.php");
+    header("Location: ConnexionAdmin.php");
     exit();
 }
 
-// Connexion à la base de données
 $host = "localhost";
 $user = "root";
 $password = "";
@@ -19,7 +17,6 @@ if ($connection->connect_error) {
     die("Erreur de connexion à la base de données : " . $connection->connect_error);
 }
 
-// Récupérer les catégories depuis la base de données
 $query = "SELECT id_categorie, nom_categorie, description_categorie FROM Categorie";
 $result = $connection->query($query);
 
@@ -109,14 +106,19 @@ $connection->close();
             table-layout: fixed;
         }
 
-        th, td {
-            border: 1px solid #ddd;
-            padding: 16px;
-            text-align: center;
+        th{
+            color: white;
+            background-color: #ff6600;
         }
 
-        th {
-            background-color: #f2f2f2;
+        th:hover{
+            color: #000;
+        }
+
+        th, td {
+            border: 3px solid #ddd;
+            padding: 16px;
+            text-align: center;
         }
 
         th.description-col, td.description-col {
@@ -180,6 +182,26 @@ $connection->close();
         .return-home-btn i {
             margin-right: 10px;
         }
+
+        textarea{
+            resize: none;
+        }
+
+        .return-home-btn:hover{
+            background-color: #565e67;
+        }
+
+        .add-category-btn:hover{
+            background-color: #005abb;
+        }
+
+        .button-group .update:hover{
+            background-color: rgb(0, 115, 15);
+        }
+
+        .button-group .delete:hover{
+            background-color: #930000;
+        }
     </style>
 </head>
 <body>
@@ -192,7 +214,7 @@ $connection->close();
             </div>
         </div>
         <div class="connect_entete">
-            <a href="../connexion.php">
+            <a href="ConnexionAdmin.php.php">
                 <i class="fas fa-user"></i>
                 <span>Se déconnecter</span>
             </a>
@@ -237,10 +259,9 @@ $connection->close();
         <button class="add-category-btn" id="add-category-btn">Ajouter Catégorie</button>
     </div>
 
-    <div class="footer">
-        <h4 class="footer-left"><a href="mailto:support@orange.com" style="text-decoration: none; color: white;">Contact</a></h4>
-        <h4 class="footer-right">© Orange/Juin2024</h4>
-    </div>
+    <?php
+        include("../barrefooter.html");
+    ?>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -250,7 +271,7 @@ $connection->close();
             addCategoryBtn.addEventListener('click', function () {
                 const newRow = document.createElement('tr');
                 newRow.innerHTML = `
-                    <td>New</td>
+                    <td>Nouveau</td>
                     <td><input type="text" name="new_nom_categorie" placeholder="Nom de la catégorie"></td>
                     <td class="description-col"><textarea name="new_description_categorie" placeholder="Description de la catégorie"></textarea></td>
                     <td>

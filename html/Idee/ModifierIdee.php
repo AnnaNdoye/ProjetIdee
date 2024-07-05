@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['user_id'])) {
-    header("Location: ../connexion.php");
+    header("Location: ../Connexion.php");
     exit();
 }
 
@@ -24,8 +24,9 @@ $idee_id = $_GET['id'];
 $employe_id = $_SESSION['user_id'];
 
 $query = "
-    SELECT idee.id_idee, idee.titre, idee.contenu_idee, idee.est_publique, idee.categorie_id
+    SELECT idee.id_idee, idee.titre, idee.contenu_idee, idee.est_publique, idee.categorie_id, fichier.nom_fichier
     FROM idee
+    LEFT JOIN fichier on idee.id_idee = fichier.idee_id
     WHERE idee.id_idee = ? AND idee.employe_id = ?
 ";
 
@@ -52,13 +53,13 @@ $categories = $connexion->query($query);
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://kit.fontawesome.com/64d58efce2.js" crossorigin="anonymous"></script>
     <link rel="icon" type="image/png" href="../../static/img/icon.png">
-    <link rel="stylesheet" type="tet/css" href="../../static/css/style6.css">
+    <link rel="stylesheet" type="text/css" href="../../static/css/style6.css">
     <link rel="stylesheet" type="text/css" href="../../static/css/style7.css">
     <link rel="stylesheet" type="text/javascript" href="../../static/js/script2.js">
     <title>Modifier Idée</title>
@@ -133,48 +134,57 @@ $categories = $connexion->query($query);
 
                 <div class="form-group">
                     <label for="fichier">Choisissez un fichier :</label>
-                    <input type="file" id="fichier" name="fichier" accept=".doc,.docx,.mpp,.avi,.gif,.gz,.zip,.jpeg,.jpg,.jpe,.png,.odp,.odt,.ods,.pdf,.xlsx,.pptx,.txt">
+                    <?php if(!empty($idee['nom_fichier'])) : ?>
+                        <p>Fichier actuel : <?php echo htmlspecialchars($idee['nom_fichier']); ?></p>
+                    <?php endif ?>
+                        <input type="file" id="fichier" name="fichier" accept=".doc,.docx,.mpp,.avi,.gif,.gz,.zip,.jpeg,.jpg,.jpe,.png,.odp,.odt,.ods,.pdf,.xlsx,.pptx,.txt">
                 </div>
                 
                 <div class="form-buttons">
-                    <a href="AccueilIdee.html">Annuler</a>
+                    <a href="AccueilIdee.php">Annuler</a>
                     <button type="submit">Enregistrer</button>
                 </div>
             </form>
         </main>
         
-        <footer class="footer">
-            <h4 class="footer-left"><a href="mailto:support@orange.com" style="text-decoration: none; color: white;">Contact</a></h4>
-            <h4 class="footer-right">©Orange/Juin2024</h4>
-        </footer>
+        <?php
+            include("../barrefooter.html");
+        ?>
     </div>
     <div id="alert-container"></div>
 <script>
-    function displayAlert(message, type) {
+    function displayAlert(message, type) 
+    {
         const alertContainer = document.getElementById('alert-container');
         const alert = document.createElement('div');
         alert.className = `alert ${type}`;
         alert.textContent = message;
         alertContainer.appendChild(alert);
-        setTimeout(() => {
+        setTimeout(() => 
+        {
             alert.remove();
         }, 3000);
     }
 
-    function formatText(command) {
+    function formatText(command) 
+    {
         document.execCommand(command, false, null);
     }
 
     function toggleFormat(command)
         formatText(command);
         const button = document.getElementById(`${command}Button`);
-        if (document.queryCommandState(command)) {
+        if (document.queryCommandState(command)) 
+        {
             button.classList.add('active');
-        } else {
+        } 
+        else 
+        {
             button.classList.remove('active');
     }
     
-    function syncContent() {
+    function syncContent() 
+    {
         const contentEditableDiv = document.getElementById('contenu');
         const hiddenTextarea = document.getElementById('hiddenContent');
         hiddenTextarea.value = contentEditableDiv.innerHTML;

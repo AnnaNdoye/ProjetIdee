@@ -2,7 +2,7 @@
 session_start();
 
 if (!isset($_SESSION['user_id'])) {
-    header("Location: ../../connexion.php");
+    header("Location: ../../html/Connexion.php");
     exit();
 }
 
@@ -17,32 +17,57 @@ if ($connexion->connect_error) {
     die("Erreur lors de la connexion: " . $connexion->connect_error);
 }
 
-$idee_id = $_GET['id'];
+if (isset($_GET['id'])) {
+    $id_idee = $_GET['id'];
 
-// Supprimer d'abord les fichiers associés à cette idée
-$delete_fichiers_query = "DELETE FROM fichier WHERE idee_id = ?";
-$stmt_fichiers = $connexion->prepare($delete_fichiers_query);
-if ($stmt_fichiers === false) {
-    die("Erreur lors de la préparation de la requête: " . $connexion->error);
-}
-$stmt_fichiers->bind_param('i', $idee_id);
-if (!$stmt_fichiers->execute()) {
-    die("Erreur lors de l'exécution de la requête: " . $stmt_fichiers->error);
-}
-$stmt_fichiers->close();
+    // Démarrer une transaction
+    $connexion->begin_transaction();
 
-// Ensuite, supprimer l'idée
-$delete_idee_query = "DELETE FROM idee WHERE id_idee = ?";
-$stmt_idee = $connexion->prepare($delete_idee_query);
-if ($stmt_idee === false) {
-    die("Erreur lors de la préparation de la requête: " . $connexion->error);
-}
-$stmt_idee->bind_param('i', $idee_id);
-if (!$stmt_idee->execute()) {
-    die("Erreur lors de l'exécution de la requête: " . $stmt_idee->error);
-}
-$stmt_idee->close();
+    try 
+    {
+        // Supprimer les likes associés aux commentaires de l'idée
+        $query = "DELETE FROM LikeCommentaire WHERE commentaire_id IN (SELECT id_commentaire FROM Commentaire WHERE idee_id = ?)";
+        $stmt = $connexion->prepare($query);
+        $stmt->bind_param("i", $id_idee);
+        $stmt->execute();
 
-header("Location: ../../html/idee/AccueilIdee.php");
+        // Supprimer les commentaires associés à l'idée
+        $query = "DELETE FROM Commentaire WHERE idee_id = ?";
+        $stmt = $connexion->prepare($query);
+        $stmt->bind_param("i", $id_idee);
+        $stmt->execute();
+
+        // Supprimer les fichiers associés à l'idée
+        $query = "DELETE FROM Fichier WHERE idee_id = ?";
+        $stmt = $connexion->prepare($query);
+        $stmt->bind_param("i", $id_idee);
+        $stmt->execute();
+
+        // Supprimer les likes associés à l'idée
+        $query = "DELETE FROM LikeIdee WHERE idee_id = ?";
+        $stmt = $connexion->prepare($query);
+        $stmt->bind_param("i", $id_idee);
+        $stmt->execute();
+
+        // Enfin, supprimer l'idée elle-même
+        $query = "DELETE FROM Idee WHERE id_idee = ?";
+        $stmt = $connexion->prepare($query);
+        $stmt->bind_param("i", $id_idee);
+        $stmt->execute();
+
+        // Valider la transaction
+        $connexion->commit();
+        header("Location: ../../html/idee/AccueilIdee.php");
+        exit();
+    } 
+    catch (Exception $e) 
+    {
+        // En cas d'erreur, annuler la transaction
+        $connexion->rollback();
+        die("Erreur lors de la suppression de l'idée: " . $e->getMessage());
+    }
+} else {
+    header("Location: ../../html/idee/AccueilIdee.php");
+}
 
 $connexion->close();

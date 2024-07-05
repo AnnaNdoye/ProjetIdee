@@ -3,7 +3,7 @@ session_start();
 
 // Vérifiez si l'utilisateur est connecté en tant qu'administrateur, sinon redirigez vers la page de connexion
 if (!isset($_SESSION['user_id'])) {
-    header("Location: ../connexion.php");
+    header("Location: ConnexionAdmin.php");
     exit();
 }
 
@@ -44,11 +44,10 @@ if ($result->num_rows > 0)
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_idee'])) {
     $statut = $_POST['statut'];
     $idIdee = $_POST['id_idee'];
-    $dateModification = date('Y-m-d H:i:s');
 
-    $updateQuery = "UPDATE idee SET statut = ?, date_modification = ? WHERE id_idee = ?";
+    $updateQuery = "UPDATE idee SET statut = ? WHERE id_idee = ?";
     $stmt = $connection->prepare($updateQuery);
-    $stmt->bind_param("ssi", $statut, $dateModification, $idIdee);
+    $stmt->bind_param("si", $statut, $idIdee);
 
     if ($stmt->execute()) {
         header("Location: " . $_SERVER['PHP_SELF']);
@@ -130,11 +129,13 @@ $connection->close();
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://kit.fontawesome.com/64d58efce2.js" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <link rel="icon" type="image/png" href="../../static/img/icon.png">
     <link rel="stylesheet" href="../../static/css/style1.css">
     <link rel="stylesheet" href="../../static/css/style5.css">
@@ -151,7 +152,7 @@ $connection->close();
             </div>
         </div>
         <div class="connect_entete">
-            <a href="../connexion.php">
+            <a href="ConnexionAdmin.php">
                 <i class="fas fa-user"></i>
                 <span>Se déconnecter</span>
             </a>
@@ -159,7 +160,7 @@ $connection->close();
     </div>
 
     <div class="button-container">
-        <a class="return-home-btn" href="AccueilAdmin.php"><i class="fas fa-arrow-left"></i>Retour à l'accueil</a>
+        <a class="return-home-btn" href="AccueilAdmin.php"><i class="fas fa-arrow-left"></i> Retour à l'accueil</a>
     </div>
 
     <div>
@@ -176,18 +177,18 @@ $connection->close();
                 <th>Date de modification</th>
                 <th>Statut</th>
                 <th>Categorie</th>
-                <th>Actions</th>
+                <th class="large">Actions</th>
             </tr>
             <?php foreach ($ideearray as $idee): ?>
             <tr>
                 <td><?php echo $idee['id_idee']; ?></td>
                 <td><?php echo $idee['titre']; ?></td>
-                <td><?php echo $idee['contenu_idee']; ?></td>
+                <td class="noncentre"><?php echo $idee['contenu_idee']; ?></td>
                 <td><?php echo $idee['date_creation']; ?></td>
                 <td><?php echo $idee['date_modification']; ?></td>
                 <td class="statuts statut-<?php echo strtolower($idee['statut']); ?>"><?php echo $idee['statut']; ?></td>
                 <td><?php echo $idee['nom_categorie']; ?></td>
-                <td>
+                <td class="action">
                     <div class="button-group">
                         <form method="POST" action="">
                             <input type="hidden" name="id_idee" value="<?php echo $idee['id_idee']; ?>">
@@ -214,104 +215,11 @@ $connection->close();
         <a class="return-home-btn" href="AccueilAdmin.php"><i class="fas fa-arrow-left"></i>Retour à l'accueil</a>
     </div>
 
-    <div class="footer">
-        <h4 class="footer-left"><a href="mailto:support@orange.com" style="text-decoration: none; color: white;">Contact</a></h4>
-        <h4 class="footer-right">© Orange/Juin2024</h4>
-    </div>
+    <?php
+        include("../barrefooter.html");
+    ?>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () 
-        {
-            const addCategoryBtn = document.getElementById('add-category-btn');
-            const table = document.querySelector('table');
-
-            addEventListener('click', function () 
-            {
-                    const newRow = document.createElement('tr');
-                    newRow.innerHTML = `
-                        <td>New</td>
-                        <td><input type="text" name="new_titre" placeholder="Nom de la catégorie"></td>
-                        <td><input type="date" name="new_date_creation"></td>
-                        <td><input type="date" name="new_date_modification"></td>
-                        <td>
-                            <select name="new_statut">
-                                <option value="Soumis">Soumis</option>
-                                <option value="Approuvé">Approuvé</option>
-                                <option value="Rejeté">Rejeté</option>
-                                <option value="Implémenté">Implémenté</option>
-                            </select>
-                        </td>
-                        <td><input type="text" name="new_categorie" placeholder="Nom de la catégorie"></td>
-                        <td>
-                            <div class="button-group">
-                                <button class="update" data-action="add">Ajouter</button>
-                                <button class="delete">Annuler</button>
-                            </div>
-                        </td>
-                    `;
-                    table.appendChild(newRow);
-
-                    const updateButton = newRow.querySelector('.update');
-                    const deleteButton = newRow.querySelector('.delete');
-
-                    updateButton.addEventListener('click', function () 
-                    {
-                        const titre = newRow.querySelector('input[name="new_titre"]').value;
-                        const date_creation = newRow.querySelector('input[name="new_date_creation"]').value;
-                        const statut = newRow.querySelector('select[name="new_statut"]').value;
-                        const categorie = newRow.querySelector('input[name="new_categorie"]').value;
-
-                        const form = document.createElement('form');
-                        form.method = 'POST';
-                        form.style.display = 'none';
-
-                        const titreInput = document.createElement('input');
-                        titreInput.type = 'hidden';
-                        titreInput.name = 'new_titre';
-                        titreInput.value = titre;
-                        form.appendChild(titreInput);
-
-                        const dateCreationInput = document.createElement('input');
-                        dateCreationInput.type = 'hidden';
-                        dateCreationInput.name = 'new_date_creation';
-                        dateCreationInput.value = date_creation;
-                        form.appendChild(dateCreationInput);
-
-                        const dateModificationInput = document.createElement('input');
-                        dateModificationInput.type = 'hidden';
-                        dateModificationInput.name = 'new_date_modification';
-                        dateModificationInput.value = date_modification;
-                        form.appendChild(dateModificationInput);
-
-                        const statutInput = document.createElement('input');
-                        statutInput.type = 'hidden';
-                        statutInput.name = 'new_statut';
-                        statutInput.value = statut;
-                        form.appendChild(statutInput);
-
-                        const categorieInput = document.createElement('input');
-                        categorieInput.type = 'hidden';
-                        categorieInput.name = 'new_categorie';
-                        categorieInput.value = categorie;
-                        form.appendChild(categorieInput);
-
-                        const addCategoryInput = document.createElement('input');
-                        addCategoryInput.type = 'hidden';
-                        addCategoryInput.name = 'add_category';
-                        addCategoryInput.value = '1';
-                        form.appendChild(addCategoryInput);
-
-                        document.body.appendChild(form);
-                        form.submit();
-                    });
-
-                    deleteButton.addEventListener('click', function () 
-                    {
-                        newRow.remove();
-                    });
-            });
-        });
-
             // Gérer la mise à jour et la suppression
             document.querySelectorAll('.update').forEach(button => 
             {

@@ -103,7 +103,7 @@
     border: 2px solid #ddd;
     border-radius: 10px;
     padding: 20px;
-    margin: 10px 0;
+    margin: 10px 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease;
     width: 100%;
@@ -170,7 +170,7 @@
     outline: none;
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 100%) {
     .header {
         flex-direction: column;
         align-items: flex-start;
@@ -184,9 +184,9 @@
     .navigation a {
         margin-top: 10px;
     }
-
+        /*pour ideas j'avais utilisés auto-fit pour ajuster automatiquement la taille en fonction du plus long*/
     .ideas {
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        grid-template-columns: repeat(3, 250px);
     }
 }
 

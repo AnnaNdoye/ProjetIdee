@@ -1,9 +1,26 @@
+<?php
+
+$host = "localhost";
+$user = "root";
+$password = "";
+$database = "idee";
+
+// Créer une connexion
+$connexion = mysqli_connect($host, $user, $password, $database);
+
+// Vérifier la connexion
+if (!$connexion) {
+    die("Erreur lors de la connexion: " . mysqli_connect_error());
+}
+?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="../../static/img/icon.png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/64d58efce2.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="../../static/css/style1.css">
     <title>Connexion Administrateur</title>
@@ -11,11 +28,27 @@
         .error {
             color: red;
         }
+        .user-button {
+            background-color: #FF6600;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            text-align: center;
+            display: inline-block;
+            font-size: 16px;
+            margin: 20px 0 20px 0;
+            cursor: pointer;
+            text-decoration: none;
+            position: absolute;
+            bottom: 60px;
+            right: 20px;
+        }
     </style>
 </head>
 <body>
     <div class="header">
-        <div class="logo" onclick="location.href='Accueil.html'">
+        <div class="logo" onclick="location.href='../Accueil.html'">
             <img src="../../static/img/icon.png">
             <h1>Orange</h1>
             <h3><span class="for-ideas">for ideas</span></h3>
@@ -66,10 +99,10 @@
             </div>
         </form>
     </div>
-    <div class="footer">
-        <h4 class="footer-left"><a href="mailto:support@orange.com" style="text-decoration: none; color: white;">Contact</a></h4>
-        <h4 class="footer-right">©Orange/Juin2024</h4>
-    </div>
+    <a href="../Connexion.php" class="user-button">Connexion Employé</a>
+    <?php
+        include("../barrefooter.html");
+    ?>
     <script src="../static/js/script1.js"></script>
     <script>
         const togglePassword = document.querySelector('#togglePassword');
