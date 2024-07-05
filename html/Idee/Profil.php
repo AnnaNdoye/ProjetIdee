@@ -108,9 +108,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <link rel="icon" type="image/png" href="../../static/img/icon.png">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
-    <link rel="stylesheet" href="../../static/css/style1.css">
     <link rel="stylesheet" href="../../static/css/Profil.css">
+    <link rel="stylesheet" href="../../static/css/style1.css">
     <title>Profil</title>
 </head>
 <body>
@@ -138,9 +137,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="profile-photo">
                 <img src="<?php echo $row['photo_profil'] ? $row['photo_profil'] : $default_photo; ?>" alt="Photo de profil" id="profile-img">
                 <input type="file" id="photo_profil" name="photo_profil" style="display: none;">
-                <button type="button" onclick="document.getElementById('photo_profil').click();"><i class="fas fa-pen"></i> Editer</button>
+                <button id="edit" type="button" onclick="document.getElementById('photo_profil').click();"><i class="fas fa-pen"></i> Editer</button>
                 <?php if ($row['photo_profil'] && $row['photo_profil'] !== $default_photo): ?>
-                    <button type="submit" name="delete_photo"><i class="fas fa-trash"></i> Supprimer</button>
+                    <button id="edit" type="submit" name="delete_photo"><i class="fas fa-trash"></i> Supprimer</button>
                 <?php endif; ?>
             </div>
             <div class="profile-item">

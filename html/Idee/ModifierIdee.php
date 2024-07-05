@@ -59,7 +59,7 @@ $categories = $connexion->query($query);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://kit.fontawesome.com/64d58efce2.js" crossorigin="anonymous"></script>
     <link rel="icon" type="image/png" href="../../static/img/icon.png">
-    <link rel="stylesheet" type="tet/css" href="../../static/css/style6.css">
+    <link rel="stylesheet" type="text/css" href="../../static/css/style6.css">
     <link rel="stylesheet" type="text/css" href="../../static/css/style7.css">
     <link rel="stylesheet" type="text/javascript" href="../../static/js/script2.js">
     <title>Modifier Idée</title>
@@ -153,31 +153,38 @@ $categories = $connexion->query($query);
     </div>
     <div id="alert-container"></div>
 <script>
-    function displayAlert(message, type) {
+    function displayAlert(message, type) 
+    {
         const alertContainer = document.getElementById('alert-container');
         const alert = document.createElement('div');
         alert.className = `alert ${type}`;
         alert.textContent = message;
         alertContainer.appendChild(alert);
-        setTimeout(() => {
+        setTimeout(() => 
+        {
             alert.remove();
         }, 3000);
     }
 
-    function formatText(command) {
+    function formatText(command) 
+    {
         document.execCommand(command, false, null);
     }
 
     function toggleFormat(command)
         formatText(command);
         const button = document.getElementById(`${command}Button`);
-        if (document.queryCommandState(command)) {
+        if (document.queryCommandState(command)) 
+        {
             button.classList.add('active');
-        } else {
+        } 
+        else 
+        {
             button.classList.remove('active');
     }
     
-    function syncContent() {
+    function syncContent() 
+    {
         const contentEditableDiv = document.getElementById('contenu');
         const hiddenTextarea = document.getElementById('hiddenContent');
         hiddenTextarea.value = contentEditableDiv.innerHTML;

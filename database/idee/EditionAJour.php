@@ -13,8 +13,7 @@ $database = "idee";
 
 $connexion = new mysqli($host, $user, $password, $database);
 
-if ($connexion->connect_error) 
-{
+if ($connexion->connect_error) {
     die("Erreur lors de la connexion: " . $connexion->connect_error);
 }
 
@@ -29,9 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $categorie_id = $_POST['categorie_id'];
     $employe_id = $_SESSION['user_id'];
 
-    //$update_query = "UPDATE idee SET titre = ?, contenu_idee = ?, est_publique = ?, categorie_id = ?, date_modification = ? WHERE id_idee = ? AND employe_id = ?";
-    $update_query = "INSERT INTO idee  (titre, contenu_idee, est_publique, categorie_id, date_modification) VALUES(?,?,?,?,?) WHERE id_idee = ? AND employe_id = ?";
-
+    $update_query = "UPDATE idee SET titre = ?, contenu_idee = ?, est_publique = ?, categorie_id = ?, date_modification = ? WHERE id_idee = ? AND employe_id = ?";
     $stmt = $connexion->prepare($update_query);
     if ($stmt === false) {
         die("Erreur lors de la préparation de la requête: " . $connexion->error);
@@ -45,7 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $fileName = $file['name'];
             $fileTmpName = $file['tmp_name'];
             $fileType = $file['type'];
-            $fichierTaille = $files['size'];
+            $fichierTaille = $file['size'];
 
             $upload_dir = 'uploads/';
             if (!is_dir($upload_dir)) {
@@ -55,16 +52,38 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $filePath = $upload_dir . basename($fileName);
 
             if (move_uploaded_file($fileTmpName, $filePath)) {
-                $file_query = "INSERT INTO fichier (nom_fichier, type, taille, contenu_fichier) VALUES (?, ?, ?, ?)";
-                $file_stmt = $connexion->prepare($file_query);
-                if ($file_stmt === false) {
-                    die("Erreur lors de la préparation de la requête de fichier: " . $connexion->error);
+                // Vérifier s'il y a déjà un fichier pour cette idée
+                $file_check_query = "SELECT id_fichier FROM fichier WHERE idee_id = ?";
+                $file_check_stmt = $connexion->prepare($file_check_query);
+                $file_check_stmt->bind_param('i', $idee_id);
+                $file_check_stmt->execute();
+                $file_check_stmt->store_result();
+
+                if ($file_check_stmt->num_rows > 0) {
+                    // Mise à jour du fichier existant
+                    $file_check_stmt->bind_result($id_fichier);
+                    $file_check_stmt->fetch();
+                    $file_query = "UPDATE fichier SET nom_fichier = ?, type = ?, taille = ?, contenu_fichier = ? WHERE id_fichier = ?";
+                    $file_stmt = $connexion->prepare($file_query);
+                    if ($file_stmt === false) {
+                        die("Erreur lors de la préparation de la requête de fichier: " . $connexion->error);
+                    }
+                    $file_stmt->bind_param('ssisi', $fileName, $fileType, $fichierTaille, $filePath, $id_fichier);
+                } else {
+                    // Insertion d'un nouveau fichier
+                    $file_query = "INSERT INTO fichier (nom_fichier, type, taille, contenu_fichier, idee_id) VALUES (?, ?, ?, ?, ?)";
+                    $file_stmt = $connexion->prepare($file_query);
+                    if ($file_stmt === false) {
+                        die("Erreur lors de la préparation de la requête de fichier: " . $connexion->error);
+                    }
+                    $file_stmt->bind_param('ssisi', $fileName, $fileType, $fichierTaille, $filePath, $idee_id);
                 }
-                $file_stmt->bind_param('ssss',$fileName, $fileType,$fichierTaille, $filePath);
+
                 if (!$file_stmt->execute()) {
-                    die("Erreur lors de l'insertion du fichier: " . $file_stmt->error);
+                    die("Erreur lors de l'insertion ou de la mise à jour du fichier: " . $file_stmt->error);
                 }
                 $file_stmt->close();
+                $file_check_stmt->close();
             } else {
                 die("Erreur lors du téléchargement du fichier.");
             }
