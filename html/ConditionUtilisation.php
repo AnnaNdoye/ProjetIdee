@@ -30,7 +30,7 @@
         <div class="container">
             <header>
                 <h2>Conditions d'utilisation</h2>
-                <p>Dernière mise à jour: Juin 2024</p>
+                <p>Dernière mise à jour: Juillet 2024</p>
             </header>
 
             <section>

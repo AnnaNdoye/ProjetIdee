@@ -225,8 +225,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['like_comment'])) {
     
     <script src="https://kit.fontawesome.com/64d58efce2.js" crossorigin="anonymous"></script>
     <link rel="icon" type="image/png" href="../../static/img/icon.png">
-    <link rel="stylesheet" href="../../static/css/style1.css">
-    <link rel="stylesheet" href="../../static/css/style.css">
+    <link rel="stylesheet" type="text/css" href="../../static/css/style1.css">
+    <link rel="stylesheet" type="text/css" href="../../static/css/style.css">
     <title>Voir Idée</title>
     <style>
         .container {
@@ -401,6 +401,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['like_comment'])) {
             text-decoration: none;
             color: white;
         }
+        .navigation:hover {
+            color: #000;
+        }
         .contenu_idee{
             padding: 20px;
             border-radius: 5px;
@@ -463,14 +466,14 @@ textarea {
 </head>
 <body>
 <div class="header">
-    <div class="logo" onclick="location.href='../accueil.html'">
+    <div class="logo" onclick="location.href='../Accueil.html'">
         <img src="../../static/img/icon.png" alt="Logo">
-        <div>
+        <div class="logo">
             <h1>Orange</h1>
             <h3><span class="for-ideas">for ideas</span></h3>
         </div>
     </div>
-    <a href="IdeePublique.php" class="navigation"><i class="fas fa-arrow-left"></i>Retour</a>
+    <a href="IdeePublique.php" class="navigation"><i class="fas fa-arrow-left"></i> Retour</a>
 </div>
 <div class="container">
     <div class="idea-details">

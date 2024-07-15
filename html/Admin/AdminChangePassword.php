@@ -21,8 +21,10 @@ if (!isset($_SESSION['user_id'])) {
     <div class="header">
         <div class="logo" onclick="location.href='AccueilIdee.html'">
             <img src="../../static/img/icon.png">
-            <h1>Orange</h1>
-            <h3><span class="for-ideas">for ideas</span></h3>
+            <div class="logo">
+                <h1>Orange</h1>
+                <h3><span class="for-ideas">for ideas</span></h3>
+            </div>
         </div>
     </div>
     <div class="boite">

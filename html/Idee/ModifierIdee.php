@@ -69,8 +69,10 @@ $categories = $connexion->query($query);
         <header class="header">
             <div class="logo" onclick="location.href='../accueil.html'">
                 <img src="../../static/img/icon.png" alt="Logo">
-                <h1>Orange</h1>
-                <h3><span class="for-ideas">for ideas</span></h3>
+                <div class="logo">
+                    <h1>Orange</h1>
+                    <h3><span class="for-ideas">for ideas</span></h3>
+            </div>
             </div>
             <strong>
                 <nav class="navigation">

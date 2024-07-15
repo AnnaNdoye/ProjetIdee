@@ -188,11 +188,6 @@
     transition: background-color 0.3s;
 }
 
-.profile-photo  #edit{
-    text-decoration: none;
-    border: none;
-}
-
 .profile-item button:hover {
     background-color: #e64a19;
 }
@@ -234,6 +229,13 @@
     transform: scale(1.2);
 }
 
+.profile-photo  button{
+    background-color: transparent;
+    text-decoration: none;
+    border: none;
+    margin-right: 20px;
+}
+
 .profile-photo button{
     transition: 0.5s;
 }
@@ -249,11 +251,3 @@
     padding: 10px 20px;
     border-radius: 5px;
 }
-
-.logo h3{
-    font-size: 1em;
-    color: #000;
-    margin: 0;
-    align-self: flex-start;
-}
-

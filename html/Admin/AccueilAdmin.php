@@ -55,6 +55,14 @@ $result = $conn->query($sql);
 $row = $result->fetch_assoc();
 $total_likes_commentaires = $row['total_likes_commentaires'];
 
+// Obtenir les données pour les statuts des idées
+$sql = "SELECT statut, COUNT(*) as count FROM Idee GROUP BY statut";
+$result = $conn->query($sql);
+$statut_data = [];
+while ($row = $result->fetch_assoc()) {
+    $statut_data[$row['statut']] = $row['count'];
+}
+
 // Fermer la connexion
 $conn->close();
 ?>
@@ -68,6 +76,7 @@ $conn->close();
     <link rel="icon" type="image/png" href="../../static/img/icon.png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="../../static/css/style1.css">
     <link rel="stylesheet" href="../../static/css/style5.css">
     <link rel="stylesheet" type="text/css" href="../static/css/style4.css">
@@ -112,6 +121,7 @@ $conn->close();
             margin: 20px 0;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             text-align: center;
+            position: relative;
         }
         .card h3 {
             margin-top: 0;
@@ -129,9 +139,25 @@ $conn->close();
         .container h1{
             text-align: center;
         }
-
-        .header .profil, .header .connect-entete{
+        .header .profil, .header .connect-entete {
             margin-left: auto;
+        }
+        .card .hover-content {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-size: 18px;
+        }
+        .card:hover .hover-content {
+            display: flex;
         }
     </style>
 </head>
@@ -139,7 +165,7 @@ $conn->close();
     <div class="header">
         <div class="logo" onclick="location.href='../accueil.html'">
             <img src="../../static/img/icon.png" alt="Logo">
-            <div>
+            <div class="logo">
                 <h1>Orange</h1>
                 <h3><span class="for-ideas">for ideas</span></h3>
             </div>
@@ -184,6 +210,9 @@ $conn->close();
             </div>
             <h3>Total des Employés</h3>
             <p><?php echo $total_employes; ?></p>
+            <div class="hover-content">
+                Total des Employés: <?php echo $total_employes; ?>
+            </div>
         </div>
         <div class="card">
             <div class="card-icon">
@@ -191,6 +220,9 @@ $conn->close();
             </div>
             <h3>Total des Départements</h3>
             <p><?php echo $total_departements; ?></p>
+            <div class="hover-content">
+                Total des Départements: <?php echo $total_departements; ?>
+            </div>
         </div>
         <div class="card">
             <div class="card-icon">
@@ -198,6 +230,9 @@ $conn->close();
             </div>
             <h3>Total des Idées Publiques</h3>
             <p><?php echo $total_idees; ?></p>
+            <div class="hover-content">
+                Total des Idées Publiques: <?php echo $total_idees; ?>
+            </div>
         </div>
         <div class="card">
             <div class="card-icon">
@@ -205,6 +240,9 @@ $conn->close();
             </div>
             <h3>Total des Commentaires</h3>
             <p><?php echo $total_commentaires; ?></p>
+            <div class="hover-content">
+                Total des Commentaires: <?php echo $total_commentaires; ?>
+            </div>
         </div>
         <div class="card">
             <div class="card-icon">
@@ -212,6 +250,9 @@ $conn->close();
             </div>
             <h3>Total des Likes sur les Idées</h3>
             <p><?php echo $total_likes_idees; ?></p>
+            <div class="hover-content">
+                Total des Likes sur les Idées: <?php echo $total_likes_idees; ?>
+            </div>
         </div>
         <div class="card">
             <div class="card-icon">
@@ -219,6 +260,12 @@ $conn->close();
             </div>
             <h3>Total des Likes sur les Commentaires</h3>
             <p><?php echo $total_likes_commentaires; ?></p>
+            <div class="hover-content">
+                Total des Likes sur les Commentaires: <?php echo $total_likes_commentaires; ?>
+            </div>
+        </div>
+        <div class="card">
+            <canvas id="statutIdeesChart"></canvas>
         </div>
     </div>
 
@@ -252,6 +299,41 @@ $conn->close();
 
             menuList.addEventListener('mouseout', () => {
                 menuList.style.display = 'none';
+            });
+
+            // Chart.js for statut idees
+            const ctx = document.getElementById('statutIdeesChart').getContext('2d');
+            const statutData = {
+                labels: ['Implémenté', 'Rejeté', 'Approuvé', 'Soumis'],
+                datasets: [{
+                    data: [
+                        <?php echo $statut_data['Implémenté'] ?? 0; ?>,
+                        <?php echo $statut_data['Rejeté'] ?? 0; ?>,
+                        <?php echo $statut_data['Approuvé'] ?? 0; ?>,
+                        <?php echo $statut_data['Soumis'] ?? 0; ?>
+                    ],
+                    backgroundColor: ['#0000FF', '#FF0000', '#008000', '#FFA500'],
+                }]
+            };
+
+            const statutIdeesChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: statutData,
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function (tooltipItem) {
+                                    return tooltipItem.label + ': ' + tooltipItem.raw;
+                                }
+                            }
+                        }
+                    }
+                }
             });
         });
     </script>

@@ -224,7 +224,7 @@ if (!$result) {
 <div class="header">
     <div class="logo" onclick="location.href='../Accueil.html'">
         <img src="../../static/img/icon.png" alt="Logo">
-        <div>
+        <div class="logo">
             <h1>Orange</h1>
             <h3><span class="for-ideas"> for ideas</span></h3>
         </div>
