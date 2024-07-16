@@ -55,12 +55,20 @@ $result = $conn->query($sql);
 $row = $result->fetch_assoc();
 $total_likes_commentaires = $row['total_likes_commentaires'];
 
-// Obtenir les données pour les statuts des idées
-$sql = "SELECT statut, COUNT(*) as count FROM Idee GROUP BY statut";
+// Obtenir les données pour les statuts des idées publiques
+$sql = "SELECT statut, COUNT(*) as count FROM Idee WHERE est_publique = 1 GROUP BY statut";
 $result = $conn->query($sql);
 $statut_data = [];
 while ($row = $result->fetch_assoc()) {
     $statut_data[$row['statut']] = $row['count'];
+}
+
+// Obtenir les idées publiques avec leurs auteurs
+$sql = "SELECT i.id_idee, i.titre, i.contenu_idee, i.statut, e.prenom, e.nom FROM Idee i JOIN Employe e ON i.employe_id = e.id_employe WHERE i.est_publique = 1";
+$result = $conn->query($sql);
+$idees_publiques = [];
+while ($row = $result->fetch_assoc()) {
+    $idees_publiques[] = $row;
 }
 
 // Fermer la connexion
@@ -79,6 +87,7 @@ $conn->close();
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="../../static/css/style1.css">
     <link rel="stylesheet" href="../../static/css/style5.css">
+    <link rel="stylesheet" href="../../static/css/IdeePP.css">
     <link rel="stylesheet" type="text/css" href="../static/css/style4.css">
 
     <title>Accueil Admin</title>
@@ -159,6 +168,18 @@ $conn->close();
         .card:hover .hover-content {
             display: flex;
         }
+        .idea-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        .idea-card {
+            background: #fff;
+            padding: 15px;
+            margin: 10px;
+            width: 30%;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
     </style>
 </head>
 <body>
@@ -204,138 +225,121 @@ $conn->close();
         </div>
     </header>
     <div class="container">
-        <div class="card">
-            <div class="card-icon">
-                <i class="fas fa-users"></i>
+        <div class="idea-container">
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h3>Total des Employés</h3>
+                <p><?php echo $total_employes; ?></p>
+                <div class="hover-content">
+                    <p>Total des Employés : <?php echo $total_employes; ?></p>
+                </div>
             </div>
-            <h3>Total des Employés</h3>
-            <p><?php echo $total_employes; ?></p>
-            <div class="hover-content">
-                Total des Employés: <?php echo $total_employes; ?>
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-building"></i>
+                </div>
+                <h3>Total des Départements</h3>
+                <p><?php echo $total_departements; ?></p>
+                <div class="hover-content">
+                    <p>Total des Départements : <?php echo $total_departements; ?></p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-lightbulb"></i>
+                </div>
+                <h3>Total des Idées Publiques</h3>
+                <p><?php echo $total_idees; ?></p>
+                <div class="hover-content">
+                    <p>Total des Idées Publiques : <?php echo $total_idees; ?></p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-comments"></i>
+                </div>
+                <h3>Total des Commentaires</h3>
+                <p><?php echo $total_commentaires; ?></p>
+                <div class="hover-content">
+                    <p>Total des Commentaires : <?php echo $total_commentaires; ?></p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-thumbs-up"></i>
+                </div>
+                <h3>Total des Likes (Idées)</h3>
+                <p><?php echo $total_likes_idees; ?></p>
+                <div class="hover-content">
+                    <p>Total des Likes (Idées) : <?php echo $total_likes_idees; ?></p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-thumbs-up"></i>
+                </div>
+                <h3>Total des Likes (Commentaires)</h3>
+                <p><?php echo $total_likes_commentaires; ?></p>
+                <div class="hover-content">
+                    <p>Total des Likes (Commentaires) : <?php echo $total_likes_commentaires; ?></p>
+                </div>
             </div>
         </div>
-        <div class="card">
-            <div class="card-icon">
-                <i class="fas fa-building"></i>
-            </div>
-            <h3>Total des Départements</h3>
-            <p><?php echo $total_departements; ?></p>
-            <div class="hover-content">
-                Total des Départements: <?php echo $total_departements; ?>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-icon">
-                <i class="fas fa-lightbulb"></i>
-            </div>
-            <h3>Total des Idées Publiques</h3>
-            <p><?php echo $total_idees; ?></p>
-            <div class="hover-content">
-                Total des Idées Publiques: <?php echo $total_idees; ?>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-icon">
-                <i class="fas fa-comments"></i>
-            </div>
-            <h3>Total des Commentaires</h3>
-            <p><?php echo $total_commentaires; ?></p>
-            <div class="hover-content">
-                Total des Commentaires: <?php echo $total_commentaires; ?>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-icon">
-                <i class="fas fa-thumbs-up"></i>
-            </div>
-            <h3>Total des Likes sur les Idées</h3>
-            <p><?php echo $total_likes_idees; ?></p>
-            <div class="hover-content">
-                Total des Likes sur les Idées: <?php echo $total_likes_idees; ?>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-icon">
-                <i class="fas fa-heart"></i>
-            </div>
-            <h3>Total des Likes sur les Commentaires</h3>
-            <p><?php echo $total_likes_commentaires; ?></p>
-            <div class="hover-content">
-                Total des Likes sur les Commentaires: <?php echo $total_likes_commentaires; ?>
-            </div>
-        </div>
-        <div class="card">
-            <canvas id="statutIdeesChart"></canvas>
-        </div>
-    </div>
 
-    <div class="espace"></div>
-    <?php
-        include("../barrefooter.html");
-    ?>
+        <canvas id="statutChart" width="400" height="200"></canvas>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const menuButton = document.querySelector('.menu-deroulant button');
-            const menuList = document.querySelector('.menu-deroulant ul');
-
-            menuButton.addEventListener('click', () => {
-                menuList.style.display = menuList.style.display === 'flex' ? 'none' : 'flex';
-            });
-
-            menuButton.addEventListener('mouseover', () => {
-                menuList.style.display = 'flex';
-            });
-
-            menuButton.addEventListener('mouseout', () => {
-                if (menuList.style.display !== 'flex') {
-                    menuList.style.display = 'none';
-                }
-            });
-
-            menuList.addEventListener('mouseover', () => {
-                menuList.style.display = 'flex';
-            });
-
-            menuList.addEventListener('mouseout', () => {
-                menuList.style.display = 'none';
-            });
-
-            // Chart.js for statut idees
-            const ctx = document.getElementById('statutIdeesChart').getContext('2d');
-            const statutData = {
-                labels: ['Implémenté', 'Rejeté', 'Approuvé', 'Soumis'],
-                datasets: [{
-                    data: [
-                        <?php echo $statut_data['Implémenté'] ?? 0; ?>,
-                        <?php echo $statut_data['Rejeté'] ?? 0; ?>,
-                        <?php echo $statut_data['Approuvé'] ?? 0; ?>,
-                        <?php echo $statut_data['Soumis'] ?? 0; ?>
-                    ],
-                    backgroundColor: ['#0000FF', '#FF0000', '#008000', '#FFA500'],
-                }]
-            };
-
-            const statutIdeesChart = new Chart(ctx, {
-                type: 'doughnut',
-                data: statutData,
+        <script>
+            var ctx = document.getElementById('statutChart').getContext('2d');
+            var statutChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: <?php echo json_encode(array_keys($statut_data)); ?>,
+                    datasets: [{
+                        data: <?php echo json_encode(array_values($statut_data)); ?>,
+                        backgroundColor: [
+                            'rgba(216, 19, 19)',
+                            'rgb(7, 104, 51)',
+                            'rgb(233, 117, 16)',
+                            'rgb(22, 71, 232)',
+                            'rgba(153, 102, 255)',
+                            'rgba(255, 159, 64)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
                 options: {
                     responsive: true,
                     plugins: {
                         legend: {
-                            position: 'top',
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function (tooltipItem) {
-                                    return tooltipItem.label + ': ' + tooltipItem.raw;
-                                }
-                            }
+                            display: true,
+                            position: 'bottom',
                         }
                     }
                 }
             });
-        });
-    </script>
+        </script>
+
+        <h2>Idées Publiques</h2>
+        <div class="idea-container">
+            <?php foreach ($idees_publiques as $idee): ?>
+                <div class="idea-card">
+                    <h3><?php echo htmlspecialchars($idee['titre']); ?></h3>
+                    <p><?php echo htmlspecialchars($idee['contenu_idee']); ?></p>
+                    <p><strong>Statut:</strong> <?php echo htmlspecialchars($idee['statut']); ?> <span class='status-circle'></span></p>
+                    <p><strong>Auteur:</strong> <?php echo htmlspecialchars($idee['prenom'].' ' .$idee['nom'] ); ?></p>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
 </body>
 </html>
