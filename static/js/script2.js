@@ -1,27 +1,32 @@
-function formatText(command) {
-    document.execCommand(command, false, null);
-}
-
-function toggleFormat(command) {
-    formatText(command);
-    const button = document.getElementById(`${command}Button`);
-    if (document.queryCommandState(command)) {
-        button.classList.add('active');
-    } else {
-        button.classList.remove('active');
+function confirmDeletion(id) {
+    if (confirm('Êtes-vous sûr de vouloir supprimer cette idée')) {
+        window.location.href = '../../database/idee/supprimer_idee.php?id=' + id;
     }
 }
 
-function syncContent() {
-    const contentEditableDiv = document.getElementById('contenu');
-    const hiddenTextarea = document.getElementById('hiddenContent');
-    hiddenTextarea.value = contentEditableDiv.innerHTML;
-}
+document.addEventListener('DOMContentLoaded', function () {
+    const menuButton = document.querySelector('.menu-deroulant button');
+    const menuList = document.querySelector('.menu-deroulant ul');
 
-function displayFileName() {
-    const input = document.getElementById('fichier');
-    const fileName = input.files[0].name;
-    document.getElementById('file-name').textContent = `Selected file: ${fileName}`;
-}
+    menuButton.addEventListener('click', () => {
+        menuList.style.display = menuList.style.display === 'flex' ? 'none' : 'flex';
+    });
 
-document.getElementById('fichier').addEventListener('change', displayFileName);
+    menuButton.addEventListener('mouseover', () => {
+        menuList.style.display = 'flex';
+    });
+
+    menuButton.addEventListener('mouseout', () => {
+        if (menuList.style.display !== 'flex') {
+            menuList.style.display = 'none';
+        }
+    });
+
+    menuList.addEventListener('mouseover', () => {
+        menuList.style.display = 'flex';
+    });
+
+    menuList.addEventListener('mouseout', () => {
+        menuList.style.display = 'none';
+    });
+});

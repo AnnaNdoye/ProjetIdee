@@ -94,7 +94,7 @@ $categories = $connexion->query($query);
                 <h2>Modifier l'idée</h2>
             </header>
 
-            <form action="../../database/idee/EditionAJour.php" method="post" enctype="multipart/form-data" onsubmit="syncContent()">
+            <form action="../../database/idee/EditionAJour.php" method="post" enctype="multipart/form-data" onsubmit="syncContent(e)">
             <input type="hidden" name="id" value="<?php echo $idee_id; ?>">
     <div class="form-group">
         <label for="titre">Titre:</label>
@@ -103,15 +103,13 @@ $categories = $connexion->query($query);
 
     <div class="form-group">
         <label for="contenu">Contenu:</label>
-        <div id="contenu" class="contenteditable" contenteditable="true" required><?php echo $idee['contenu_idee']; ?></div>
-        <textarea id="hiddenContent" name="contenu" style="display:none;"></textarea>
+        <textarea name="contenu""><?php echo htmlspecialchars($idee['contenu_idee']); ?></textarea>
         <div class="toolbar">
             <button type="button" id="boldButton" onclick="toggleFormat('bold')"><i class="fas fa-bold"></i></button>
             <button type="button" id="italicButton" onclick="toggleFormat('italic')"><i class="fas fa-italic"></i></button>
             <button type="button" id="underlineButton" onclick="toggleFormat('underline')"><i class="fas fa-underline"></i></button>
         </div>
     </div>
-
                 <div class="form-group">
                     <label for="visibilite">Choisissez la visibilité de votre idée :</label>
                     <div class="radio-group">
@@ -155,12 +153,6 @@ $categories = $connexion->query($query);
     </div>
     <div id="alert-container"></div>
 <script>
-    function syncContent() {
-        const contentEditableDiv = document.getElementById('contenu');
-        const hiddenTextarea = document.getElementById('hiddenContent');
-        hiddenTextarea.value = contentEditableDiv.innerHTML;
-    }
-
     function toggleFormat(command) {
         document.execCommand(command, false, null);
         const button = document.getElementById(`${command}Button`);
@@ -184,7 +176,7 @@ $categories = $connexion->query($query);
         document.execCommand(command, false, null);
     }
 
-    function toggleFormat(command)
+    function toggleFormat(command) {
         formatText(command);
         const button = document.getElementById(`${command}Button`);
         if (document.queryCommandState(command)) 
@@ -194,13 +186,7 @@ $categories = $connexion->query($query);
         else 
         {
             button.classList.remove('active');
-    }
-    
-    function syncContent() 
-    {
-        const contentEditableDiv = document.getElementById('contenu');
-        const hiddenTextarea = document.getElementById('hiddenContent');
-        hiddenTextarea.value = contentEditableDiv.innerHTML;
+        }
     }
 
     function displayFileName() {
@@ -211,8 +197,8 @@ $categories = $connexion->query($query);
 
     document.getElementById('fichier').addEventListener('change', displayFileName);
 </script>
-<script src="../static/js/script1.js"></script>
-<script src="../static/js/script2.js"></script>
+<script src="../../static/js/script1.js"></script>
+<script src="../../static/js/script2.js"></script>
 </body>
 </html>
 

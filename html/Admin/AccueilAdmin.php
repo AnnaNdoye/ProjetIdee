@@ -138,7 +138,7 @@ $conn->close();
         }
         .card p {
             font-size: 20px;
-            color: #333;
+            color: #fff;
         }
         .card-icon {
             font-size: 50px;
@@ -292,13 +292,16 @@ $conn->close();
 
         <script>
             var ctx = document.getElementById('statutChart').getContext('2d');
-            var statutChart = new Chart(ctx, {
+            var statutChart = new Chart(ctx,
+            {
                 type: 'pie',
-                data: {
+                data: 
+                {
                     labels: <?php echo json_encode(array_keys($statut_data)); ?>,
                     datasets: [{
                         data: <?php echo json_encode(array_values($statut_data)); ?>,
-                        backgroundColor: [
+                        backgroundColor: 
+                        [
                             'rgba(216, 19, 19)',
                             'rgb(7, 104, 51)',
                             'rgb(233, 117, 16)',
@@ -306,7 +309,8 @@ $conn->close();
                             'rgba(153, 102, 255)',
                             'rgba(255, 159, 64)'
                         ],
-                        borderColor: [
+                        borderColor: 
+                        [
                             'rgba(255, 99, 132, 1)',
                             'rgba(54, 162, 235, 1)',
                             'rgba(255, 206, 86, 1)',
@@ -317,10 +321,13 @@ $conn->close();
                         borderWidth: 1
                     }]
                 },
-                options: {
+                options: 
+                {
                     responsive: true,
-                    plugins: {
-                        legend: {
+                    plugins: 
+                    {
+                        legend: 
+                        {
                             display: true,
                             position: 'bottom',
                         }
