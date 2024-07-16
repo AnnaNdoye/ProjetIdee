@@ -85,11 +85,9 @@ $conn->close();
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="../../static/css/style1.css">
-    <link rel="stylesheet" href="../../static/css/style5.css">
-    <link rel="stylesheet" href="../../static/css/IdeePP.css">
-    <link rel="stylesheet" type="text/css" href="../static/css/style4.css">
-
+    <link rel="stylesheet" type="text/css" href="../../static/css/style1.css">
+    <link rel="stylesheet" type="text/css" href="../../static/css/style5.css">
+    <link rel="stylesheet" type="text/css" href="../../static/css/IdeePP.css">
     <title>Accueil Admin</title>
     <style>
         body {
@@ -131,6 +129,8 @@ $conn->close();
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             text-align: center;
             position: relative;
+            flex: 1 1 400px;
+            margin-right: 20px;
         }
         .card h3 {
             margin-top: 0;
@@ -167,6 +167,7 @@ $conn->close();
         }
         .card:hover .hover-content {
             display: flex;
+            border-radius: 5px;
         }
         .idea-container {
             display: flex;
@@ -288,7 +289,7 @@ $conn->close();
             </div>
         </div>
 
-        <canvas id="statutChart" width="400" height="200"></canvas>
+        <canvas id="statutChart" width="200px" height="100px"></canvas>
 
         <script>
             var ctx = document.getElementById('statutChart').getContext('2d');
