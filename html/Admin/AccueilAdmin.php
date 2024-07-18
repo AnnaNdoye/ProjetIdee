@@ -349,5 +349,34 @@ $conn->close();
             <?php endforeach; ?>
         </div>
     </div>
+    <script>
+        
+document.addEventListener('DOMContentLoaded', function () {
+    const menuButton = document.querySelector('.menu-deroulant button');
+    const menuList = document.querySelector('.menu-deroulant ul');
+
+    menuButton.addEventListener('click', () => {
+        menuList.style.display = menuList.style.display === 'flex' ? 'none' : 'flex';
+    });
+
+    menuButton.addEventListener('mouseover', () => {
+        menuList.style.display = 'flex';
+    });
+
+    menuButton.addEventListener('mouseout', () => {
+        if (menuList.style.display !== 'flex') {
+            menuList.style.display = 'none';
+        }
+    });
+
+    menuList.addEventListener('mouseover', () => {
+        menuList.style.display = 'flex';
+    });
+
+    menuList.addEventListener('mouseout', () => {
+        menuList.style.display = 'none';
+    });
+});
+    </script>
 </body>
 </html>
